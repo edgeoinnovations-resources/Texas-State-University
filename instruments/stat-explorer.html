@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Spatial Thinking Ability Test (STAT) — an interactive explainer</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --line:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --blue-t:#eaf1fb; --green-t:#e6f2e6; --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  header.hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 46px}
+  header.hero .wrap{max-width:960px}
+  .eyebrow{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#bcd4f5;font-weight:700;margin:0 0 12px}
+  h1{font-size:34px;line-height:1.15;margin:0 0 14px;font-weight:800;letter-spacing:-.01em}
+  .hero p.lede{font-size:17px;color:#e4edfb;margin:0 0 20px;max-width:680px}
+  .reuse-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.26);border-radius:999px;padding:7px 15px;font-size:13.5px;color:#eaf2ff}
+  .reuse-badge b{color:#fff}
+  .metarow{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:8px;
+    padding:9px 13px;font-size:13px;color:#eaf2ff}
+  .chip b{display:block;font-size:18px;color:#fff;font-weight:800;letter-spacing:-.01em}
+  section{padding:40px 0}
+  section:nth-child(even){background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  h2{font-size:23px;margin:0 0 6px;font-weight:800;letter-spacing:-.01em}
+  h2 .n{color:var(--blue);font-variant-numeric:tabular-nums;margin-right:8px}
+  .sectionsub{color:var(--sub);margin:0 0 24px;font-size:15px;max-width:720px}
+  p{font-size:15.5px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+  /* ------- component explorer ------- */
+  .explorer{display:grid;grid-template-columns:220px 1fr;gap:0;overflow:hidden}
+  .typelist{border-right:1px solid var(--line);background:#fafbfe}
+  .typebtn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:none;
+    padding:13px 15px;cursor:pointer;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink);
+    font-family:inherit;transition:background .12s}
+  .typebtn:hover{background:var(--blue-t)}
+  .typebtn.active{background:var(--blue);color:#fff}
+  .typebtn.active .tnum,.typebtn.active .titems{color:#fff}
+  .typebtn:last-child{border-bottom:0}
+  .tnum{font-weight:800;font-variant-numeric:tabular-nums;min-width:34px;color:var(--blue)}
+  .tlabel{font-weight:600;line-height:1.25}
+  .titems{display:block;font-size:11px;color:var(--sub);font-weight:500;margin-top:1px}
+  .detail{padding:24px 26px;min-height:430px}
+  .detail .dtype{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);font-weight:700}
+  .detail h3{font-size:20px;margin:4px 0 4px;font-weight:800}
+  .detail .items-tag{display:inline-block;background:var(--blue-t);color:#1d4b8f;border-radius:6px;
+    padding:2px 9px;font-size:12.5px;font-weight:700;margin-bottom:12px}
+  .detail .what{font-size:15px;color:var(--ink);margin:0 0 18px}
+  .sampbox{background:#fafbfe;border:1px solid var(--line);border-radius:11px;padding:17px 18px}
+  .sampbox .stag{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:7px}
+  .sampbox .q{font-size:14.5px;font-weight:600;margin:0 0 13px}
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;align-items:flex-start;gap:10px;border:1.5px solid var(--line);background:#fff;border-radius:9px;
+    padding:10px 12px;cursor:pointer;font-size:14px;font-family:inherit;text-align:left;color:var(--ink);transition:.12s}
+  .opt:hover{border-color:var(--blue);background:var(--blue-t)}
+  .opt .k{font-weight:800;color:var(--blue);min-width:16px}
+  .opt.correct{border-color:var(--green);background:var(--green-t)}
+  .opt.correct .k{color:var(--green)}
+  .opt.wrong{border-color:var(--orange);background:#fdeee7}
+  .opt.wrong .k{color:var(--orange)}
+  .opt.locked{cursor:default;opacity:.72}
+  .opt.locked.correct,.opt.locked.wrong{opacity:1}
+  .feedback{margin-top:12px;font-size:13.5px;padding:11px 13px;border-radius:9px;display:none}
+  .feedback.show{display:block}
+  .feedback.ok{background:var(--green-t);color:#0a5a1e;border:1px solid #b6dcbb}
+  .feedback.no{background:#fdeee7;color:#8a3413;border:1px solid #f3c3ad}
+  .feedback b{font-weight:800}
+  /* ------- study results ------- */
+  .studygrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .statline{display:flex;flex-direction:column;gap:3px;margin-bottom:14px}
+  .barrow{display:grid;grid-template-columns:150px 1fr 60px;align-items:center;gap:12px;margin-bottom:9px;font-size:13px}
+  .barrow .lab{color:var(--ink);font-weight:600}
+  .barrow .lab small{display:block;color:var(--sub);font-weight:500;font-size:11px}
+  .track{position:relative;height:26px;background:#eef1f7;border-radius:6px;overflow:hidden}
+  .pre,.post{position:absolute;top:0;height:100%;border-radius:6px}
+  .pre{background:#c7d4e8}
+  .post{background:var(--blue);opacity:.92}
+  .barrow.exp .post{background:var(--green)}
+  .track .caps{position:absolute;top:0;height:100%;display:flex;align-items:center;font-size:10.5px;font-weight:800;color:#1a2230}
+  .delta{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;font-size:13px}
+  .delta.sig{color:var(--green)}
+  .delta.ns{color:var(--sub)}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--sub);margin:4px 0 20px}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:14px;height:14px;border-radius:4px;display:inline-block}
+  table.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  table.tbl th,table.tbl td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.tbl th{background:#fafbfe;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--sub)}
+  table.tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .sigdot{color:var(--green);font-weight:800}
+  /* ------- callouts ------- */
+  .callout{border-left:4px solid var(--yellow);background:#fef8e9;border-radius:0 11px 11px 0;padding:16px 20px;margin:8px 0}
+  .callout h4{margin:0 0 6px;font-size:14px;font-weight:800;color:#8a6400;letter-spacing:.02em;text-transform:uppercase}
+  .callout p{margin:0 0 8px;font-size:14px;color:#5a4a1e}
+  .callout p:last-child{margin:0}
+  .honesty{border-left-color:var(--orange);background:#fdf1ec}
+  .honesty h4{color:#a5411a}
+  .honesty p{color:#7a3a1e}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .minicard{padding:18px 20px}
+  .minicard h4{margin:0 0 7px;font-size:15px;font-weight:800}
+  .minicard p{margin:0;font-size:14px;color:var(--sub)}
+  .timeline{position:relative;padding-left:26px;margin-top:8px}
+  .timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .tl{position:relative;margin-bottom:15px}
+  .tl::before{content:"";position:absolute;left:-23px;top:4px;width:12px;height:12px;border-radius:50%;
+    background:#fff;border:2.5px solid var(--blue)}
+  .tl.reuse::before{border-color:var(--green)}
+  .tl .yr{font-weight:800;font-size:13.5px;color:var(--blue)}
+  .tl.reuse .yr{color:var(--green)}
+  .tl .tx{font-size:14px;color:var(--ink)}
+  footer{padding:34px 0 46px;color:var(--sub);font-size:13px}
+  footer .wrap{border-top:1px solid var(--line);padding-top:22px}
+  footer a{color:var(--blue)}
+  .refs{font-size:12.5px;color:var(--sub);line-height:1.7}
+  .scorebanner{display:none;margin-top:16px;padding:14px 18px;border-radius:11px;background:var(--blue-t);
+    border:1px solid #c2d8f4;font-size:14px;font-weight:600;color:#1d4b8f}
+  .scorebanner.show{display:block}
+  @media(max-width:720px){
+    .explorer{grid-template-columns:1fr}
+    .typelist{display:grid;grid-template-columns:repeat(2,1fr);border-right:0;border-bottom:1px solid var(--line)}
+    .typebtn{border-right:1px solid var(--line)}
+    .studygrid,.grid2{grid-template-columns:1fr}
+    .barrow{grid-template-columns:110px 1fr 52px}
+    h1{font-size:27px}
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Dr. Injeong Jo · Methods & Instruments Toolkit</p>
+    <h1>The Spatial Thinking Ability Test (STAT)</h1>
+    <p class="lede">A standardized, 16-item test that scores how well a person reasons with maps, space, and geographic representations. Jo didn't build this one — she <em>reused</em> it as the pre/post yardstick in her Web-based GIS experiment.</p>
+    <div class="reuse-badge">↻ &nbsp;<b>Reused instrument</b> — built by Lee &amp; Bednarz (2012), applied by Jo, Hong &amp; Verma (2016)</div>
+    <div class="metarow">
+      <div class="chip"><b>16</b> multiple-choice items</div>
+      <div class="chip"><b>8</b> types (I–VIII)</div>
+      <div class="chip"><b>0–16</b> score range</div>
+      <div class="chip"><b>2</b> equivalent forms (pre/post)</div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">1</span>What the STAT is — and why Jo reached for it</h2>
+    <p class="sectionsub">Most of Jo's flagship instruments are ones she built herself (the Taxonomy, the Disposition Inventory). The STAT is the clearest example of the opposite habit — a mark of methodological maturity that the toolkit calls out directly: <em>she doesn't reinvent a good measure.</em></p>
+    <div class="grid2">
+      <div class="card minicard">
+        <h4>A standardized outcome measure</h4>
+        <p>The STAT integrates geographic content knowledge with spatial-thinking skills into one scored test. Because it was "developed through rigorous validity and reliability tests," it's built for replication across different populations and settings — exactly what a quasi-experiment needs on both ends of an intervention.</p>
+      </div>
+      <div class="card minicard">
+        <h4>Two equivalent forms</h4>
+        <p>The STAT ships as two parallel forms so students can be tested before and after a course without simply memorizing answers. Each form has 16 multiple-choice items covering the same eight types, plus three demographic questions (gender, major, prior geospatial coursework). No time limit — most finish in about 20 minutes.</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:20px">
+      <h4>Lineage: SST → STAT</h4>
+      <p>The STAT (Lee &amp; Bednarz, <b>2012</b>) is a revision and expansion of the earlier <b>Spatial Skills Test (SST)</b> from Lee &amp; Bednarz (2009). The 2009 SST focused narrowly on understanding spatial-relation concepts; the 2012 STAT widened the lens to include geographic content and skills that support spatial thinking in real geographic contexts. When you cite "the STAT," you mean the 2012 paper.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">2</span>The eight components, one item at a time</h2>
+    <p class="sectionsub">The 16 items sort into eight types (Type I–VIII), each targeting a different spatial-thinking skill. Click a type to see what it measures, which item numbers belong to it, and try an original sample-style question in that style.</p>
+    <div class="card explorer">
+      <div class="typelist" id="typelist"></div>
+      <div class="detail" id="detail"></div>
+    </div>
+    <div class="scorebanner" id="scorebanner"></div>
+    <div class="callout honesty" style="margin-top:20px">
+      <h4>Honesty note — these sample items are original illustrations</h4>
+      <p>The real 16 STAT items are a copyrighted published instrument. Nothing here reproduces them. Each "try it" question below is an <b>original item written for this page</b> to illustrate the <em>style</em> of reasoning a given type calls for — it is not from the actual test, and getting it right doesn't mean you'd score the same on the STAT.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">3</span>How Jo used it: the 2016 Web-GIS experiment</h2>
+    <p class="sectionsub">Jo, Hong &amp; Verma (2016) ran a non-equivalent control group quasi-experiment: <b>306 undergraduates</b> across <b>7 world-geography sections</b> at two universities. Two sections did Web-based GIS (ArcGIS Online) activities; five didn't. Everyone took the STAT before and after the semester. Scores were compared within each class using paired t-tests.</p>
+
+    <div class="legend">
+      <span><span class="sw" style="background:#c7d4e8"></span> Pre-test mean</span>
+      <span><span class="sw" style="background:var(--blue)"></span> Post-test — control</span>
+      <span><span class="sw" style="background:var(--green)"></span> Post-test — Web-GIS group</span>
+    </div>
+    <div class="card" style="padding:22px 24px">
+      <div id="bars"></div>
+    </div>
+
+    <div class="callout" style="margin-top:20px">
+      <h4>The result</h4>
+      <p>Only the two Web-GIS sections improved significantly: <b>Class 2b +1.17 points</b> (p&lt;.01, d=.51, medium) and <b>Class 3 +1.60 points</b> (p=.01, d=.74, medium). None of the five control sections showed a statistically significant gain. On a 0–16 scale these are modest but real shifts — and they land exactly where the intervention should push.</p>
+    </div>
+
+    <h3 style="font-size:17px;margin:26px 0 4px;font-weight:800">Which skills moved?</h3>
+    <p class="sectionsub" style="margin-bottom:12px">Breaking the gains down by item type is where the STAT earns its keep. Of the eight types, only three improved significantly in one or more classes — and they're the ones GIS work actually exercises.</p>
+    <table class="tbl">
+      <thead><tr><th>Type</th><th>Skill</th><th>Who improved</th><th class="num">Best effect</th></tr></thead>
+      <tbody>
+        <tr><td><b>Type III</b><br><small style="color:var(--sub)">item 4</small></td><td>Map overlay (situational) — choosing a site from combined constraints</td><td>Class 1 &amp; Class 2b <span class="sigdot">●</span></td><td class="num">d=.45</td></tr>
+        <tr><td><b>Type VII</b><br><small style="color:var(--sub)">items 9–12</small></td><td>Overlay &amp; dissolve / Boolean operations (abstract)</td><td>5 of 7 classes <span class="sigdot">●</span></td><td class="num">d=1.17</td></tr>
+        <tr><td><b>Type VIII</b><br><small style="color:var(--sub)">items 13–16</small></td><td>Types of spatial data — points, lines, polygons</td><td>Both Web-GIS classes <span class="sigdot">●</span></td><td class="num">d=.64</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--sub);margin-top:12px"><span class="sigdot">●</span> statistically significant pre-to-post gain. Type VII — the Boolean overlay/dissolve reasoning at the heart of GIS — showed the largest single effect (d=1.17, a <em>large</em> effect) and the broadest reach across classes. Class 4 (reflective writing) improved on no item type at all.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">4</span>Where the STAT sits in her program</h2>
+    <p class="sectionsub">The toolkit's throughline is <em>instrument continuity</em>. The STAT is the outside measure she plugs in when she needs a standardized spatial-thinking outcome she didn't have to build and validate herself.</p>
+    <div class="timeline">
+      <div class="tl"><span class="yr">2009</span> <span class="tx">Lee &amp; Bednarz publish the <b>SST</b> (spatial skills test) — focused on spatial-relation concepts.</span></div>
+      <div class="tl"><span class="yr">2012</span> <span class="tx">Lee &amp; Bednarz expand it into the <b>STAT</b>: 16 items, 8 types, validated by factor analysis on 532 students.</span></div>
+      <div class="tl reuse"><span class="yr">2016</span> <span class="tx">Jo, Hong &amp; Verma <b>reuse the STAT</b> as the pre/post outcome in the Web-GIS quasi-experiment (this study).</span></div>
+      <div class="tl reuse"><span class="yr">2015 · 2018</span> <span class="tx">Jo references the STAT in her agenda chapter and the secondary-geography research summary, flagging it as a validated but <b>underutilized</b> tool the field should use more.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="n">5</span>Read it critically</h2>
+    <div class="grid2">
+      <div class="callout honesty" style="margin:0">
+        <h4>Theory vs. factor structure</h4>
+        <p>In the original 2012 paper, the spatial components that emerged from factor analysis only <b>partly coincided</b> with the spatial concepts used to write the questions — and differed from components other researchers had hypothesized. The eight "types" are a design scaffold, not eight cleanly separable, empirically confirmed factors.</p>
+      </div>
+      <div class="callout honesty" style="margin:0">
+        <h4>No reliability figure in Jo's paper</h4>
+        <p>The 2016 study calls the STAT rigorously validated but reports <b>no specific reliability coefficient</b> (no Cronbach's alpha) for its own administration. If you cite a reliability value, get it from the 2012 source, not the 2016 application.</p>
+      </div>
+      <div class="callout honesty" style="margin:0">
+        <h4>Quasi-experiment, not a trial</h4>
+        <p>No randomization. Intact class sections were compared as-is with convenience sampling, so pre-existing group differences can't be ruled out — the authors say so plainly. The pre-test means already differ across sections (7.4 to 10.1).</p>
+      </div>
+      <div class="callout honesty" style="margin:0">
+        <h4>The STAT doesn't measure everything</h4>
+        <p>Jo notes the STAT "does not cover all content and skills taught in a variety of areas in geography." It's a focused spatial-thinking measure — useful precisely because it's narrow, not a general geography exam.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0 0 12px"><b>Sources.</b> Built from the full text of Jo, Hong &amp; Verma (2016) in your Zotero library, cross-checked against the published record of the original test.</p>
+    <p class="refs">
+      Lee, J., &amp; Bednarz, R. (2012). Components of spatial thinking: Evidence from a spatial thinking ability test. <em>Journal of Geography, 111</em>(1), 15–26.<br>
+      Lee, J., &amp; Bednarz, R. (2009). Effect of GIS learning on spatial thinking. <em>Journal of Geography in Higher Education, 33</em>(2), 183–198.<br>
+      Jo, I., Hong, J. E., &amp; Verma, K. (2016). Facilitating spatial thinking in world geography using Web-based GIS. <em>Journal of Geography in Higher Education, 40</em>(3), 442–459.
+    </p>
+    <p style="margin-top:14px;color:#8a93a8">Interactive explainer · reused-instrument companion to the Dr. Jo methods toolkit. Sample items are original illustrations, not the copyrighted STAT.</p>
+  </div>
+</footer>
+
+<script>
+const TYPES = [
+  { id:"I", label:"Orientation & direction", items:"Items 1–2",
+    what:"Way-finding and route planning — navigating a road map from verbal instructions (your location, directions to a destination, street names) to figure out where you end up and which way you face.",
+    sample:{ q:"You're standing at the corner of Main St and 1st Ave, facing north. You turn right, walk two blocks, then turn left. Which direction are you now facing?",
+      opts:["North","East","South","West"], correct:0,
+      why:"Turning right from north points you east; a left turn from east returns you to facing north. The two blocks between don't change your heading." } },
+  { id:"II", label:"Pattern → graphic", items:"Item 3",
+    what:"Recognizing a spatial pattern on a map and picking the graph or diagram that represents that pattern correctly.",
+    sample:{ q:"A dot map shows population densely clustered along a coastline and thinning out the farther inland you go. Which graph best represents population density versus distance from the coast?",
+      opts:["A line that rises steadily as distance increases","A line that falls as distance from the coast increases","A flat, unchanging line","A U-shaped curve"], correct:1,
+      why:"Density is highest at the coast and drops moving inland, so density falls as distance increases — a downward line." } },
+  { id:"III", label:"Map overlay (situational)", items:"Item 4",
+    what:"Choosing an ideal location by mentally overlaying spatial factors — land use, elevation, population density — and finding where the favorable conditions coincide.",
+    sample:{ q:"You must site a new clinic on a parcel that is (1) low flood risk, (2) on gentle slope, and (3) within walking distance of a road. Overlaying the three layers, which parcel qualifies?",
+      opts:["The parcel that meets flood-risk and slope but has no nearby road","The parcel in the flood zone but flat and road-adjacent","The parcel that satisfies all three layers at once","The parcel on a steep hill far from any road"], correct:2,
+      why:"Overlay logic keeps only the area where every required condition is simultaneously true — the parcel satisfying all three constraints." } },
+  { id:"IV", label:"Contour → slope profile", items:"Item 5",
+    what:"Reading contour lines on a topographic map and translating that elevation data into a different representation — a slope profile or cross-section.",
+    sample:{ q:"Along a line on a topographic map, the contour lines are packed tightly together on the left and spread far apart on the right. Which cross-section profile matches?",
+      opts:["Gentle rise on the left, steep drop on the right","Steep on the left, then gentle on the right","A flat, level profile the whole way","A symmetric V-shaped valley"], correct:1,
+      why:"Closely spaced contours mean a steep gradient; widely spaced contours mean gentle terrain. Tight-on-the-left → steep left, gentle right." } },
+  { id:"V", label:"Spatial correlation", items:"Items 6–7",
+    what:"Identifying whether two mapped phenomena are positively or negatively correlated by comparing their patterns — and representing that relationship graphically.",
+    sample:{ q:"Map A shows high rainfall concentrated in the eastern region. Map B shows dense forest cover concentrated in the same eastern region. What relationship does this suggest?",
+      opts:["A negative (inverse) correlation","No relationship at all","A positive correlation","A one-to-one causation"], correct:2,
+      why:"Both variables are high in the same place and low elsewhere — they vary together, a positive spatial correlation. (Correlation isn't causation, which is why 'causation' is wrong.)" } },
+  { id:"VI", label:"2D → 3D transformation", items:"Item 8",
+    what:"Transforming a representation from one dimension to another — mentally visualizing a 3D landform from a 2D topographic map.",
+    sample:{ q:"A topographic map shows a set of closed contour loops, nested inside one another, with elevation values increasing toward the center. What 3D landform is this?",
+      opts:["A flat plain","A hill or peak rising to a summit","A depression or crater","A straight ridge line"], correct:1,
+      why:"Concentric closed contours with values increasing inward describe a single high point — a hill or peak. (Values decreasing inward would be a depression.)" } },
+  { id:"VII", label:"Overlay & dissolve (Boolean)", items:"Items 9–12",
+    what:"Understanding overlaying and dissolving processes — mentally executing Boolean map operations (AND, OR, NOT) and picking the resulting image. This is the reasoning at the core of GIS.",
+    sample:{ q:"You need land that is forest AND NOT within 100 m of a river. Starting from a forest layer and a 100 m river-buffer layer, which result is correct?",
+      opts:["All forest, buffer included","Only the river buffer","Forest with the buffer zone erased from it","Everything outside the forest"], correct:2,
+      why:"'Forest AND NOT buffer' keeps forest but removes any part overlapping the river buffer — the forest layer with the buffer erased from it." } },
+  { id:"VIII", label:"Types of spatial data", items:"Items 13–16",
+    what:"Comprehending geographic features as points, lines, or polygons — matching a real-world feature to the appropriate geometry for representing it.",
+    sample:{ q:"Which geometry type best represents a set of city bus routes on a map?",
+      opts:["Points","Lines","Polygons","None — routes can't be mapped"], correct:1,
+      why:"Routes are linear paths, best shown as lines. Weather stations would be points; a lake or a county would be a polygon." } },
+];
+
+let answered = {}; // typeId -> boolean correct
+
+const typelist = document.getElementById("typelist");
+const detail = document.getElementById("detail");
+const scorebanner = document.getElementById("scorebanner");
+
+TYPES.forEach((t, i)=>{
+  const b = document.createElement("button");
+  b.className = "typebtn" + (i===0?" active":"");
+  b.dataset.idx = i;
+  b.innerHTML = `<span class="tnum">${t.id}</span><span class="tlabel">${t.label}<span class="titems">${t.items}</span></span>`;
+  b.addEventListener("click", ()=>select(i));
+  typelist.appendChild(b);
+});
+
+function select(i){
+  document.querySelectorAll(".typebtn").forEach(x=>x.classList.toggle("active", +x.dataset.idx===i));
+  render(i);
+}
+
+function render(i){
+  const t = TYPES[i];
+  const s = t.sample;
+  detail.innerHTML = `
+    <div class="dtype">Type ${t.id} · ${t.items}</div>
+    <h3>${t.label}</h3>
+    <p class="what">${t.what}</p>
+    <div class="sampbox">
+      <div class="stag">Try it — original sample item</div>
+      <p class="q">${s.q}</p>
+      <div class="opts" id="opts"></div>
+      <div class="feedback" id="fb"></div>
+    </div>`;
+  const optsEl = detail.querySelector("#opts");
+  const fb = detail.querySelector("#fb");
+  s.opts.forEach((o, oi)=>{
+    const btn = document.createElement("button");
+    btn.className="opt"; btn.innerHTML = `<span class="k">${String.fromCharCode(65+oi)}</span><span>${o}</span>`;
+    btn.addEventListener("click", ()=>{
+      if(optsEl.classList.contains("done")) return;
+      optsEl.classList.add("done");
+      const first = !(t.id in answered);
+      const correct = oi===s.correct;
+      answered[t.id] = correct;
+      [...optsEl.children].forEach((c,ci)=>{
+        c.classList.add("locked");
+        if(ci===s.correct) c.classList.add("correct");
+        if(ci===oi && !correct) c.classList.add("wrong");
+      });
+      fb.className = "feedback show " + (correct?"ok":"no");
+      fb.innerHTML = (correct?"<b>Correct.</b> ":"<b>Not quite.</b> ") + s.why;
+      updateScore();
+    });
+    optsEl.appendChild(btn);
+  });
+}
+
+function updateScore(){
+  const done = Object.keys(answered).length;
+  const right = Object.values(answered).filter(Boolean).length;
+  if(done>0){
+    scorebanner.classList.add("show");
+    let msg = `You've tried ${done} of 8 types — ${right} correct so far.`;
+    if(done===8) msg = right===8
+      ? `All 8 types tried, ${right}/8 correct — you've reasoned through every component the STAT targets. Remember: the real test items are more elaborate than these illustrations.`
+      : `All 8 types tried — ${right}/8 correct. Revisit any type to see the reasoning again.`;
+    scorebanner.textContent = msg;
+  }
+}
+
+render(0);
+
+// ---- study bars ----
+const CLASSES = [
+  { name:"Class 1", act:"films", pre:9.30, post:9.59, exp:false, sig:false, d:.05 },
+  { name:"Class 2a", act:"spatial concepts", pre:10.06, post:10.16, exp:false, sig:false, d:.01 },
+  { name:"Class 2b", act:"Web-GIS (ArcGIS Online)", pre:8.58, post:9.75, exp:true, sig:true, d:.51 },
+  { name:"Class 3", act:"Web-GIS (ArcGIS Online)", pre:8.33, post:9.93, exp:true, sig:true, d:.74 },
+  { name:"Class 4", act:"reflective writing", pre:7.92, post:8.38, exp:false, sig:false, d:.07 },
+  { name:"Class 5a", act:"local landscape", pre:7.42, post:8.10, exp:false, sig:false, d:.12 },
+  { name:"Class 5b", act:"local landscape", pre:7.97, post:8.83, exp:false, sig:false, d:.15 },
+];
+const MAX = 16;
+const bars = document.getElementById("bars");
+CLASSES.forEach(c=>{
+  const prePct = (c.pre/MAX*100).toFixed(1);
+  const postPct = (c.post/MAX*100).toFixed(1);
+  const delta = (c.post-c.pre);
+  const row = document.createElement("div");
+  row.className = "barrow" + (c.exp?" exp":"");
+  row.innerHTML = `
+    <div class="lab">${c.name}<small>${c.act}</small></div>
+    <div class="track">
+      <div class="post" style="width:${postPct}%"></div>
+      <div class="pre" style="width:${prePct}%"></div>
+      <div class="caps" style="left:8px">${c.pre.toFixed(2)} → ${c.post.toFixed(2)}</div>
+    </div>
+    <div class="delta ${c.sig?'sig':'ns'}">${delta>=0?'+':''}${delta.toFixed(2)}${c.sig?' ●':''}</div>`;
+  bars.appendChild(row);
+});
+</script>
+</body>
+</html>

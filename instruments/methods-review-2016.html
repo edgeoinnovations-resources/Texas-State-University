@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditing the Rigor of a Subfield — Zadrozny, McClure, Lee &amp; Jo (2016)</title>
+<style>
+  .viz-root{
+    color-scheme:light;
+    --surface:#fcfcfb; --plane:#f4f2ec; --panel:#fff; --ink:#14150f; --ink-2:#52514e; --muted:#8b8a83; --line:#e4ded1; --grid:#e6e2d8;
+    --quant:#2a78d6; --qual:#008300; --mixed:#c65f96; --accent:#2a78d6; --warn:#c2544d; --gold:#b8860b;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 30px rgba(30,30,30,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:930px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--accent)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+  header.hero{padding:48px 0 18px;border-bottom:1px solid var(--line)}
+  header.hero h1{font-size:30px;margin:8px 0 10px;line-height:1.14;max-width:720px}
+  header.hero p{font-size:16.5px;color:var(--ink-2);max-width:710px;margin:0}
+  .cite{margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 2px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow)}
+  .stat .v{font-size:24px;font-weight:800;line-height:1}
+  .stat .l{font-size:11.5px;color:var(--muted);margin-top:5px}
+  .stat.alarm{border-color:#eecfca;background:#fdf3f1}.stat.alarm .v{color:var(--warn)}
+
+  section{padding:34px 0 2px}
+  h2.sec{font-size:23px;margin:0 0 5px}
+  .sub{font-size:15px;color:var(--ink-2);margin:0 0 16px;max-width:720px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin:14px 0}
+
+  /* journals */
+  .jrow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+  .jrow:last-child{border-bottom:none}
+  .jname{font-size:14px;font-weight:600}.jname small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+  .jbar{display:flex;align-items:center;gap:10px}
+  .jtrack{width:220px;height:16px;background:#eee9dd;border-radius:5px;overflow:hidden}
+  .jtrack i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .jn{font-weight:800;font-variant-numeric:tabular-nums;width:34px;text-align:right}
+
+  /* design distribution */
+  .designbars{display:flex;flex-direction:column;gap:10px}
+  .dbar{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;cursor:pointer}
+  .dbar .dl{font-size:14px;font-weight:700}
+  .dtrack{position:relative;height:34px;background:#f1eee6;border-radius:8px}
+  .dfill{height:100%;border-radius:8px;transition:.2s;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-weight:800;font-size:14px}
+  .dbar.on .dfill{box-shadow:inset 0 0 0 2px #12130f}
+  .detail{margin-top:16px;border-top:1px dashed var(--line);padding-top:16px;display:none}
+  .detail.on{display:block}
+  .detail h4{margin:0 0 4px;font-size:16px}
+  .detail .dd{font-size:13.5px;color:var(--ink-2);margin-bottom:12px}
+  .subbars{margin:8px 0}
+  .sbar{display:grid;grid-template-columns:130px 1fr 32px;gap:10px;align-items:center;margin:5px 0;font-size:12.5px}
+  .sbar .st{height:16px;background:#eee9dd;border-radius:5px;overflow:hidden}
+  .sbar .sf{height:100%;border-radius:5px}
+  .exrow{font-size:12.5px;color:var(--ink-2);border-left:3px solid var(--line);padding:6px 0 6px 12px;margin:8px 0}
+  .exrow b{color:var(--ink)}
+
+  /* rigor gap */
+  .scorebars .row{display:grid;grid-template-columns:210px 1fr 58px;gap:12px;align-items:center;margin:9px 0}
+  .scorebars .rl{font-size:13.5px;font-weight:600}
+  .scorebars .rc{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right}
+  .sgtrack{position:relative;height:28px;background:#f1eee6;border-radius:7px;overflow:hidden}
+  .sgfill{height:100%;border-radius:7px;min-width:0;transition:.5s}
+  .sgtrack.zero{border:1.5px dashed #d8b7b1;background:none}
+  .callout{background:#fdf3f1;border-left:4px solid var(--warn);border-radius:9px;padding:15px 17px;margin:16px 0;font-size:14.5px}
+  .callout b{color:#a23c37}
+  .callout.gold{background:#f6ecd3;border-color:var(--gold)}.callout.gold b{color:#8a6608}
+
+  .recs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+  .rec{border:1px solid var(--line);border-radius:12px;padding:15px;background:var(--panel);box-shadow:var(--shadow)}
+  .rec .rn{width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px;margin-bottom:8px}
+  .rec p{margin:0;font-size:13.5px;color:var(--ink-2)}
+  .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:720px){ .stats,.recs{grid-template-columns:1fr 1fr} .dbar,.scorebars .row{grid-template-columns:110px 1fr} header.hero h1{font-size:23px} }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+<div class="viz-root">
+  <div class="wrap">
+    <header class="hero">
+      <div class="kicker">Interactive · Zadrozny, McClure, Lee &amp; Jo (2016)</div>
+      <h1>How rigorous is geography-education research? They coded 191 studies to find out.</h1>
+      <p>To audit the health of the subfield, this team built a coded database of every empirical study in three geography-education journals — classifying each by design, sample, technique, and statistics. The picture is revealing: lots of variety, but a shared reporting weakness that undermines replication.</p>
+      <div class="cite">Zadrozny, J., McClure, C., Lee, J. &amp; Jo, I. (2016). Designs, Techniques, and Reporting Strategies in Geography Education: A Review of Research Methods. <i>RIGEO</i> 6(3):216–233.</div>
+      <div class="stats">
+        <div class="stat"><div class="v">191</div><div class="l">studies coded</div></div>
+        <div class="stat"><div class="v">3</div><div class="l">journals audited</div></div>
+        <div class="stat"><div class="v">3</div><div class="l">design families</div></div>
+        <div class="stat alarm"><div class="v">0</div><div class="l">of 55 quantitative studies reported BOTH an effect size &amp; a confidence interval</div></div>
+      </div>
+    </header>
+
+    <!-- corpus -->
+    <section>
+      <h2 class="sec">The corpus</h2>
+      <p class="sub">Every empirical article in three long-running geography-education journals. They found 197; six were discarded for unclear design, leaving <b>191</b>. Counts differ by each journal's scope and publication frequency.</p>
+      <div class="card">
+        <div id="journals"></div>
+      </div>
+    </section>
+
+    <!-- design distribution -->
+    <section>
+      <h2 class="sec">What designs does the field use?</h2>
+      <p class="sub">Each study was coded quantitative, qualitative, or mixed-methods from its methods section. Mixed methods is the most common — click a bar to drill into its techniques and example studies.</p>
+      <div class="card">
+        <div class="designbars" id="designbars"></div>
+        <div class="detail" id="designDetail"></div>
+      </div>
+    </section>
+
+    <!-- rigor gap -->
+    <section>
+      <h2 class="sec">The rigor gap</h2>
+      <p class="sub">The audit's sharpest finding lives in the 55 quantitative studies. Nearly all ran statistical tests — but almost none reported the <b>practical significance</b> (effect size) or the <b>precision</b> (confidence interval) that make results replicable and comparable.</p>
+      <div class="card">
+        <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Reporting practices among the <b>55 quantitative studies</b></div>
+        <div class="scorebars" id="scorebars"></div>
+        <div class="callout"><b>“No single study reported both together.”</b> The p-value was almost the only indicator of significance. Only 8 studies reported an effect size and only 4 a confidence interval — and not one reported both, even though the APA had recommended both since 2009. This is exactly the reporting habit that blocks replication and meta-analysis.</div>
+        <div class="callout gold"><b>And the qualitative side fragments.</b> The 65 qualitative studies used 26 slightly different data-collection approaches — so many that, in the authors' words, “there was not a single pair of articles of which the results are comparable.” Variety is healthy; incomparability is not.</div>
+      </div>
+    </section>
+
+    <!-- recommendations -->
+    <section>
+      <h2 class="sec">The fixes the authors prescribe</h2>
+      <div class="recs">
+        <div class="rec"><div class="rn">1</div><p><b>Report practical significance.</b> Pair every p-value with an effect size <i>and</i> a confidence interval, plus basic descriptive stats, so studies can be replicated.</p></div>
+        <div class="rec"><div class="rn">2</div><p><b>Coordinate qualitative work.</b> Replicate the same questions and methods with different participants and settings — reporting procedures in enough detail to make that possible.</p></div>
+        <div class="rec"><div class="rn">3</div><p><b>Fully specify mixed-methods designs.</b> State the data-collection methods, analysis, timing/sequence, and the purpose of mixing — most articles left this to the reader to guess.</p></div>
+        <div class="rec"><div class="rn">4</div><p><b>Build cumulatively.</b> Use exemplars and prior work to produce longitudinal, comparable research — “so that in ten years we are not repeating ourselves about the need for more data.”</p></div>
+      </div>
+      <div class="foot">Source: Zadrozny, McClure, Lee &amp; Jo (2016), <i>Review of International Geographical Education Online</i> 6(3):216–233 (full text in the connected Zotero library). Corpus: 191 empirical articles from the Journal of Geography, Journal of Geography in Higher Education, and International Research in Geographical &amp; Environmental Education. Design, technique, and statistics counts are the article's reported values; design percentages are computed from the raw counts. Coding by four authors to consensus (no inter-rater statistic reported). Framed as a response to the <i>Road Map for 21st Century Geography Education</i> (Bednarz, Heffron &amp; Huynh, 2013). Chart palette validated for color-vision accessibility.</div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* journals */
+  var JOURNALS=[
+    {name:'Int. Research in Geographical &amp; Environmental Education',span:'2006–2014 · 8-yr span · quarterly',n:79},
+    {name:'Journal of Geography',span:'2005–2014 · 9-yr span · 6×/year',n:60},
+    {name:'Journal of Geography in Higher Education',span:'1999–2014 · 15-yr span',n:58}
+  ];
+  var jmax=79, jhost=document.getElementById('journals');
+  jhost.innerHTML=JOURNALS.map(function(j){
+    return '<div class="jrow"><div class="jname">'+j.name+'<small>'+j.span+'</small></div>'+
+      '<div class="jbar"><div class="jtrack"><i style="width:'+(j.n/jmax*100)+'%"></i></div><span class="jn">'+j.n+'</span></div></div>';
+  }).join('')+'<div class="jrow"><div class="jname" style="color:var(--muted)">197 found − 6 discarded (unclear design)</div><div class="jbar"><span class="jn" style="color:var(--accent)">191</span></div></div>';
+
+  /* designs */
+  var DESIGNS={
+    quant:{name:'Quantitative', n:55, color:'#2a78d6',
+      dd:'The <b>least</b> common design — the authors blame publication bias (the “file-drawer problem”), not a lack of quantitative questions. Of 55, 49 ran statistical tests; 34 studied the effect of an intervention, 12 studied knowledge/perceptions of tools like GIS.',
+      sub:[{l:'Applied statistical tests',n:49,of:55},{l:'Used t-test / ANOVA (dominant)',n:null,txt:'most'},{l:'Used Cronbach’s α (assessment studies)',n:6,of:55}],
+      ex:['<b>t-test &amp; ANOVA</b> — comparing variables — Battersby, Golledge &amp; Marsh (2006), map-overlay skills by grade','<b>Factor analysis, Cronbach’s α, t-test, ANOVA</b> — validating an assessment — Lee &amp; Bednarz (2012), spatial-thinking-ability test','<b>Chi-square</b> — Jo &amp; Bednarz (2011), question location &amp; spatiality']},
+    qual:{name:'Qualitative', n:65, color:'#008300',
+      dd:'The middle of the pack — but wildly varied. The 65 studies used <b>26 different</b> data-collection approaches, so “not a single pair of articles” had comparable results. 45 used one method; 20 combined several.',
+      sub:[{l:'Document analysis',n:40,of:65},{l:'Interviews',n:37,of:65},{l:'Observation',n:12,of:65}],
+      ex:['<b>Interviews</b> — individual perception — Milson &amp; Earle (2008), Internet GIS with 9th-graders','<b>Observation</b> — environment &amp; interaction — Kwan (2008), problem-based field learning, Hong Kong','<b>Document analysis</b> — written artifacts — Kulo &amp; Bodzin (2011), geospatial energy unit']},
+    mixed:{name:'Mixed methods', n:71, color:'#c65f96',
+      dd:'The <b>most</b> common design — but the most under-specified. Few articles stated <i>which</i> of the six mixed-methods designs they used, leaving it “up to the judgement of the research team” to infer.',
+      sub:[{l:'Explanatory (sequential)',n:26,of:71},{l:'Convergent (parallel)',n:14,of:71},{l:'Embedded',n:14,of:71},{l:'Exploratory (sequential)',n:9,of:71},{l:'Multiphase',n:7,of:71},{l:'Transformative',n:1,of:71}],
+      ex:[]}
+  };
+  var order=['quant','qual','mixed'], dmax=71;
+  var db=document.getElementById('designbars');
+  db.innerHTML=order.map(function(k){ var d=DESIGNS[k];
+    return '<div class="dbar" data-k="'+k+'"><div class="dl">'+d.name+'</div>'+
+      '<div class="dtrack"><div class="dfill" style="width:'+(d.n/dmax*100)+'%;background:'+d.color+'">'+d.n+'</div></div></div>';
+  }).join('');
+  var detail=document.getElementById('designDetail');
+  function selDesign(k){
+    db.querySelectorAll('.dbar').forEach(function(x){ x.classList.toggle('on',x.dataset.k===k); });
+    var d=DESIGNS[k];
+    var subs=d.sub.map(function(s){
+      var w=s.n!=null?(s.n/d.n*100):100;
+      return '<div class="sbar"><span>'+s.l+'</span><span class="st"><span class="sf" style="width:'+(s.n!=null?w:0)+'%;background:'+d.color+'"></span></span><span style="text-align:right;font-weight:700">'+(s.n!=null?s.n:s.txt)+'</span></div>';
+    }).join('');
+    var exs=d.ex.length? '<div style="font-size:12px;color:var(--muted);margin:12px 0 4px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Example studies</div>'+d.ex.map(function(e){return '<div class="exrow">'+e+'</div>';}).join('') : '';
+    detail.className='detail on';
+    detail.innerHTML='<h4 style="color:'+d.color+'">'+d.name+' · '+d.n+' studies</h4><div class="dd">'+d.dd+'</div>'+subs+exs;
+  }
+  db.querySelectorAll('.dbar').forEach(function(x){ x.onclick=function(){ selDesign(x.dataset.k); }; });
+  selDesign('mixed');
+
+  /* rigor gap */
+  var SCORE=[
+    {l:'Ran a statistical test', n:49, color:'#2a78d6'},
+    {l:'Reported an effect size', n:8, color:'#eda100'},
+    {l:'Reported a confidence interval', n:4, color:'#eb6834'},
+    {l:'Reported BOTH', n:0, color:'#c2544d'}
+  ];
+  document.getElementById('scorebars').innerHTML=SCORE.map(function(s){
+    var w=s.n/55*100;
+    return '<div class="row"><div class="rl">'+s.l+'</div>'+
+      '<div class="sgtrack'+(s.n===0?' zero':'')+'"><div class="sgfill" style="width:'+w+'%;background:'+s.color+'"></div></div>'+
+      '<div class="rc" style="color:'+(s.n===0?'var(--warn)':'var(--ink)')+'">'+s.n+'/55</div></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

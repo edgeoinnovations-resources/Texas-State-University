@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coding Geography for Scientific Literacy — Xuan et al. (2019)</title>
+<style>
+  .viz-root{
+    color-scheme:light;
+    --surface:#fcfcfb; --plane:#f6f5f0; --panel:#fff;
+    --ink:#12130f; --ink-2:#52514e; --muted:#898781; --line:#e5e0d6; --grid:#e6e2d8;
+    --d0:#2a78d6;  /* Knowledge — blue */
+    --d1:#008300;  /* Inquiry — green */
+    --d2:#e87ba4;  /* Application & connection — magenta */
+    --d3:#eda100;  /* Values & attitudes — yellow */
+    --good:#0ca30c; --warn:#c2544d; --gold:#b8860b;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 30px rgba(30,30,30,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--d0)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--d1)}
+
+  header.hero{padding:48px 0 18px;border-bottom:1px solid var(--line)}
+  header.hero h1{font-size:30px;margin:8px 0 10px;line-height:1.14;max-width:720px}
+  header.hero p{font-size:16.5px;color:var(--ink-2);max-width:700px;margin:0}
+  .cite{margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 2px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow)}
+  .stat .v{font-size:25px;font-weight:800;line-height:1}
+  .stat .l{font-size:11.5px;color:var(--muted);margin-top:5px}
+
+  section{padding:34px 0 2px}
+  h2.sec{font-size:23px;margin:0 0 5px}
+  .sub{font-size:15px;color:var(--ink-2);margin:0 0 16px;max-width:720px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:24px 26px;margin:14px 0}
+
+  /* framework */
+  .fw{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .domain{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--panel)}
+  .domain .dh{padding:11px 13px;color:#fff;font-weight:700;font-size:14px}
+  .domain .codes{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+  .codebtn{border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:var(--plane);cursor:pointer;text-align:left;transition:.12s}
+  .codebtn:hover{border-color:var(--ink-2)}
+  .codebtn .top{display:flex;align-items:center;justify-content:space-between}
+  .codebtn .cc{font-weight:800;font-size:13px}
+  .codebtn .cn{font-size:13px}
+  .codebtn .freq{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .codebtn .mini{height:5px;border-radius:3px;margin-top:5px;background:currentColor;opacity:.9}
+  .codebtn.zero .mini{background:repeating-linear-gradient(90deg,#d9d4c8 0 4px,transparent 4px 8px);height:5px}
+  .fwdef{margin-top:12px;font-size:14px;color:var(--ink-2);min-height:20px;border-top:1px dashed var(--line);padding-top:12px}
+  .fwdef b{color:var(--ink)}
+
+  /* coder game */
+  .game .prog{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .game .pdot{width:9px;height:9px;border-radius:50%;background:#d9d4c8}
+  .game .pdot.on{background:var(--d1)} .game .pdot.done{background:var(--good)}
+  .game .step{font-size:12px;color:var(--muted);font-weight:600}
+  .lo{background:#fbfaf6;border:1px solid var(--line);border-left:4px solid var(--d1);border-radius:11px;padding:15px 17px;margin-bottom:14px}
+  .lo .id{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+  .lo .txt{font-family:var(--serif);font-size:17px;line-height:1.45}
+  .ask{font-size:13.5px;color:var(--ink-2);margin-bottom:9px}
+  .codegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .cg{border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;cursor:pointer;background:#fff;transition:.1s;position:relative}
+  .cg:hover{border-color:var(--ink-2)}
+  .cg.sel{border-color:var(--selc);box-shadow:inset 0 0 0 1.5px var(--selc)}
+  .cg .cc{font-weight:800;font-size:13px}
+  .cg .cn{font-size:12px;color:var(--ink-2)}
+  .cg .tagm{position:absolute;top:6px;right:8px;font-size:10px;font-weight:800;border-radius:5px;padding:1px 6px;display:none}
+  .cg.correct{border-color:var(--good);box-shadow:inset 0 0 0 1.5px var(--good)}
+  .cg.correct .tagm{display:inline-block;background:#e2f5e2;color:#0a7a0a}
+  .cg.missed{border-color:var(--warn);border-style:dashed}
+  .cg.missed .tagm{display:inline-block;background:#fbe9e8;color:#a23c37}
+  .cg.extra{border-color:var(--gold)}
+  .cg.extra .tagm{display:inline-block;background:#f6ecd3;color:#8a6608}
+  .gamebtns{display:flex;gap:10px;margin-top:14px;align-items:center}
+  .btn{font-family:var(--sans);font-size:14px;font-weight:700;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid transparent}
+  .btn.primary{background:var(--d1);color:#fff} .btn.primary:hover{filter:brightness(1.06)}
+  .btn.ghost{background:#fff;border-color:var(--line);color:var(--ink-2)} .btn.ghost:hover{border-color:var(--d1);color:var(--ink)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .verdict{margin-top:14px;border-radius:11px;padding:14px 16px;font-size:14px;display:none}
+  .verdict.on{display:block}
+  .verdict.match{background:#e9f7 e9;background:#eaf7ea;border:1px solid #c5e6c5}
+  .verdict.diff{background:#fdf3e8;border:1px solid #f0dcc0}
+  .verdict .off{font-weight:700;margin-bottom:5px}
+  .verdict .why{color:var(--ink-2)}
+  .summary{display:none;text-align:center;padding:10px 0}
+  .summary.on{display:block}
+  .summary .big{font-size:40px;font-weight:800;color:var(--d1)}
+  .summary p{max-width:560px;margin:8px auto;color:var(--ink-2);font-size:14.5px}
+
+  /* distribution */
+  .controls{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .spacer{flex:1}
+  .tblbtn{font-family:var(--sans);font-size:12px;color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer}
+  .tblbtn:hover{border-color:var(--d0)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink-2);margin:2px 0 14px;align-items:center}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .bars .brow{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;margin:6px 0}
+  .bars .bl{font-size:12.5px;font-weight:600}
+  .bars .bl small{color:var(--muted);font-weight:400}
+  .btrack{position:relative;height:26px;background:#f1eee6;border-radius:7px}
+  .bfill{height:100%;border-radius:7px;min-width:2px;transition:width .5s;cursor:pointer;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-weight:800;font-size:12px}
+  .bfill.zero{background:none!important;border:1.5px dashed #cfc9bb;color:var(--warn);justify-content:flex-start;padding-left:8px}
+  .btotals{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .bt{border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:13px}
+  .bt b{font-size:17px;display:block}
+  .tablewrap{display:none;overflow-x:auto;margin-top:12px}
+  .tablewrap.on{display:block}
+  table.data{border-collapse:collapse;width:100%;font-size:12.5px}
+  table.data th,table.data td{border:1px solid var(--line);padding:6px 9px;text-align:center;font-variant-numeric:tabular-nums}
+  table.data th{background:var(--plane)} table.data td.g{text-align:left;font-weight:600}
+
+  .callout{background:#fdf3e8;border-left:4px solid var(--gold);border-radius:9px;padding:15px 17px;margin:16px 0;font-size:14.5px}
+  .callout b{color:#8a6608}
+  #tip{position:fixed;pointer-events:none;background:#12130f;color:#fff;font-size:12px;border-radius:8px;padding:8px 11px;opacity:0;transition:opacity .1s;z-index:60;max-width:250px;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+  #tip .m{color:#c9c7bf}
+  .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:720px){
+    .stats{grid-template-columns:1fr 1fr}
+    .fw{grid-template-columns:1fr 1fr}
+    .codegrid{grid-template-columns:1fr 1fr}
+    .bars .brow{grid-template-columns:96px 1fr}
+    header.hero h1{font-size:23px}
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+<div class="viz-root">
+  <div class="wrap">
+    <header class="hero">
+      <div class="kicker">Interactive · Xuan, Jin, Jo, Duan &amp; Kim (2019)</div>
+      <h1>Can a geography curriculum teach scientific literacy? They coded it to find out.</h1>
+      <p>This study built a four-domain scientific-literacy framework and used it to code all <b>100 learning objectives</b> in China’s national middle-school geography curriculum. Below, you can <b>become the coder</b> — tag real objectives yourself, then see how the researchers scored them and where the curriculum’s strengths and blind spots lie.</p>
+      <div class="cite">Xuan, X., Jin, Q., Jo, I., Duan, Y. &amp; Kim, M. (2019). The Potential Contribution of Geography Curriculum to Scientific Literacy. <i>Journal of Geography</i> 118(5):185–196.</div>
+      <div class="stats">
+        <div class="stat"><div class="v">100</div><div class="l">learning objectives coded</div></div>
+        <div class="stat"><div class="v">9</div><div class="l">codes · 4 domains</div></div>
+        <div class="stat"><div class="v">160</div><div class="l">total code assignments</div></div>
+        <div class="stat"><div class="v">.777</div><div class="l">inter-rater reliability (κ)</div></div>
+      </div>
+    </header>
+
+    <!-- framework -->
+    <section>
+      <h2 class="sec">The coding scheme: four domains, nine codes</h2>
+      <p class="sub">Scientific literacy was split into four domains and nine leaf-codes (only the Inquiry domain subdivides, into B-1…B-4). Click a code to read its definition and how often it turned up. The bar under each is its share of the 100 objectives.</p>
+      <div class="card">
+        <div class="fw" id="fw"></div>
+        <div class="fwdef" id="fwdef">Tip: the two <b>dashed</b> bars are codes that appeared in <b>zero</b> objectives — the curriculum’s blind spots.</div>
+      </div>
+    </section>
+
+    <!-- coder game -->
+    <section>
+      <h2 class="sec">You be the coder</h2>
+      <p class="sub">Here are four real objectives from the curriculum, in ascending complexity. Pick every code you think applies, then reveal how the researchers coded it. Watch the codes stack up — and feel the study’s hardest call: <b>describing data (B-2)</b> vs. <b>explaining it (B-3)</b>.</p>
+      <div class="card game" id="game">
+        <div class="prog" id="prog"></div>
+        <div id="gameBody"></div>
+        <div class="summary" id="summary"></div>
+      </div>
+    </section>
+
+    <!-- distribution -->
+    <section>
+      <h2 class="sec">What the curriculum actually emphasizes</h2>
+      <p class="sub">Across all 100 objectives, the codes fell wildly unevenly. Geography leans hard on <b>knowledge</b> and <b>inquiry</b> — especially interpreting data (map reading) and reasoning — but several codes barely register, and two never appear at all.</p>
+      <div class="card">
+        <div class="controls"><div class="spacer"></div><button class="tblbtn" id="tblToggle">Show data table</button></div>
+        <div class="legend" id="legend"></div>
+        <div class="bars" id="bars"></div>
+        <div class="btotals" id="btotals"></div>
+        <div class="tablewrap" id="tableWrap"></div>
+        <div class="callout"><b>The blind spots.</b> Two codes scored <b>zero</b>: <b>B-4</b> (evaluating scientific inquiry) and <b>F</b> (fostering interest in science). And despite the curriculum’s stated devotion to everyday life, <b>personal, everyday use of science (D) was just 2%</b> — the authors call this “surprising.” Science-related ethics (E) was also 2%. A curriculum can be rich in reasoning yet still leave students never asked to evaluate, apply, or care.</div>
+      </div>
+    </section>
+
+    <div class="foot">
+      Source: Xuan, Jin, Jo, Duan &amp; Kim (2019), <i>Journal of Geography</i> 118(5):185–196 (full text in the connected Zotero library). Framework synthesized from AAAS (1993), Chiappetta, Fillman &amp; Sethna (1991, 1993), NRC (1996), Yager (2000), Boujaoude (2002), Bybee &amp; McCrae (2011), and OECD/PISA (2017). Corpus: 100 learning objectives, China’s National Geography Curriculum Standard for Middle School (2011), grades 7–9. Coding: two coders, κ = 0.777, 81.6% agreement; frequencies from Table 3 (each count = its percentage, out of 100). Objectives in the coder exercise are verbatim from the paper. Chart palette validated for color-vision accessibility.
+    </div>
+  </div>
+</div>
+<div id="tip"></div>
+
+<script>
+(function(){
+  var DOMAINS=[
+    {name:'Knowledge', color:'#2a78d6'},
+    {name:'Inquiry process', color:'#008300'},
+    {name:'Application & connection', color:'#e87ba4'},
+    {name:'Values & attitudes', color:'#eda100'}
+  ];
+  var CODES=[
+    {c:'A',dom:0,name:'Knowledge',def:'Scientific concepts, principles, laws, theories, and models.',n:54},
+    {c:'B-1',dom:1,name:'Observe &amp; experiment',def:'Observing, classifying, hypothesizing, experimenting.',n:3},
+    {c:'B-2',dom:1,name:'Interpret data',def:'Recording &amp; interpreting data in various formats — texts, graphs, tables, charts. In geography, mostly through map reading.',n:53},
+    {c:'B-3',dom:1,name:'Scientific reasoning',def:'Constructing causal explanations from evidence — the “why,” not just the “what.”',n:34},
+    {c:'B-4',dom:1,name:'Evaluate inquiry',def:'Evaluating and critiquing scientific inquiry.',n:0},
+    {c:'C',dom:2,name:'STSE interrelations',def:'Interrelationships among science, technology, society &amp; environment.',n:12},
+    {c:'D',dom:2,name:'Everyday use',def:'Personal use of science to make everyday decisions and solve everyday problems.',n:2},
+    {c:'E',dom:3,name:'Ethics &amp; morals',def:'Science-related moral and ethical issues.',n:2},
+    {c:'F',dom:3,name:'Interest',def:'Interest in science and technology.',n:0}
+  ];
+  var codeByC={}; CODES.forEach(function(x){codeByC[x.c]=x;});
+
+  /* tooltip */
+  var tip=document.getElementById('tip');
+  function showTip(h,e){ tip.innerHTML=h; tip.style.opacity=1; moveTip(e); }
+  function moveTip(e){ var x=e.clientX+14; if(x>window.innerWidth-260)x=e.clientX-246; tip.style.left=x+'px'; tip.style.top=(e.clientY+14)+'px'; }
+  function hideTip(){ tip.style.opacity=0; }
+  window.addEventListener('scroll',hideTip,{passive:true});
+
+  /* framework */
+  var fw=document.getElementById('fw'), fwdef=document.getElementById('fwdef');
+  DOMAINS.forEach(function(d,di){
+    var el=document.createElement('div'); el.className='domain';
+    var codes=CODES.filter(function(c){return c.dom===di;});
+    var inner='<div class="dh" style="background:'+d.color+'">'+d.name+'</div><div class="codes">';
+    codes.forEach(function(c){
+      var w=(c.n/54*100);
+      inner+='<button class="codebtn'+(c.n===0?' zero':'')+'" data-c="'+c.c+'" style="color:'+d.color+'">'+
+        '<div class="top"><span class="cc">'+c.c+'</span><span class="cn" style="color:var(--ink)">'+c.name+'</span><span class="freq">'+c.n+'%</span></div>'+
+        '<div class="mini" style="width:'+(c.n===0?100:w)+'%"></div></button>';
+    });
+    inner+='</div>';
+    el.innerHTML=inner; fw.appendChild(el);
+  });
+  fw.querySelectorAll('.codebtn').forEach(function(b){
+    b.onclick=function(){
+      var c=codeByC[b.dataset.c];
+      fwdef.innerHTML='<b>'+c.c+' · '+c.name+'</b> — '+c.def+' &nbsp; <span style="color:var(--muted)">Appears in <b>'+c.n+'</b> of 100 objectives'+(c.n===0?' — a blind spot.':'.')+'</span>';
+    };
+  });
+
+  /* ---- coder game ---- */
+  var LOS=[
+    {id:16,text:'Be able to distinguish weather from climate and use these terms appropriately.',codes:['A'],
+     why:'Pure conceptual knowledge — no data work and no explanation. Just knowing and correctly using the concepts.'},
+    {id:25,text:'Describe and summarize the characteristics of world population growth and distribution through reading maps and other materials.',codes:['B-2'],
+     why:'Reading maps and materials to describe patterns = interpreting data (B-2). It stops at description — there’s no causal explanation, so <b>not</b> B-3.'},
+    {id:37,text:'Take a certain continent for example, through reading maps and analyzing other data, describe and summarize the characteristics of its landform, climate, and water resource distribution, and then explain their interrelationships.',codes:['B-2','B-3'],
+     why:'It interprets data (B-2) <b>and then</b> explains the interrelationships among physical features (B-3). Description vs. causal explanation — the B-2/B-3 line — was the study’s hardest coding call.'},
+    {id:24,text:'With a certain region as an example, through reading maps and analyzing other data, explain the impact of climate on the industrial production and people’s lives.',codes:['B-2','B-3','C'],
+     why:'Data interpretation (B-2) + a causal explanation (B-3) + it links a natural factor (climate) to society and economy (industry, people’s lives) = STSE (C). The fullest objective in the set.'}
+  ];
+  var gi=0, selected=[], revealed=false, exactMatches=0, decisionCorrect=0, decisionTotal=0;
+  var prog=document.getElementById('prog'), gameBody=document.getElementById('gameBody'), summaryEl=document.getElementById('summary');
+
+  function renderProg(){
+    var s='';
+    LOS.forEach(function(_,i){ s+='<span class="pdot '+(i<gi?'done':(i===gi?'on':''))+'"></span>'; });
+    s+='<span class="step">Objective '+(gi+1)+' of '+LOS.length+'</span>';
+    prog.innerHTML=s;
+  }
+  function renderGame(){
+    if(gi>=LOS.length){ return renderSummary(); }
+    renderProg();
+    var lo=LOS[gi];
+    var grid='';
+    CODES.forEach(function(c){
+      var sel=selected.indexOf(c.c)>=0;
+      grid+='<div class="cg'+(sel?' sel':'')+'" data-c="'+c.c+'" style="--selc:'+DOMAINS[c.dom].color+'">'+
+        '<span class="tagm"></span><div class="cc" style="color:'+DOMAINS[c.dom].color+'">'+c.c+'</div><div class="cn">'+c.name+'</div></div>';
+    });
+    gameBody.innerHTML=
+      '<div class="lo"><div class="id">Curriculum objective #'+lo.id+'</div><div class="txt">“'+lo.text+'”</div></div>'+
+      '<div class="ask">Which codes apply? Select all you think fit — an objective often earns several.</div>'+
+      '<div class="codegrid" id="codegrid">'+grid+'</div>'+
+      '<div class="gamebtns"><button class="btn primary" id="revealBtn">Reveal the researchers’ coding</button>'+
+        '<button class="btn ghost" id="nextBtn" style="display:none">Next objective →</button></div>'+
+      '<div class="verdict" id="verdict"></div>';
+    document.getElementById('codegrid').querySelectorAll('.cg').forEach(function(el){
+      el.onclick=function(){
+        if(revealed) return;
+        var c=el.dataset.c, i=selected.indexOf(c);
+        if(i>=0){ selected.splice(i,1); el.classList.remove('sel'); } else { selected.push(c); el.classList.add('sel'); }
+      };
+    });
+    document.getElementById('revealBtn').onclick=reveal;
+    document.getElementById('nextBtn').onclick=next;
+    revealed=false;
+  }
+  function reveal(){
+    if(revealed) return; revealed=true;
+    var lo=LOS[gi], official=lo.codes;
+    var exact = official.length===selected.length && official.every(function(c){return selected.indexOf(c)>=0;});
+    if(exact) exactMatches++;
+    // per-code decision accuracy
+    CODES.forEach(function(c){
+      decisionTotal++;
+      var inOff=official.indexOf(c.c)>=0, inSel=selected.indexOf(c.c)>=0;
+      if(inOff===inSel) decisionCorrect++;
+      var el=document.querySelector('.cg[data-c="'+c.c+'"]'), tag=el.querySelector('.tagm');
+      el.classList.remove('sel');
+      if(inOff && inSel){ el.classList.add('correct'); tag.textContent='✓ match'; }
+      else if(inOff && !inSel){ el.classList.add('missed'); tag.textContent='missed'; }
+      else if(!inOff && inSel){ el.classList.add('extra'); tag.textContent='extra'; }
+    });
+    var v=document.getElementById('verdict');
+    v.className='verdict on '+(exact?'match':'diff');
+    v.innerHTML='<div class="off">Researchers coded #'+lo.id+' as: '+official.map(function(c){return '<b style="color:'+DOMAINS[codeByC[c].dom].color+'">'+c+'</b>';}).join(' · ')+
+      (exact?' &nbsp;— exact match! ✓':'')+'</div><div class="why">'+lo.why+'</div>';
+    document.getElementById('revealBtn').style.display='none';
+    document.getElementById('nextBtn').style.display='inline-block';
+    document.getElementById('nextBtn').textContent = gi===LOS.length-1?'See your results →':'Next objective →';
+  }
+  function next(){ gi++; selected=[]; renderGame(); }
+  function renderSummary(){
+    prog.innerHTML=''; gameBody.style.display='none'; summaryEl.classList.add('on');
+    var agree=Math.round(decisionCorrect/decisionTotal*100);
+    summaryEl.innerHTML='<div class="big">'+exactMatches+' / '+LOS.length+'</div>'+
+      '<p>objectives coded <b>exactly</b> as the researchers did — with <b>'+agree+'% agreement</b> across every individual code decision.</p>'+
+      '<p>For comparison, the study’s two trained coders reached <b>81.6% agreement</b> and a Cohen’s κ of <b>0.777</b> — and even they disagreed most on the same call you just felt: <b>interpreting data (B-2)</b> vs. <b>scientific reasoning (B-3)</b>. That single ambiguity is why they ultimately split “reasoning” out as its own code.</p>'+
+      '<button class="btn ghost" id="againBtn">↺ Code them again</button>';
+    document.getElementById('againBtn').onclick=function(){
+      gi=0; selected=[]; exactMatches=0; decisionCorrect=0; decisionTotal=0;
+      gameBody.style.display='block'; summaryEl.classList.remove('on'); renderGame();
+    };
+  }
+  renderGame();
+
+  /* ---- distribution bars ---- */
+  var legend=document.getElementById('legend');
+  legend.innerHTML=DOMAINS.map(function(d){return '<span><i style="background:'+d.color+'"></i>'+d.name+'</span>';}).join('')+
+    '<span style="color:var(--muted)">count = % of 100 objectives</span>';
+  var bars=document.getElementById('bars'), maxN=54;
+  var bhtml='';
+  CODES.forEach(function(c){
+    var w=(c.n/maxN*100);
+    bhtml+='<div class="brow"><div class="bl">'+c.c+' <small>'+c.name+'</small></div>'+
+      '<div class="btrack"><div class="bfill'+(c.n===0?' zero':'')+'" data-c="'+c.c+'" style="width:'+(c.n===0?0:w)+'%;background:'+DOMAINS[c.dom].color+'">'+(c.n===0?'0':c.n)+'</div></div></div>';
+  });
+  bars.innerHTML=bhtml;
+  bars.querySelectorAll('.bfill').forEach(function(f){
+    var c=codeByC[f.dataset.c];
+    var show=function(e){ showTip('<b>'+c.c+' · '+c.name+'</b><br>'+DOMAINS[c.dom].name+' domain<br><b>'+c.n+'</b> of 100 objectives<br><span class="m">'+c.def+'</span>',e); };
+    f.addEventListener('mouseover',show); f.addEventListener('mousemove',show); f.addEventListener('mouseleave',hideTip);
+  });
+  // domain totals
+  var totals=[0,0,0,0]; CODES.forEach(function(c){ totals[c.dom]+=c.n; });
+  document.getElementById('btotals').innerHTML=DOMAINS.map(function(d,i){
+    return '<div class="bt" style="border-left:4px solid '+d.color+'">'+d.name+'<b>'+totals[i]+' codes</b></div>';
+  }).join('');
+  // table
+  var t='<table class="data"><thead><tr><th class="g">Code</th><th>Domain</th><th>Count = %</th></tr></thead><tbody>';
+  CODES.forEach(function(c){ t+='<tr><td class="g">'+c.c+' · '+c.name+'</td><td>'+DOMAINS[c.dom].name+'</td><td>'+c.n+'</td></tr>'; });
+  t+='<tr><td class="g">Total code assignments</td><td>—</td><td>160</td></tr></tbody></table>';
+  document.getElementById('tableWrap').innerHTML=t;
+  document.getElementById('tblToggle').onclick=function(){ var on=document.getElementById('tableWrap').classList.toggle('on'); this.textContent=on?'Hide data table':'Show data table'; };
+})();
+</script>
+</body>
+</html>

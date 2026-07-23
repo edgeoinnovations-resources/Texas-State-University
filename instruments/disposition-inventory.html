@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching Spatial Thinking Disposition Inventory — interactive demo</title>
+<style>
+  :root{
+    --bg:#f5f3ec; --panel:#fff; --panel-2:#fbfaf5; --ink:#232a2f; --soft:#4c5760; --muted:#8a929b; --line:#e4ded1;
+    --teal:#0f766e; --gold:#b8860b; --warn:#c2544d; --good:#0f9d6e;
+    --c0:#0f766e; --c1:#3a68b0; --c2:#7c3aed; --c3:#b4630f; --c4:#0891b2;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 32px rgba(30,30,30,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--teal)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
+
+  header.hero{padding:52px 0 26px;text-align:center;border-bottom:1px solid var(--line)}
+  header.hero h1{font-size:31px;margin:9px auto 12px;max-width:700px;line-height:1.14}
+  header.hero p{font-size:17px;color:var(--soft);max-width:660px;margin:0 auto}
+  .cite{margin-top:15px;font-size:12.5px;color:var(--muted)}
+
+  section{padding:36px 0 4px}
+  h2.sec{font-size:24px;margin:0 0 5px}
+  .sub{font-size:15px;color:var(--soft);margin:0 0 16px;max-width:700px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:24px 26px;margin:16px 0}
+
+  /* disposition vs ability hook */
+  .vs{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center}
+  .vs .box{border:1px solid var(--line);border-radius:13px;padding:16px 18px;background:var(--panel-2)}
+  .vs .box h4{margin:0 0 5px;font-size:15px}
+  .vs .box.able h4{color:var(--muted)} .vs .box.disp h4{color:var(--teal)}
+  .vs .box p{margin:0;font-size:13.5px;color:var(--soft)}
+  .vs .amp{font-size:22px;color:var(--muted);font-weight:800}
+
+  /* five dimensions */
+  .dims{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .dim{border:1px solid var(--line);border-radius:12px;padding:13px 12px;background:var(--panel-2);border-top:4px solid var(--dc)}
+  .dim .n{font-size:10.5px;font-weight:700;color:var(--muted)}
+  .dim h4{margin:3px 0 4px;font-size:13.5px;line-height:1.2}
+  .dim p{margin:0;font-size:11.5px;color:var(--soft)}
+  .dim .ct{font-size:10.5px;color:var(--dc);font-weight:700;margin-top:6px}
+
+  /* inventory */
+  .invhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .legend{display:flex;gap:5px;font-size:10.5px;color:var(--muted);align-items:center}
+  .legend b{color:var(--soft)}
+  .toggle{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--soft);cursor:pointer}
+  .sw{width:40px;height:23px;border-radius:999px;background:#d8d2c4;position:relative;transition:.15s;flex:0 0 auto}
+  .sw i{position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+  .sw.on{background:var(--teal)} .sw.on i{left:20px}
+
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+  .items{display:flex;flex-direction:column;gap:2px}
+  .item{padding:12px 4px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+  .item .txt{font-family:var(--serif);font-size:15px}
+  .item .cattag{font-size:10px;font-weight:700;color:#fff;border-radius:5px;padding:1px 6px;margin-right:7px;vertical-align:middle}
+  .likert{display:flex;gap:5px;flex:0 0 auto}
+  .lk{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:var(--muted);
+    font-size:12px;font-weight:700;cursor:pointer;transition:.1s}
+  .lk:hover{border-color:var(--teal)}
+  .lk.on{background:var(--teal);border-color:var(--teal);color:#fff}
+  .revbadge{display:none;font-size:9.5px;font-weight:800;color:#7a5c12;background:#f6ecd3;border:1px solid #e4cf9b;border-radius:5px;padding:1px 6px;margin-left:6px}
+  .reveal .revbadge{display:inline-block}
+  .score{display:none;font-size:11px;color:var(--muted);margin-top:5px;font-weight:600}
+  .reveal .score{display:block}
+  .score .flip{display:inline-block;color:var(--gold);font-weight:800}
+  .score.rev .raw{text-decoration:line-through;color:#c2544d}
+  @keyframes flipin{0%{transform:rotateX(90deg);opacity:0}100%{transform:rotateX(0);opacity:1}}
+  .score .flip.anim{animation:flipin .5s}
+
+  /* radar sticky */
+  .profile{position:sticky;top:14px}
+  .radarcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px}
+  .radarcard h4{margin:0 0 2px;font-size:14px;text-align:center}
+  .radarcard .ov{text-align:center;font-size:12px;color:var(--muted);margin-bottom:6px}
+  .radarcard .ovnum{font-weight:800;font-size:15px}
+  .warnbanner{display:none;background:#fbeceb;border:1px solid #f0cfcc;border-radius:10px;padding:11px 13px;font-size:12.5px;color:#a23c37;margin-top:12px}
+  .warnbanner.on{display:block}
+
+  /* reverse-scoring widget */
+  .revwidget{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+  .revq{font-family:var(--serif);font-size:16px;background:var(--panel-2);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:14px 16px}
+  .revlk{display:flex;gap:6px;margin-top:12px}
+  .flowbox{text-align:center}
+  .flowbox .cell{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:#fff;min-width:120px}
+  .flowbox .cell .cap{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .flowbox .cell .val{font-size:30px;font-weight:800;line-height:1.1}
+  .flowbox .arrow{font-size:20px;color:var(--gold);margin:6px 0}
+  .flowbox .raw .val{color:var(--warn)} .flowbox .scored .val{color:var(--good)}
+  .flowbox .scored{border-color:var(--good)}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+  .flowbox .pop{animation:pop .4s}
+
+  /* reuse scale */
+  .reuse{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .ru{border:1px solid var(--line);border-radius:13px;padding:18px;background:var(--panel-2)}
+  .ru .yr{font-size:12px;font-weight:800;color:var(--teal);letter-spacing:.05em}
+  .ru h4{margin:4px 0 8px;font-size:15px}
+  .ru .big{font-size:30px;font-weight:800;line-height:1}
+  .ru .lbl{font-size:12px;color:var(--muted)}
+  .ru p{font-size:12.5px;color:var(--soft);margin:9px 0 0}
+  .prepost{display:flex;align-items:flex-end;gap:8px;height:66px;margin:8px 0 2px}
+  .ppbar{flex:1;background:#e7e1d4;border-radius:6px 6px 0 0;position:relative;transition:height 1s}
+  .ppbar b{position:absolute;top:-17px;left:0;right:0;text-align:center;font-size:11px;font-weight:800}
+  .ppbar span{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:9.5px;color:#fff;font-weight:700}
+  .ppbar.pre{background:#c9b79a} .ppbar.post{background:var(--teal)}
+  .ck{display:flex;align-items:flex-end;gap:10px;height:66px;margin:8px 0 2px}
+  .ckbar{flex:1;border-radius:6px 6px 0 0;position:relative;transition:height 1s}
+  .ckbar b{position:absolute;top:-17px;left:0;right:0;text-align:center;font-size:11px;font-weight:800}
+  .ckbar span{position:absolute;bottom:-16px;left:0;right:0;text-align:center;font-size:9.5px;color:var(--muted);font-weight:700}
+  .ckbar.china{background:var(--c3)} .ckbar.korea{background:var(--c1)}
+
+  .callout{background:#f6ecd3;border-left:4px solid var(--gold);border-radius:9px;padding:15px 17px;margin:16px 0;font-size:14px}
+  .callout b{color:#8a6608}
+  .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:700;border-radius:9px;padding:9px 15px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--soft)}
+  .btn:hover{border-color:var(--teal);color:var(--ink)}
+
+  @media(max-width:760px){
+    .dims{grid-template-columns:1fr 1fr}
+    .layout,.revwidget,.reuse,.vs{grid-template-columns:1fr}
+    .vs .amp{display:none}
+    .item{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="kicker">Interactive Instrument · Jo &amp; Bednarz (2014) ★</div>
+      <h1>Are you <em>inclined</em> to teach spatial thinking?</h1>
+      <p>This inventory doesn’t test what a teacher <i>knows</i> — it measures whether they’re <b>disposed</b> to actually do it. Answer the items below and watch your five-dimension disposition profile build in real time, and see the clever reverse-scoring safeguard catch inconsistent responses.</p>
+      <div class="cite">Jo, I. &amp; Bednarz, S. W. (2014). Dispositions Toward Teaching Spatial Thinking Through Geography. <i>Journal of Geography</i> 113(5):198–207.</div>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+  <!-- hook -->
+  <section>
+    <div class="card">
+      <div class="vs">
+        <div class="box able"><h4>Ability / knowledge</h4><p>A teacher <i>can</i> explain distribution, run a GIS overlay, design a spatial question. Necessary — but it doesn’t guarantee they’ll ever choose to.</p></div>
+        <div class="amp">≠</div>
+        <div class="box disp"><h4>Disposition</h4><p>The <b>inclination, belief, and willingness</b> to actually reach for those skills in the classroom. That “will they bother?” tendency is what this instrument measures.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- five dimensions -->
+  <section>
+    <h2 class="sec">Five dimensions of the disposition</h2>
+    <p class="sub">The 40-item inventory is built from five belief-and-inclination subcategories. Each maps to an axis on the profile you’ll build below.</p>
+    <div class="dims" id="dims"></div>
+  </section>
+
+  <!-- inventory -->
+  <section>
+    <h2 class="sec">Take a slice of the inventory</h2>
+    <p class="sub">Fifteen real items (three per dimension) from the 40-item instrument, on the original 5-point scale. Your profile updates with every answer. Four items are secretly <b>reverse-scored</b> — flip the switch to reveal which, and watch their scores invert.</p>
+    <div class="card">
+      <div class="invhead">
+        <div class="legend"><b>1</b> Strongly disagree · <b>2</b> Disagree · <b>3</b> Neutral · <b>4</b> Agree · <b>5</b> Strongly agree</div>
+        <div class="toggle" id="revToggle"><div class="sw" id="revSw"><i></i></div><span>Reveal scoring &amp; reverse items</span></div>
+      </div>
+      <div class="layout">
+        <div>
+          <div class="items" id="items"></div>
+          <div style="margin-top:14px"><button class="btn" id="resetBtn">↺ Reset answers</button></div>
+        </div>
+        <div class="profile">
+          <div class="radarcard">
+            <h4>Your disposition profile</h4>
+            <div class="ov">overall mean <span class="ovnum" id="ovNum">—</span> / 5</div>
+            <svg viewBox="0 0 300 300" width="100%" id="radar" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:2px">dashed ring = “fairly disposed” (mean &gt; 4.0)</div>
+            <div class="warnbanner" id="warnBanner">⚠ <b>Possible contradiction.</b> You leaned <i>agree</i> on both “geography is best learned by rote memorization” <i>and</i> “asking questions matters in geography.” Those pull opposite directions — exactly what the reverse-scored items exist to catch.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- reverse-scoring widget -->
+  <section>
+    <h2 class="sec">The validity safeguard, up close</h2>
+    <p class="sub">Five of the 40 items are “counter-statements” — agreeing with them signals <i>less</i> inclination, so they’re scored backwards. It’s a quiet trap for people who just click “agree” down the page. Try it:</p>
+    <div class="card">
+      <div class="revwidget">
+        <div>
+          <div class="revq">#16 (reverse-scored): “I believe that geography is best learned by rote memorization of facts.”</div>
+          <div class="revlk" id="revLk"></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:9px">Move the answer and watch the raw response flip into the scored value.</div>
+        </div>
+        <div class="flowbox">
+          <div class="cell raw"><div class="cap">Your raw answer</div><div class="val" id="revRaw">—</div></div>
+          <div class="arrow">↓ reverse ( 6 − raw )</div>
+          <div class="cell scored"><div class="cap">Scored as</div><div class="val" id="revScored">—</div></div>
+        </div>
+      </div>
+      <div class="callout"><b>Why it matters.</b> A respondent who “strongly agrees” with rote memorization (a 5) is telling you they’re <i>not</i> disposed toward inquiry-driven spatial thinking — so it counts as a 1. Reverse items keep an all-“agree” response from faking a high score, and let researchers flag people whose answers contradict each other.</div>
+    </div>
+  </section>
+
+  <!-- reuse / life of the instrument -->
+  <section>
+    <h2 class="sec">The life of the instrument</h2>
+    <p class="sub">Proposed in 2014 as a conceptual <i>exemplar</i> — then picked up and put to work, growing from a classroom of 14 to over a thousand teachers across two nations.</p>
+    <div class="reuse" id="reuse">
+      <div class="ru">
+        <div class="yr">2014 · ORIGIN</div>
+        <h4>Conceptual exemplar</h4>
+        <div class="big">40</div><div class="lbl">items · 5 dimensions · 5 reverse-scored</div>
+        <p>Built entirely from the literature and standards. Presented as a proposed instrument <i>awaiting</i> empirical validation — not yet a tested scale.</p>
+      </div>
+      <div class="ru">
+        <div class="yr">2016 · FIRST USE</div>
+        <h4>8-item subset · n = 14</h4>
+        <div class="prepost" id="ppBars">
+          <div class="ppbar pre" data-h="3.58"><b>3.58</b><span>PRE</span></div>
+          <div class="ppbar post" data-h="4.71"><b>4.71</b><span>POST</span></div>
+        </div>
+        <p>Preservice teachers in a methods course with web-based GIS. Dispositions rose significantly pre→post (<i>p</i> &lt; .001). <span style="color:var(--muted)">Jo (2016), CITE Journal.</span></p>
+      </div>
+      <div class="ru">
+        <div class="yr">2018 · GOES GLOBAL</div>
+        <h4>Full 40 items · n = 1,302</h4>
+        <div class="ck" id="ckBars">
+          <div class="ckbar china" data-h="70"><b id="chinaN">979</b><span>China</span></div>
+          <div class="ckbar korea" data-h="45"><b id="koreaN">323</b><span>Korea</span></div>
+        </div>
+        <p style="margin-top:22px">First international use — a China–Korea comparison. Both showed only low-to-moderate dispositions; Chinese teachers scored higher across all five dimensions. <span style="color:var(--muted)">Lee, Jo, Xuan &amp; Zhou (2018), IRGEE.</span></p>
+      </div>
+    </div>
+    <div class="foot" id="foot">Primary source: Jo &amp; Bednarz (2014), <i>Journal of Geography</i> 113(5):198–207 — the 40-item inventory, five subcategories, and five reverse-scored counter-statements (items #4, #11, #15, #16, #34). Note: the 2014 paper presents the inventory as a conceptual exemplar built from the literature, with <b>no reported reliability/validity statistics</b>; psychometric use came in the later applications. Reuse: Jo (2016), <i>CITE Journal</i> 16(3); Lee, Jo, Xuan &amp; Zhou (2018), <i>International Research in Geographical &amp; Environmental Education</i> 27(2):135–148. All 15 items shown are verbatim from the 2014 appendix.</div>
+  </section>
+
+  </div>
+
+<script>
+(function(){
+  var CATS=[
+    {name:'Teaching Thinking Skills', short:'Thinking skills', color:'#0f766e', total:7,
+      def:'Belief that thinking skills can and should be taught — and the will to stimulate them.'},
+    {name:'Teaching Spatial Thinking', short:'Spatial thinking', color:'#3a68b0', total:7,
+      def:'Belief that spatial thinking is powerful, teachable, and belongs in school.'},
+    {name:'Spatial Thinking in Geography', short:'ST in geography', color:'#7c3aed', total:6,
+      def:'Seeing geography as spatial and inquiry-driven, not fact memorization.'},
+    {name:'Explicit Teaching of Spatial Concepts', short:'Explicit concepts', color:'#b4630f', total:11,
+      def:'Willingness to explicitly teach spatial concepts, simple to complex.'},
+    {name:'Representations & Geospatial Tech', short:'Reps & GST', color:'#0891b2', total:9,
+      def:'Inclination to use maps, graphs, GIS and GPS to build spatial thinking.'}
+  ];
+  var ITEMS=[
+    {id:1,cat:0,text:"I believe that thinking skills can be taught."},
+    {id:4,cat:0,rev:true,text:"I will feel satisfied when students remember exactly what I have said."},
+    {id:5,cat:0,text:"I will frequently challenge students through questions and tasks."},
+    {id:9,cat:1,text:"I believe that spatial thinking is powerful."},
+    {id:11,cat:1,rev:true,text:"I believe that spatial thinking is a skill that is innate."},
+    {id:14,cat:1,text:"I believe that spatial thinking should be taught in schools."},
+    {id:16,cat:2,rev:true,text:"I believe that geography is best learned by rote memorization of facts."},
+    {id:17,cat:2,text:"I believe that asking questions and solving problems is important in geography."},
+    {id:19,cat:2,text:"I believe that understanding spatial patterns and processes is essential in learning geography."},
+    {id:22,cat:3,text:"I will explicitly teach the concept of location."},
+    {id:26,cat:3,text:"I will explicitly teach the concept of overlay."},
+    {id:31,cat:3,text:"I will explicitly teach the concept of spatial correlation."},
+    {id:34,cat:4,rev:true,text:"I believe that students can readily interpret spatial representations without a guided practice."},
+    {id:37,cat:4,text:"I believe that geospatial technologies, such as GIS and GPS, are powerful tools for spatial thinking."},
+    {id:39,cat:4,text:"I am familiar with the educational uses of geospatial technologies."}
+  ];
+  var resp={};  // id -> raw 1..5
+
+  /* dims */
+  var dimsEl=document.getElementById('dims');
+  CATS.forEach(function(c,i){
+    var d=document.createElement('div'); d.className='dim'; d.style.setProperty('--dc',c.color);
+    d.innerHTML='<div class="n">Dimension '+(i+1)+'</div><h4>'+c.name+'</h4><p>'+c.def+'</p><div class="ct">'+c.total+' items</div>';
+    dimsEl.appendChild(d);
+  });
+
+  /* inventory items */
+  var itemsEl=document.getElementById('items');
+  ITEMS.forEach(function(it){
+    var row=document.createElement('div'); row.className='item'; row.dataset.id=it.id;
+    var lks='';
+    for(var v=1;v<=5;v++) lks+='<button class="lk" data-v="'+v+'">'+v+'</button>';
+    row.innerHTML='<div><div class="txt"><span class="cattag" style="background:'+CATS[it.cat].color+'">'+CATS[it.cat].short+'</span>'+
+        '#'+it.id+'. '+it.text+(it.rev?'<span class="revbadge">reverse-scored</span>':'')+'</div>'+
+        '<div class="score" id="sc-'+it.id+'"></div></div>'+
+      '<div class="likert">'+lks+'</div>';
+    itemsEl.appendChild(row);
+    row.querySelectorAll('.lk').forEach(function(b){
+      b.addEventListener('click',function(){
+        resp[it.id]=+b.dataset.v;
+        row.querySelectorAll('.lk').forEach(function(x){ x.classList.toggle('on', +x.dataset.v===resp[it.id]); });
+        updateScoreLine(it, true);
+        updateRadar(); checkContradiction();
+      });
+    });
+  });
+  function scoredVal(it){ var r=resp[it.id]; if(r==null) return null; return it.rev?(6-r):r; }
+  function updateScoreLine(it, anim){
+    var el=document.getElementById('sc-'+it.id); var r=resp[it.id]; if(r==null){ el.innerHTML=''; return; }
+    if(it.rev){ el.className='score rev';
+      el.innerHTML='raw <span class="raw">'+r+'</span> → scored <span class="flip'+(anim?' anim':'')+'">'+(6-r)+'</span>'; }
+    else { el.className='score'; el.innerHTML='scored '+r; }
+  }
+
+  /* radar */
+  var radar=document.getElementById('radar'), CX=150,CY=150,MR=108;
+  function vpt(cat,val){ var a=(-90+cat*72)*Math.PI/180, r=val/5*MR; return [CX+r*Math.cos(a), CY+r*Math.sin(a)]; }
+  function catMean(ci){
+    var vals=ITEMS.filter(function(it){return it.cat===ci && resp[it.id]!=null;}).map(scoredVal);
+    if(!vals.length) return 0; return vals.reduce(function(a,b){return a+b;},0)/vals.length;
+  }
+  function drawRadarStatic(){
+    var s='';
+    // rings
+    for(var g=1;g<=5;g++){
+      var pts=[]; for(var c=0;c<5;c++){ var p=vpt(c,g); pts.push(p[0].toFixed(1)+','+p[1].toFixed(1)); }
+      s+='<polygon points="'+pts.join(' ')+'" fill="none" stroke="#e4ded1" stroke-width="1"/>';
+    }
+    // axes + labels
+    for(var c=0;c<5;c++){
+      var e=vpt(c,5); s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+e[0]+'" y2="'+e[1]+'" stroke="#e4ded1" stroke-width="1"/>';
+      var lp=vpt(c,5.9);
+      var anchor=Math.abs(lp[0]-CX)<10?'middle':(lp[0]<CX?'end':'start');
+      s+='<text x="'+lp[0].toFixed(0)+'" y="'+lp[1].toFixed(0)+'" font-family="Helvetica,Arial" font-size="9.5" font-weight="700" fill="'+CATS[c].color+'" text-anchor="'+anchor+'">'+CATS[c].short+'</text>';
+    }
+    // benchmark ring at 4.0
+    var bp=[]; for(var c2=0;c2<5;c2++){ var p2=vpt(c2,4); bp.push(p2[0].toFixed(1)+','+p2[1].toFixed(1)); }
+    s+='<polygon points="'+bp.join(' ')+'" fill="none" stroke="#b8860b" stroke-width="1.4" stroke-dasharray="4 4" opacity=".8"/>';
+    // data polygon + dots (updated later)
+    s+='<polygon id="dataPoly" points="'+Array(5).fill(CX+','+CY).join(' ')+'" fill="rgba(15,118,110,.16)" stroke="#0f766e" stroke-width="2" style="transition:all .3s"/>';
+    for(var c3=0;c3<5;c3++){ s+='<circle id="dot-'+c3+'" cx="'+CX+'" cy="'+CY+'" r="4" fill="'+CATS[c3].color+'" style="transition:all .3s"/>'; }
+    radar.innerHTML=s;
+  }
+  function updateRadar(){
+    var pts=[], answered=[];
+    for(var c=0;c<5;c++){ var m=catMean(c); var p=vpt(c,m); pts.push(p[0].toFixed(1)+','+p[1].toFixed(1));
+      var dot=document.getElementById('dot-'+c); if(dot){ dot.setAttribute('cx',p[0].toFixed(1)); dot.setAttribute('cy',p[1].toFixed(1)); dot.setAttribute('r', m>0?4.5:0); } }
+    var poly=document.getElementById('dataPoly'); if(poly) poly.setAttribute('points',pts.join(' '));
+    // overall
+    var all=ITEMS.filter(function(it){return resp[it.id]!=null;}).map(scoredVal);
+    var ov=all.length?(all.reduce(function(a,b){return a+b;},0)/all.length):null;
+    var ovEl=document.getElementById('ovNum');
+    ovEl.textContent=ov==null?'—':ov.toFixed(2);
+    ovEl.style.color=ov==null?'#8a929b':(ov>4?'#0f9d6e':(ov>=3?'#b4630f':'#c2544d'));
+  }
+  function checkContradiction(){
+    var w=document.getElementById('warnBanner');
+    w.classList.toggle('on', resp[16]!=null && resp[17]!=null && resp[16]>=4 && resp[17]>=4);
+  }
+
+  /* reveal toggle */
+  var revSw=document.getElementById('revSw');
+  document.getElementById('revToggle').onclick=function(){
+    var on=revSw.classList.toggle('on');
+    document.querySelector('.layout').classList.toggle('reveal',on);
+    document.querySelector('.items').classList.toggle('reveal',on);
+    ITEMS.forEach(function(it){ updateScoreLine(it,false); });
+  };
+  // .reveal needs to be on the items container for score visibility
+  document.getElementById('items').classList.add('items');
+
+  document.getElementById('resetBtn').onclick=function(){
+    resp={};
+    document.querySelectorAll('.lk').forEach(function(x){ x.classList.remove('on'); });
+    ITEMS.forEach(function(it){ document.getElementById('sc-'+it.id).innerHTML=''; });
+    updateRadar(); checkContradiction();
+  };
+
+  /* reverse widget */
+  var revLk=document.getElementById('revLk'), revRaw=document.getElementById('revRaw'), revScored=document.getElementById('revScored');
+  for(var v=1;v<=5;v++){ (function(v){ var b=document.createElement('button'); b.className='lk'; b.textContent=v;
+    b.onclick=function(){ revLk.querySelectorAll('.lk').forEach(function(x){x.classList.remove('on');}); b.classList.add('on');
+      revRaw.textContent=v; revScored.textContent=6-v;
+      revRaw.classList.remove('pop'); revScored.classList.remove('pop'); void revRaw.offsetWidth;
+      revRaw.classList.add('pop'); revScored.classList.add('pop'); };
+    revLk.appendChild(b); })(v); }
+
+  /* reuse bars: animate on scroll into view */
+  function animateReuse(){
+    document.querySelectorAll('#ppBars .ppbar').forEach(function(b){ b.style.height=(+b.dataset.h/5*100)+'%'; });
+    document.querySelectorAll('#ckBars .ckbar').forEach(function(b){ b.style.height=b.dataset.h+'%'; });
+    countUp(document.getElementById('chinaN'),979); countUp(document.getElementById('koreaN'),323);
+  }
+  function countUp(el,target){ var t0=null, dur=1100; function step(ts){ if(!t0)t0=ts; var p=Math.min(1,(ts-t0)/dur);
+    el.textContent=Math.round(target*(0.15+0.85*p)); if(p<1) requestAnimationFrame(step); else el.textContent=target; } requestAnimationFrame(step); }
+  var seen=false;
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !seen){ seen=true; animateReuse(); } }); },{threshold:.3});
+  io.observe(document.getElementById('reuse'));
+  // fallback if IO unsupported
+  document.querySelectorAll('#ppBars .ppbar,#ckBars .ckbar').forEach(function(b){ b.style.height='2%'; });
+
+  drawRadarStatic(); updateRadar();
+})();
+</script>
+</body>
+</html>

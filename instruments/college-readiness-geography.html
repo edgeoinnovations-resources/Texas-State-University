@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>College Readiness for Geography — Jo &amp; Milson (2013), interactive</title>
+<style>
+  .viz-root{
+    color-scheme:light;
+    --surface-1:#fcfcfb; --plane:#f7f5ef;
+    --text-primary:#12130f; --text-secondary:#52514e; --muted:#898781;
+    --grid:#e6e2d8; --baseline:#c3c2b7; --border:rgba(11,11,11,.10);
+    --imp:#2a78d6;      /* Importance — blue (slot 1) */
+    --prof:#eb6834;     /* Proficiency — orange (slot 6) */
+    --profMore:#2a78d6; /* diverging: professors value more */
+    --teachMore:#d03b3b;/* diverging: teachers value more */
+    --accent:#2a78d6;
+    --panel:#fff; --line:#e4ded1;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 30px rgba(30,30,30,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--plane);color:var(--text-primary);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--imp)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--imp)}
+
+  header.hero{padding:50px 0 20px;border-bottom:1px solid var(--line)}
+  header.hero h1{font-size:31px;margin:8px 0 10px;line-height:1.13;max-width:720px}
+  header.hero p{font-size:17px;color:var(--text-secondary);max-width:700px;margin:0}
+  .cite{margin-top:14px;font-size:12.5px;color:var(--muted)}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0 4px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px 16px;box-shadow:var(--shadow)}
+  .stat .v{font-size:26px;font-weight:800;line-height:1}
+  .stat .l{font-size:12px;color:var(--muted);margin-top:5px}
+  .stat.gap .v{color:var(--prof)}
+
+  section{padding:34px 0 2px}
+  h2.sec{font-size:23px;margin:0 0 5px}
+  .sub{font-size:15px;color:var(--text-secondary);margin:0 0 16px;max-width:720px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:24px 26px;margin:14px 0}
+
+  /* crosswalk */
+  .crossflow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .srcpill{border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:12.5px;background:var(--plane);text-align:center}
+  .srcpill b{display:block;font-size:13px}
+  .srcpill span{color:var(--muted);font-size:11px}
+  .arrow{color:var(--muted);font-size:20px;font-weight:700}
+  .goalchips{display:flex;flex-wrap:wrap;gap:8px}
+  .gchip{border:1px solid var(--line);border-radius:999px;padding:8px 13px;font-size:13px;cursor:pointer;background:#fff;transition:.12s;display:flex;align-items:center;gap:8px}
+  .gchip:hover{border-color:var(--accent)}
+  .gchip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .gchip .gn{width:20px;height:20px;border-radius:6px;background:var(--plane);color:var(--text-secondary);font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .gchip.on .gn{background:rgba(255,255,255,.25);color:#fff}
+  .goaldetail{margin-top:16px;border-top:1px solid var(--line);padding-top:16px;display:none}
+  .goaldetail.on{display:block}
+  .goaldetail h4{margin:0 0 4px;font-size:16px}
+  .goaldetail .fulltext{font-size:14px;color:var(--text-secondary);margin-bottom:14px}
+  .maprow{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+  .maprow .src{font-weight:700;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+
+  /* controls */
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;align-items:center}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .seg button{font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--text-secondary);background:#fff;border:none;padding:8px 14px;cursor:pointer}
+  .seg button.on{background:var(--accent);color:#fff}
+  .seg button+button{border-left:1px solid var(--line)}
+  .spacer{flex:1}
+  .tblbtn{font-family:var(--sans);font-size:12px;color:var(--text-secondary);background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer}
+  .tblbtn:hover{border-color:var(--accent)}
+
+  /* legend */
+  .legend{display:flex;gap:16px;font-size:12.5px;color:var(--text-secondary);margin:2px 0 14px;align-items:center}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
+
+  /* dumbbell chart */
+  .chart .row{display:grid;grid-template-columns:210px 1fr;gap:14px;align-items:center;margin:3px 0}
+  .chart .glabel{font-size:13px;font-weight:600;line-height:1.2}
+  .chart .glabel small{display:block;color:var(--muted);font-weight:400;font-size:11px}
+  .track{position:relative;height:38px}
+  .track .grid{position:absolute;inset:0}
+  .track .grid i{position:absolute;top:2px;bottom:16px;width:1px;background:var(--grid)}
+  .track .gtick{position:absolute;bottom:0;font-size:9.5px;color:var(--muted);transform:translateX(-50%)}
+  .conn{position:absolute;top:13px;height:3px;background:var(--baseline);border-radius:2px}
+  .dot{position:absolute;top:8px;width:15px;height:15px;border-radius:50%;transform:translateX(-50%);cursor:pointer;
+    border:2px solid var(--surface-1);box-shadow:0 0 0 1px var(--border)}
+  .dot.imp{background:var(--imp)} .dot.prof{background:var(--prof)}
+  .vlab{position:absolute;top:24px;font-size:10px;font-weight:700;transform:translateX(-50%);color:var(--text-secondary)}
+  .gaplab{position:absolute;top:-2px;font-size:10px;font-weight:800;color:var(--prof);transform:translateX(-50%)}
+  .axisrow{display:grid;grid-template-columns:210px 1fr;gap:14px;margin-top:2px}
+  .axisttl{grid-column:2;font-size:10.5px;color:var(--muted);text-align:center;margin-top:2px}
+
+  /* diverging chart */
+  .dv .row{display:grid;grid-template-columns:210px 1fr;gap:14px;align-items:center;margin:5px 0}
+  .dvtrack{position:relative;height:26px;border-left:2px solid var(--baseline)}
+  .dvtrack.mid{border-left:none}
+  .dvzero{position:absolute;top:-2px;bottom:-2px;left:50%;width:2px;background:var(--baseline)}
+  .dvbar{position:absolute;top:5px;height:16px;border-radius:4px;display:flex;align-items:center;font-size:10.5px;font-weight:800;color:#fff;padding:0 6px}
+  .dvbar.pos{background:var(--profMore);left:50%;justify-content:flex-end;border-radius:0 4px 4px 0}
+  .dvbar.neg{background:var(--teachMore);justify-content:flex-start;border-radius:4px 0 0 4px}
+  .dvsig{position:absolute;top:4px;font-size:12px;color:var(--text-secondary)}
+  .dvends{display:grid;grid-template-columns:210px 1fr;font-size:10.5px;color:var(--muted);margin-top:4px}
+  .dvends .lr{display:flex;justify-content:space-between}
+
+  /* table */
+  .tablewrap{display:none;overflow-x:auto;margin-top:12px}
+  .tablewrap.on{display:block}
+  table.data{border-collapse:collapse;width:100%;font-size:12.5px}
+  table.data th,table.data td{border:1px solid var(--line);padding:7px 9px;text-align:center;font-variant-numeric:tabular-nums}
+  table.data th{background:var(--plane);font-weight:700}
+  table.data td.g{text-align:left;font-weight:600}
+
+  /* tooltip */
+  #tip{position:fixed;pointer-events:none;background:#12130f;color:#fff;font-size:12px;border-radius:8px;padding:8px 11px;opacity:0;transition:opacity .1s;z-index:50;max-width:240px;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+  #tip b{color:#fff} #tip .m{color:#c9c7bf}
+
+  /* challenges */
+  .cgroup{margin:14px 0}
+  .cgroup h4{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
+  .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ch{border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:#fff;font-size:13.5px;position:relative}
+  .ch .cn{font-weight:800;color:var(--muted);font-size:11px;margin-right:6px}
+  .ch .flag{display:inline-block;font-size:10.5px;font-weight:700;border-radius:5px;padding:2px 7px;margin-top:7px}
+  .ch .flag.t{background:#fbe6dd;color:#a23c1c} .ch .flag.b{background:#e6eefb;color:#1b4a86}
+
+  .callout{background:#fdf3e8;border-left:4px solid var(--prof);border-radius:9px;padding:15px 17px;margin:16px 0;font-size:14.5px}
+  .callout b{color:#a4471c}
+  .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+
+  @media(max-width:720px){
+    .stats{grid-template-columns:1fr 1fr}
+    .cgrid{grid-template-columns:1fr}
+    .chart .row,.dv .row,.axisrow{grid-template-columns:130px 1fr}
+    .dvends{grid-template-columns:130px 1fr}
+    header.hero h1{font-size:24px}
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+<div class="viz-root">
+  <div class="wrap">
+    <header class="hero">
+      <div class="kicker">Interactive · Jo &amp; Milson (2013)</div>
+      <h1>What does “ready for college geography” actually mean — and are students there?</h1>
+      <p>This study reverse-engineered college readiness for geography: cross-walking three standards documents into <b>seven goals</b>, then surveying 353 educators on how <b>important</b> each goal is and how <b>proficient</b> students are. The result is a stark “expectations gap” you can explore below.</p>
+      <div class="cite">Jo, I. &amp; Milson, A. J. (2013). College Readiness for Geography: Perceptions of High School Teachers and College Faculty. <i>Journal of Geography</i> 112(5):193–204.</div>
+      <div class="stats">
+        <div class="stat"><div class="v">7</div><div class="l">college-readiness goals</div></div>
+        <div class="stat"><div class="v">353</div><div class="l">educators (260 teachers · 93 professors)</div></div>
+        <div class="stat"><div class="v">5.37<span style="font-size:14px;color:var(--muted)">/6</span></div><div class="l">highest importance rating</div></div>
+        <div class="stat gap"><div class="v">&lt;2.6<span style="font-size:14px;color:var(--muted)">/6</span></div><div class="l">every proficiency mean — the gap</div></div>
+      </div>
+    </header>
+
+    <!-- crosswalk -->
+    <section>
+      <h2 class="sec">How the seven goals were built</h2>
+      <p class="sub">There was no ready-made definition of “ready for college geography.” So the authors <b>correlated three standards documents</b> and kept the goals common to all three. Click a goal to see the three sources it was distilled from.</p>
+      <div class="card">
+        <div class="crossflow">
+          <div class="srcpill"><b>Texas CCRS</b><span>social studies standards</span></div>
+          <div class="srcpill"><b>AP Human Geography</b><span>course description</span></div>
+          <div class="srcpill"><b>National Geography Standards</b><span>Geography for Life (1994)</span></div>
+          <span class="arrow">→</span>
+          <div class="srcpill" style="border-color:var(--accent);color:var(--accent)"><b>7 shared goals</b><span>the common core</span></div>
+        </div>
+        <div class="goalchips" id="goalchips"></div>
+        <div class="goaldetail" id="goaldetail"></div>
+      </div>
+    </section>
+
+    <!-- gap chart -->
+    <section>
+      <h2 class="sec">The readiness gap: importance vs. proficiency</h2>
+      <p class="sub">Every goal was rated highly important — but students’ proficiency, as educators saw it, sat far below. The distance between the two dots <i>is</i> the readiness gap. Toggle whose eyes you’re seeing through.</p>
+      <div class="card">
+        <div class="controls">
+          <div class="seg" id="grpSeg">
+            <button data-g="p" class="on">Professors’ view</button>
+            <button data-g="t">Teachers’ view</button>
+          </div>
+          <div class="spacer"></div>
+          <button class="tblbtn" id="tblToggle">Show data table</button>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--imp)"></i> Importance</span>
+          <span><i style="background:var(--prof)"></i> Proficiency</span>
+          <span style="color:var(--prof)">▸ gap = importance − proficiency</span>
+          <span style="color:var(--muted)">scale 1–6</span>
+        </div>
+        <div class="chart" id="gapChart"></div>
+        <div class="axisrow"><div class="axisttl">Mean rating (1 = low · 6 = high)</div></div>
+        <div class="tablewrap" id="tableWrap"></div>
+      </div>
+    </section>
+
+    <!-- diverging -->
+    <section>
+      <h2 class="sec">Who prioritizes what — the expectations mismatch</h2>
+      <p class="sub">The study’s core finding wasn’t just low proficiency — it was that <b>professors and teachers value different goals</b>. Here’s the difference in importance ratings (professors − teachers) for each goal. ★ marks a statistically significant gap.</p>
+      <div class="card">
+        <div class="legend">
+          <span><i style="background:var(--profMore)"></i> Professors rate it higher</span>
+          <span><i style="background:var(--teachMore)"></i> Teachers rate it higher</span>
+          <span style="color:var(--muted)">★ = significant (95% CI)</span>
+        </div>
+        <div class="dv" id="dvChart"></div>
+        <div class="dvends"><div></div><div class="lr"><span>◀ Teachers value more</span><span>Professors value more ▶</span></div></div>
+        <div class="callout"><b>The gap that matters most:</b> professors rated <b>Goals 5 &amp; 6</b> — the higher-level spatial-thinking goals — significantly more important, while teachers rated <b>Goals 2, 3 &amp; 4</b> higher. The authors read this as teachers placing lower priority on the very spatial-thinking skills college courses assume — a gap they trace to how little geography teacher-prep requires.</div>
+      </div>
+    </section>
+
+    <!-- challenges -->
+    <section>
+      <h2 class="sec">The 18 challenges standing in the way</h2>
+      <p class="sub">The open-ended “what challenges do students face?” responses were coded into <b>18 categories</b>. Grouped below by theme — a few carry a notable split between what professors and teachers blamed.</p>
+      <div class="card" id="challenges"></div>
+    </section>
+
+    <div class="foot" id="foot">
+      Source: Jo &amp; Milson (2013), <i>Journal of Geography</i> 112(5):193–204 (full text in the connected Zotero library). Seven goals derived by correlating the National Geography Standards (Geography for Life, 1994), the AP Human Geography course description, and the Texas College &amp; Career Readiness Standards for Social Studies. Importance and proficiency rated on 6-point scales; challenge responses coded qualitatively into 18 categories. Framework: Conley’s (2008, 2010) college-readiness elements. Means from Tables 2–3; significance = 95% CI not overlapping zero. Palette validated for color-vision accessibility.
+    </div>
+  </div>
+</div>
+
+<div id="tip"></div>
+
+<script>
+(function(){
+  var GOALS=[
+    {n:1,short:"Apply geographic concepts",full:"Apply concepts of geography appropriately and accurately",
+     ccrs:"I-A-1 · Use the tools and concepts of geography appropriately and accurately",
+     aphg:"Topic I · Geography: its nature and perspectives",
+     ngs:"Standard 1 (maps &amp; geographic tools) · Standard 2 (mental maps)",
+     imp:{p:5.348,t:5.339}, prof:{p:2.066,t:2.374}, diff:0.009, sig:false},
+    {n:2,short:"Use geospatial technologies",full:"Use geospatial technologies to acquire, process, and report information from a spatial perspective",
+     ccrs:"folded into I-A-1 (geographic tools)",
+     aphg:"Topic I.F · New geographic technologies",
+     ngs:"Standard 1 (maps, tools &amp; technologies)",
+     imp:{p:3.391,t:3.933}, prof:{p:1.902,t:2.120}, diff:-0.542, sig:true},
+    {n:3,short:"Causes &amp; effects of migration",full:"Evaluate the causes and effects of human migration patterns over time",
+     ccrs:"I-A-4", aphg:"Topic II · Population", ngs:"Standard 9 (human population &amp; migration)",
+     imp:{p:4.774,t:5.109}, prof:{p:2.451,t:2.547}, diff:-0.335, sig:true},
+    {n:4,short:"How cultural regions change",full:"Analyze how various cultural regions have changed over time",
+     ccrs:"I-A-5", aphg:"Topic III · Cultural patterns and processes", ngs:"Standards 5, 6, 10 (regions &amp; cultural mosaics)",
+     imp:{p:4.720,t:5.178}, prof:{p:2.407,t:2.376}, diff:-0.458, sig:true},
+    {n:5,short:"Patterns &amp; political boundaries",full:"Distinguish spatial patterns of human communities that exist between or within contemporary political boundaries",
+     ccrs:"III-A-1", aphg:"Topic IV · Political organization of space", ngs:"Standards 12, 13 (settlement; cooperation &amp; conflict)",
+     imp:{p:4.914,t:4.545}, prof:{p:2.275,t:2.063}, diff:0.369, sig:true},
+    {n:6,short:"Connect local to global",full:"Connect regional or local developments to global ones",
+     ccrs:"III-A-2", aphg:"Topic IV · Political organization of space", ngs:"Standard 11 (economic interdependence)",
+     imp:{p:5.366,t:5.136}, prof:{p:2.457,t:2.380}, diff:0.230, sig:true},
+    {n:7,short:"Communities interact &amp; interdepend",full:"Analyze how and why diverse communities interact and become dependent on each other",
+     ccrs:"III-A-3", aphg:"Topic VI · Industrialization and economic development", ngs:"Standard 11 (economic interdependence)",
+     imp:{p:4.968,t:5.087}, prof:{p:2.267,t:2.466}, diff:-0.119, sig:false}
+  ];
+  var grp='p';
+  var tip=document.getElementById('tip');
+  function showTip(html,e){ tip.innerHTML=html; tip.style.opacity=1; moveTip(e); }
+  function moveTip(e){ var x=e.clientX+14,y=e.clientY+14; if(x>window.innerWidth-250)x=e.clientX-236; tip.style.left=x+'px'; tip.style.top=y+'px'; }
+  function hideTip(){ tip.style.opacity=0; }
+
+  /* ---- crosswalk ---- */
+  var chips=document.getElementById('goalchips'), detail=document.getElementById('goaldetail');
+  GOALS.forEach(function(g){
+    var c=document.createElement('div'); c.className='gchip'; c.dataset.n=g.n;
+    c.innerHTML='<span class="gn">'+g.n+'</span>'+g.short;
+    c.onclick=function(){
+      chips.querySelectorAll('.gchip').forEach(function(x){x.classList.toggle('on',x===c);});
+      detail.classList.add('on');
+      detail.innerHTML='<h4>Goal '+g.n+' — '+g.short+'</h4><div class="fulltext">“'+g.full+'”</div>'+
+        '<div class="maprow"><div class="src">Texas CCRS</div><div>'+g.ccrs+'</div></div>'+
+        '<div class="maprow"><div class="src">AP Human Geography</div><div>'+g.aphg+'</div></div>'+
+        '<div class="maprow"><div class="src">Nat. Geography Standards</div><div>'+g.ngs+'</div></div>';
+    };
+    chips.appendChild(c);
+  });
+
+  /* ---- gap dumbbell chart ---- */
+  var gapChart=document.getElementById('gapChart');
+  function xpct(v){ return ((v-1)/5*100); }
+  function renderGap(){
+    var html='';
+    GOALS.forEach(function(g){
+      var imp=g.imp[grp], prof=g.prof[grp], gap=(imp-prof);
+      var xi=xpct(imp), xp=xpct(prof), lo=Math.min(xi,xp), hi=Math.max(xi,xp), midg=(xi+xp)/2;
+      html+='<div class="row"><div class="glabel">'+g.n+'. '+g.short+'</div>'+
+        '<div class="track"><div class="grid">';
+      for(var t=1;t<=6;t++){ html+='<i style="left:'+xpct(t)+'%"></i><span class="gtick" style="left:'+xpct(t)+'%">'+t+'</span>'; }
+      html+='</div>'+
+        '<div class="conn" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div>'+
+        '<div class="gaplab" style="left:'+midg+'%">▸'+gap.toFixed(1)+'</div>'+
+        '<div class="dot prof" data-tip="prof" data-n="'+g.n+'" style="left:'+xp+'%"></div>'+
+        '<div class="dot imp" data-tip="imp" data-n="'+g.n+'" style="left:'+xi+'%"></div>'+
+        '<div class="vlab" style="left:'+xp+'%;color:var(--prof)">'+prof.toFixed(2)+'</div>'+
+        '<div class="vlab" style="left:'+xi+'%;color:var(--imp)">'+imp.toFixed(2)+'</div>'+
+        '</div></div>';
+    });
+    gapChart.innerHTML=html;
+    gapChart.querySelectorAll('.dot').forEach(function(d){
+      var g=GOALS[+d.dataset.n-1], which=d.dataset.tip;
+      var val=(which==='imp'?g.imp[grp]:g.prof[grp]);
+      var label=(which==='imp'?'Importance':'Proficiency');
+      var show=function(e){ showTip('<b>Goal '+g.n+'</b> · '+(grp==='p'?'Professors':'Teachers')+'<br>'+label+': <b>'+val.toFixed(2)+'</b> / 6<br><span class="m">'+g.full+'</span>',e); };
+      d.addEventListener('mouseover',show);
+      d.addEventListener('mousemove',show);
+      d.addEventListener('mouseleave',hideTip);
+    });
+  }
+  document.getElementById('grpSeg').querySelectorAll('button').forEach(function(b){
+    b.onclick=function(){ grp=b.dataset.g; document.getElementById('grpSeg').querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);}); renderGap(); };
+  });
+
+  /* ---- data table ---- */
+  var tableWrap=document.getElementById('tableWrap');
+  var t='<table class="data"><thead><tr><th class="g">Goal</th><th>Imp. (Prof)</th><th>Imp. (Teach)</th><th>Prof. (Prof)</th><th>Prof. (Teach)</th></tr></thead><tbody>';
+  GOALS.forEach(function(g){ t+='<tr><td class="g">'+g.n+'. '+g.short+'</td><td>'+g.imp.p.toFixed(2)+'</td><td>'+g.imp.t.toFixed(2)+'</td><td>'+g.prof.p.toFixed(2)+'</td><td>'+g.prof.t.toFixed(2)+'</td></tr>'; });
+  t+='</tbody></table>';
+  tableWrap.innerHTML=t;
+  document.getElementById('tblToggle').onclick=function(){ var on=tableWrap.classList.toggle('on'); this.textContent=on?'Hide data table':'Show data table'; };
+
+  /* ---- diverging chart ---- */
+  var dv=document.getElementById('dvChart'), maxD=0.55;
+  var html='';
+  GOALS.forEach(function(g){
+    var d=g.diff, w=Math.min(Math.abs(d)/maxD,1)*50, pos=d>=0;
+    html+='<div class="row"><div class="glabel">'+g.n+'. '+g.short+'</div>'+
+      '<div class="dvtrack"><div class="dvzero"></div>';
+    if(Math.abs(d)<0.02){ html+='<div class="dvsig" style="left:50%;transform:translateX(-50%);top:5px;color:var(--muted)">±0</div>'; }
+    else if(pos){ html+='<div class="dvbar pos" style="width:'+w+'%">'+(g.sig?'★':'')+d.toFixed(2)+'</div>'; }
+    else { html+='<div class="dvbar neg" style="right:50%;width:'+w+'%">'+d.toFixed(2)+(g.sig?'★':'')+'</div>'; }
+    html+='</div></div>';
+  });
+  dv.innerHTML=html;
+
+  /* ---- challenges ---- */
+  var GROUPS=[
+    {t:'Foundational knowledge &amp; thinking', items:[
+      {n:1,txt:"Lack of prerequisite knowledge related to the topic"},
+      {n:2,txt:"Lack of geographic and/or spatial thinking skills",flag:'b',fl:'&gt;40% of professors (Goal 1)'},
+      {n:3,txt:"Lack of higher-order, critical, analytic thinking skills",flag:'b',fl:'&gt;40% of BOTH groups'},
+      {n:4,txt:"Little knowledge of other places &amp; unawareness of world events"},
+      {n:5,txt:"Little real-world experience outside their communities and the US"},
+      {n:6,txt:"Misconceptions and stereotypes related to the topic"}
+    ]},
+    {t:'Geospatial-technology barriers (Goal 2)', items:[
+      {n:7,txt:"Little prior exposure to and experience with geospatial technologies"},
+      {n:8,txt:"Shallow grasp of the significance &amp; usefulness of geospatial technologies"},
+      {n:9,txt:"Limited access to geospatial technologies in classrooms",flag:'t',fl:'&gt;40% of teachers — the #1 barrier they named'}
+    ]},
+    {t:'Specific concept gaps', items:[
+      {n:10,txt:"Little knowledge of ‘culture,’ ‘region,’ and ‘cultural region’"},
+      {n:11,txt:"Little knowledge of the concept ‘political boundary’"},
+      {n:12,txt:"Little knowledge of ‘scale’ and the multi-scale approach"},
+      {n:13,txt:"Difficulty distinguishing ‘state’ from ‘nation’"}
+    ]},
+    {t:'Connection &amp; interdependence', items:[
+      {n:14,txt:"Making connections between local and global"},
+      {n:15,txt:"Deeper understanding of interactions and interdependency"}
+    ]},
+    {t:'Practical &amp; dispositional', items:[
+      {n:16,txt:"Poor reading skills"},
+      {n:17,txt:"Time constraint"},
+      {n:18,txt:"Little interest, motivation, or inclination toward the topic"}
+    ]}
+  ];
+  var ch=document.getElementById('challenges'), chtml='';
+  GROUPS.forEach(function(g){
+    chtml+='<div class="cgroup"><h4>'+g.t+'</h4><div class="cgrid">';
+    g.items.forEach(function(it){
+      chtml+='<div class="ch"><span class="cn">'+it.n+'</span>'+it.txt+(it.flag?'<br><span class="flag '+it.flag+'">'+(it.flag==='t'?'teacher-cited · ':'both/prof · ')+it.fl+'</span>':'')+'</div>';
+    });
+    chtml+='</div></div>';
+  });
+  ch.innerHTML=chtml;
+
+  window.addEventListener('scroll',hideTip,{passive:true});
+  renderGap();
+})();
+</script>
+</body>
+</html>

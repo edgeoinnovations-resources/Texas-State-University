@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPTIC &amp; SCRAP — GeoActivity Scaffolds (Jo, Crane, Hong &amp; Huh, 2022)</title>
+<style>
+  :root{
+    --bg:#f5f3ec; --panel:#fff; --panel-2:#fbfaf5; --ink:#232a2f; --ink-2:#4c5760; --muted:#8a929b; --line:#e4ded1;
+    --optic:#b4630f;   /* photos — warm */
+    --scrap:#0f766e;   /* maps — teal */
+    --accent:#0f766e;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 30px rgba(30,30,30,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--accent)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+  header.hero{padding:48px 0 18px;border-bottom:1px solid var(--line)}
+  header.hero h1{font-size:29px;margin:8px 0 10px;line-height:1.14;max-width:720px}
+  header.hero p{font-size:16.5px;color:var(--ink-2);max-width:710px;margin:0}
+  .cite{margin-top:14px;font-size:12.5px;color:var(--muted)}
+
+  section{padding:30px 0 2px}
+  h2.sec{font-size:22px;margin:0 0 5px}
+  .sub{font-size:15px;color:var(--ink-2);margin:0 0 14px;max-width:720px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin:14px 0}
+
+  /* tool switch */
+  .tabs{display:flex;gap:10px;margin-bottom:6px}
+  .tab{flex:1;border:1px solid var(--line);border-radius:13px;padding:14px 16px;cursor:pointer;background:var(--panel);transition:.12s;display:flex;gap:12px;align-items:flex-start}
+  .tab:hover{border-color:var(--tc)}
+  .tab.on{border-color:var(--tc);box-shadow:inset 0 0 0 2px var(--tc)}
+  .tab .ic{width:40px;height:40px;border-radius:11px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
+  .tab h3{margin:0 0 2px;font-size:16px}
+  .tab p{margin:0;font-size:12.5px;color:var(--ink-2)}
+  .tab .ac{font-family:var(--serif);font-weight:800;letter-spacing:.06em}
+
+  .tool{display:none}.tool.on{display:block}
+  .toolgrid{display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:start}
+  .visual{position:sticky;top:14px}
+  .visual svg{width:100%;height:auto;border:1px solid var(--line);border-radius:12px;background:#fff;display:block}
+  .visual .cap{font-size:11.5px;color:var(--muted);margin-top:8px;text-align:center}
+
+  .steps{display:flex;flex-direction:column;gap:9px}
+  .step{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+  .step .sh{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
+  .step .sh:hover{background:var(--panel-2)}
+  .step .letter{width:34px;height:34px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:800;font-size:18px;color:#fff}
+  .step .sn{font-weight:700;font-size:14.5px;flex:1}
+  .step .sn small{display:block;color:var(--muted);font-weight:400;font-size:11.5px}
+  .step .car{color:var(--muted);transition:.2s}
+  .step.open .car{transform:rotate(90deg)}
+  .step .sb{max-height:0;overflow:hidden;transition:max-height .3s;padding:0 14px}
+  .step.open .sb{padding-bottom:14px}
+  .prompt{font-family:var(--serif);font-size:15.5px;color:var(--ink);margin:4px 0 10px;padding-left:46px}
+  .exhint{font-size:12.5px;color:var(--ink-2);background:var(--panel-2);border-radius:9px;padding:9px 12px;margin:0 0 10px 46px;border-left:3px solid var(--eh)}
+  .exhint b{color:var(--ink)}
+  .step textarea{width:calc(100% - 46px);margin-left:46px;min-height:56px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-family:var(--sans);font-size:14px;resize:vertical}
+  .step textarea:focus{outline:none;border-color:var(--tc)}
+  .done-tick{color:#0a7d3a;font-size:13px;margin-left:6px;opacity:0;transition:.2s}
+  .step.filled .done-tick{opacity:1}
+
+  .fourf{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+  .ff{border:1px solid var(--line);border-radius:11px;padding:13px;background:var(--panel-2)}
+  .ff .fl{font-family:var(--serif);font-size:22px;font-weight:800;color:var(--accent)}
+  .ff h4{margin:3px 0 3px;font-size:13.5px}
+  .ff p{margin:0;font-size:12px;color:var(--ink-2)}
+
+  .tips{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tip{border:1px solid var(--line);border-radius:11px;padding:13px 15px;background:var(--panel);font-size:13.5px;color:var(--ink-2)}
+  .tip b{color:var(--ink)}
+  .series{background:var(--panel-2);border:1px dashed var(--line);border-radius:11px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
+  .series b{color:var(--ink)}
+  .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:760px){ .tabs{flex-direction:column} .toolgrid{grid-template-columns:1fr} .visual{position:static} .fourf,.tips{grid-template-columns:1fr 1fr} header.hero h1{font-size:23px} }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+  <div class="wrap">
+    <header class="hero">
+      <div class="kicker">Interactive · Jo, Crane, Hong &amp; Huh (2022)</div>
+      <h1>Two routines that turn “glancing at a map” into analyzing it</h1>
+      <p>Textbooks are full of maps and photos students barely read. These two student-facing scaffolds — <b>OPTIC</b> for photos and <b>SCRAP</b> for maps — give learners a fixed set of steps to unpack a visual and write about it. Try each below: pick a step, read the prompt, and write your own analysis.</p>
+      <div class="cite">Jo, I., Crane, M., Hong, J. E. &amp; Huh, S. (2022). GeoActivity Types in APHG: Analysis of Maps and Photos. <i>The Geography Teacher</i> 19(2):56–59.</div>
+    </header>
+
+    <section>
+      <div class="tabs">
+        <div class="tab on" data-t="optic" style="--tc:var(--optic)"><div class="ic" style="background:var(--optic)">📷</div>
+          <div><h3><span class="ac">OPTIC</span> · for photos</h3><p>Overview · Parts · Title · Interrelationships · Conclusion</p></div></div>
+        <div class="tab" data-t="scrap" style="--tc:var(--scrap)"><div class="ic" style="background:var(--scrap)">🗺️</div>
+          <div><h3><span class="ac">SCRAP</span> · for maps</h3><p>Spatial-temporal · Conditions · Region · Aura · Pattern</p></div></div>
+      </div>
+
+      <!-- OPTIC -->
+      <div class="card tool on" id="tool-optic" style="--tc:var(--optic);--eh:var(--optic)">
+        <div class="toolgrid">
+          <div class="visual">
+            <svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="0" width="300" height="230" fill="#eef2f5"/>
+              <rect x="0" y="150" width="300" height="80" fill="#e4e7cf"/>
+              <!-- sun -->
+              <circle cx="255" cy="35" r="16" fill="#f4c04a"/>
+              <!-- house -->
+              <rect x="188" y="88" width="86" height="62" fill="#d8c3a3" stroke="#b79b74"/>
+              <polygon points="182,88 231,58 280,88" fill="#9c6b3f"/>
+              <rect x="200" y="110" width="18" height="24" fill="#7c5a3a"/>
+              <rect x="244" y="104" width="18" height="16" fill="#bcd3e6"/>
+              <!-- family -->
+              <g fill="#5b6b78"><circle cx="60" cy="120" r="10"/><rect x="52" y="132" width="16" height="26" rx="5"/>
+                <circle cx="84" cy="122" r="9"/><rect x="77" y="133" width="14" height="24" rx="5"/>
+                <circle cx="104" cy="126" r="7"/><rect x="98" y="135" width="12" height="19" rx="4"/></g>
+              <!-- possessions -->
+              <rect x="24" y="176" width="34" height="20" rx="3" fill="#c0748a"/><circle cx="32" cy="198" r="5" fill="#333"/><circle cx="50" cy="198" r="5" fill="#333"/>
+              <rect x="70" y="180" width="22" height="16" fill="#7aa6c2"/>
+              <rect x="100" y="182" width="16" height="14" fill="#8bbf8b"/>
+              <rect x="124" y="178" width="20" height="18" fill="#d3b06a"/>
+              <rect x="152" y="184" width="14" height="12" fill="#b08fca"/>
+              <rect x="60" y="200" width="90" height="8" rx="3" fill="#9a8a6a"/>
+            </svg>
+            <div class="cap">A family outside their home with all their possessions<br><span style="opacity:.8">(stylized stand-in for Menzel, <i>Material World</i>)</span></div>
+          </div>
+          <div class="steps" id="optic-steps"></div>
+        </div>
+      </div>
+
+      <!-- SCRAP -->
+      <div class="card tool" id="tool-scrap" style="--tc:var(--scrap);--eh:var(--scrap)">
+        <div class="toolgrid">
+          <div class="visual">
+            <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="0" width="300" height="210" fill="#cfe0ea"/>
+              <!-- stylized continents with language-family colors -->
+              <path d="M28,44 C50,30 92,34 96,60 C100,86 70,104 46,98 C22,92 12,60 28,44 Z" fill="#5b8def"/>
+              <path d="M120,40 C150,28 176,44 172,66 C168,92 140,96 126,84 C110,70 106,52 120,40 Z" fill="#e07b39"/>
+              <path d="M118,96 C140,92 152,120 144,150 C136,182 118,190 110,168 C102,140 104,104 118,96 Z" fill="#48ab72"/>
+              <path d="M60,120 C86,112 98,142 88,168 C78,192 56,190 50,166 C44,144 46,126 60,120 Z" fill="#7b5bd0"/>
+              <path d="M196,70 C236,54 276,72 272,104 C268,140 228,150 206,132 C184,114 176,86 196,70 Z" fill="#5b8def"/>
+              <path d="M212,140 C236,134 250,158 242,176 C233,194 214,190 208,172 C202,156 202,146 212,140 Z" fill="#d94f8a"/>
+              <g font-family="Helvetica,Arial" font-size="7" fill="#12303a">
+                <text x="34" y="72">Indo-Eur.</text><text x="130" y="66">Afro-Asiatic</text><text x="112" y="140">Niger-Congo</text>
+                <text x="56" y="150">(S. Amer.)</text><text x="214" y="106">Sino-Tibetan</text><text x="210" y="168">Austrones.</text>
+              </g>
+            </svg>
+            <div class="cap">A world map of language families<br><span style="opacity:.8">(stylized; the paper uses a real language-families map)</span></div>
+          </div>
+          <div class="steps" id="scrap-steps"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="sec">The point: practice writing, the “four F’s”</h2>
+      <p class="sub">Both routines are daily warm-ups built to grow four writing habits (Walker 1996). Students go from a few words in September to a solid paragraph by spring.</p>
+      <div class="card">
+        <div class="fourf">
+          <div class="ff"><div class="fl">F</div><h4>Fluency</h4><p>the ability to write extensively.</p></div>
+          <div class="ff"><div class="fl">F</div><h4>Frequency</h4><p>the habit of writing often.</p></div>
+          <div class="ff"><div class="fl">F</div><h4>Flexibility</h4><p>producing diverse writing products.</p></div>
+          <div class="ff"><div class="fl">F</div><h4>Formality</h4><p>using language rules and structure.</p></div>
+        </div>
+        <div class="tips">
+          <div class="tip"><b>Grade by completion.</b> No penalty for a “wrong” answer — reassure students it’s OK to be wrong. Confidence first.</div>
+          <div class="tip"><b>Feedback, varied.</b> Don’t mark every step every day — focus one day on strugglers, another on oral feedback in discussion, another on just one OPTIC/SCRAP component.</div>
+          <div class="tip"><b>Start light.</b> First time, just hand out the tool and a visual and see what students do. Discuss one right and one wrong answer.</div>
+          <div class="tip"><b>Use real sources.</b> National Geographic photos, Menzel’s books, Esri atlases — and the teacher’s own travel/fieldwork photos work best of all.</div>
+        </div>
+        <div class="series" style="margin-top:14px"><b>Part of a series.</b> This is one of the 2022 “GeoActivity Types in APHG” articles in <i>The Geography Teacher</i>. Its siblings cover discussions, field study (with field-note templates), exam preparation, and an end-of-year culminating project — a whole toolkit of student-facing routines. SCRAP is adapted from Gersmehl’s (2014) modes of spatial thinking; OPTIC comes from the Texas Education Agency’s Lighthouse Project (2006).</div>
+      </div>
+      <div class="foot">Source: Jo, Crane, Hong &amp; Huh (2022), <i>The Geography Teacher</i> 19(2):56–59 (full text in the connected Zotero library). OPTIC and SCRAP prompts are verbatim from the article's Tables 1 &amp; 2. Example guiding questions are drawn from the article's worked examples (Menzel “Material World” photos; a world-language-families map). Illustrations are stylized stand-ins, not the copyrighted originals.</div>
+    </section>
+  </div>
+
+<script>
+(function(){
+  var OPTIC=[
+    {L:'O',name:'Overview',sub:'the whole first',color:'#b4630f',
+     prompt:'Give a brief overview of the visual — a short descriptive summary of what you see.',
+     ex:'A family stands outside their home, surrounded by everything they own.'},
+    {L:'P',name:'Parts',sub:'then the details',color:'#c27d2a',
+     prompt:'Focus on the parts. Read all labels and any written words. What details seem important?',
+     ex:'Count the cars and furniture; note a multiple-living-room setup, and whether there are separate spaces for males and females.'},
+    {L:'T',name:'Title',sub:'what it claims',color:'#a86b1a',
+     prompt:'What is the title of the visual? What does it have to say about the visual?',
+     ex:'“Material World” — the photo is about material possessions across cultures.'},
+    {L:'I',name:'Interrelationships',sub:'connect the parts',color:'#8a5a12',
+     prompt:'Using the title, what big umbrella connects the whole visual? Bring its parts together into a coherent picture.',
+     ex:'Possessions link to economic development, culture, and even the desert environment (how might living in a desert shape the culture?).'},
+    {L:'C',name:'Conclusion',sub:'so what?',color:'#6f4a10',
+     prompt:'Draw a conclusion about the visual as a whole. What does it mean? Why is it important to what we are studying? Summarize in a few sentences.',
+     ex:'Which possessions does the family place up front as most important — and what does that reveal about their level of development and values?'}
+  ];
+  var SCRAP=[
+    {L:'S',name:'Spatial-temporal',sub:'change across space & time',color:'#0f766e',
+     prompt:'How do features change across space (abrupt, gradual, irregular)? How do they change across time — does their extent or location shift?',
+     ex:'Do language regions have sharp or fuzzy borders? Have they spread or contracted over the centuries?'},
+    {L:'C',name:'Conditions · Connections · Comparisons',sub:'place & links',color:'#0d675f',
+     prompt:'Describe the place. How is this place linked to other places? How are places similar or different?',
+     ex:'How is Portuguese-speaking Brazil linked to Portugal? (colonization) How does it differ from its Spanish-speaking neighbors?'},
+    {L:'R',name:'Region',sub:'group the similar',color:'#0a564f',
+     prompt:'What nearby places are similar to each other and can be grouped together?',
+     ex:'Group the Indo-European languages stretching from Europe into South Asia.'},
+    {L:'A',name:'Aura · Association · Analog',sub:'influence & co-occurrence',color:'#0f766e',
+     prompt:'What effect(s) does a feature have on nearby areas? Do features tend to occur together? What distant places have similar situations and therefore similar conditions?',
+     ex:'Do language boundaries line up with religion, trade routes, or physical barriers?'},
+    {L:'P',name:'Pattern · Exceptions',sub:'the shape & the outliers',color:'#0d675f',
+     prompt:'Is there a pattern to the location of the feature? What spatial processes might explain it? Are there features that don’t follow the pattern — and why?',
+     ex:'Russia’s languages form a linear east–west pattern (following settlement/rail). What explains Brazil’s Portuguese amid Spanish South America?'}
+  ];
+
+  function build(host, data){
+    var el=document.getElementById(host);
+    el.innerHTML=data.map(function(s,i){
+      return '<div class="step" data-i="'+i+'"><div class="sh"><span class="letter" style="background:'+s.color+'">'+s.L+'</span>'+
+        '<span class="sn">'+s.name+'<small>'+s.sub+'</small></span><span class="done-tick">✓ written</span><span class="car">▸</span></div>'+
+        '<div class="sb"><div class="prompt">'+s.prompt+'</div>'+
+        '<div class="exhint"><b>Example (from the paper):</b> '+s.ex+'</div>'+
+        '<textarea placeholder="Write your analysis…"></textarea></div></div>';
+    }).join('');
+    el.querySelectorAll('.step').forEach(function(st){
+      var sh=st.querySelector('.sh'), sb=st.querySelector('.sb'), ta=st.querySelector('textarea');
+      sh.onclick=function(){
+        var open=st.classList.toggle('open');
+        sb.style.maxHeight=open?(sb.scrollHeight+40+'px'):'0';
+      };
+      ta.oninput=function(){ st.classList.toggle('filled', ta.value.trim().length>0); sb.style.maxHeight=sb.scrollHeight+40+'px'; };
+    });
+    // open first step
+    var first=el.querySelector('.step'); first.classList.add('open'); first.querySelector('.sb').style.maxHeight=first.querySelector('.sb').scrollHeight+40+'px';
+  }
+  build('optic-steps', OPTIC);
+  build('scrap-steps', SCRAP);
+
+  /* tabs */
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.onclick=function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t);});
+      document.querySelectorAll('.tool').forEach(function(x){x.classList.remove('on');});
+      document.getElementById('tool-'+t.dataset.t).classList.add('on');
+    };
+  });
+})();
+</script>
+</body>
+</html>

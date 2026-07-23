@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Spatial Concepts Does GIS Teach? — Jo &amp; Hong-Dwyer (2024)</title>
+<style>
+  .viz-root{
+    color-scheme:light;
+    --surface:#fcfcfb; --plane:#f4f2ec; --panel:#fff; --ink:#14150f; --ink-2:#52514e; --muted:#8b8a83; --line:#e4ded1;
+    --neutral:#2a78d6; --helpful:#0a7d3a; --hindering:#b5820f; --accent:#2a78d6;
+    --good:#0a7d3a; --bad:#c2544d;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 30px rgba(30,30,30,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--accent)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+  header.hero{padding:48px 0 18px;border-bottom:1px solid var(--line)}
+  header.hero h1{font-size:29px;margin:8px 0 10px;line-height:1.14;max-width:720px}
+  header.hero p{font-size:16.5px;color:var(--ink-2);max-width:710px;margin:0}
+  .cite{margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 2px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow)}
+  .stat .v{font-size:24px;font-weight:800;line-height:1}
+  .stat .l{font-size:11.5px;color:var(--muted);margin-top:5px}
+
+  section{padding:34px 0 2px}
+  h2.sec{font-size:23px;margin:0 0 5px}
+  .sub{font-size:15px;color:var(--ink-2);margin:0 0 16px;max-width:720px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin:14px 0}
+
+  /* Q1 bars */
+  .q1 .row{display:grid;grid-template-columns:130px 1fr 40px;gap:10px;align-items:center;margin:4px 0}
+  .q1 .cl{font-size:12.5px;font-weight:600}
+  .q1 .t{display:block;height:18px;background:#eee9dd;border-radius:5px;overflow:hidden}
+  .q1 .f{display:block;height:100%;border-radius:5px;transition:width .5s}
+  .q1 .n{font-size:12px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+  .splitnote{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin:10px 0 2px;border-top:1px dashed var(--line);padding-top:8px}
+
+  /* framework */
+  .fw{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .fcard{border:1px solid var(--line);border-radius:13px;overflow:hidden;cursor:pointer;background:var(--panel);transition:.12s}
+  .fcard:hover{border-color:var(--fc)}
+  .fcard.on{box-shadow:0 0 0 2px var(--fc)}
+  .fcard .fh{padding:12px 14px;color:#fff;font-weight:700;font-size:14px}
+  .fcard .fb{padding:12px 14px;font-size:13px;color:var(--ink-2)}
+  .fcard .fb .cc{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+  .fcard .fb .cc span{font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 9px;background:var(--plane);border:1px solid var(--line)}
+  .fwdef{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;font-size:14px;color:var(--ink-2)}
+  .fwdef b{color:var(--ink)}
+  .gapnote{background:#f6ecd3;border-left:4px solid var(--hindering);border-radius:9px;padding:14px 16px;margin-top:14px;font-size:13.5px}
+  .gapnote b{color:#8a6608}
+
+  /* misconception game */
+  .game .prog{display:flex;gap:6px;align-items:center;margin-bottom:12px}
+  .game .pdot{width:9px;height:9px;border-radius:50%;background:#d9d4c8}.game .pdot.on{background:var(--accent)}.game .pdot.done{background:var(--good)}
+  .game .step{font-size:12px;color:var(--muted);font-weight:600}
+  .quote{font-family:var(--serif);font-size:18px;line-height:1.5;background:#fbfaf6;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:11px;padding:16px 18px;margin-bottom:6px}
+  .qwho{font-size:12px;color:var(--muted);margin-bottom:14px}
+  .judge{display:flex;gap:10px;margin-bottom:6px}
+  .jb{flex:1;font-family:var(--sans);font-size:14px;font-weight:700;border-radius:11px;padding:13px;cursor:pointer;border:1.5px solid var(--line);background:#fff}
+  .jb:hover{border-color:var(--accent)}
+  .jb.sound{color:var(--good)} .jb.conf{color:var(--bad)}
+  .verdict{margin-top:12px;border-radius:11px;padding:14px 16px;font-size:14px;display:none}
+  .verdict.on{display:block}
+  .verdict.right{background:#eaf7ea;border:1px solid #c5e6c5}
+  .verdict.wrong{background:#fdf3f1;border:1px solid #eecfca}
+  .verdict .vh{font-weight:800;margin-bottom:5px}
+  .verdict .correct{margin-top:8px;font-size:13.5px;color:var(--ink-2);border-top:1px dashed var(--line);padding-top:8px}
+  .verdict .correct b{color:var(--ink)}
+  .nextbtn{margin-top:14px;font-family:var(--sans);font-size:14px;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px 18px;cursor:pointer;display:none}
+  .summary{display:none;text-align:center;padding:8px 0}.summary.on{display:block}
+  .summary .big{font-size:38px;font-weight:800;color:var(--accent)}
+  .summary p{max-width:560px;margin:8px auto;color:var(--ink-2);font-size:14.5px}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .mini h4{margin:0 0 8px;font-size:14px}
+  .mini.a h4{color:var(--accent)}.mini.b h4{color:var(--helpful)}
+  .minirow{display:grid;grid-template-columns:104px 1fr 34px;gap:8px;font-size:13px;margin:5px 0;align-items:center}
+  .minirow .mt{display:block;height:14px;background:#eee9dd;border-radius:4px;overflow:hidden}
+  .minirow .mf{display:block;height:100%;border-radius:4px}
+  .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:720px){ .stats{grid-template-columns:1fr 1fr} .fw,.two{grid-template-columns:1fr} .q1 .row{grid-template-columns:100px 1fr 36px} header.hero h1{font-size:23px} }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+<div class="viz-root">
+  <div class="wrap">
+    <header class="hero">
+      <div class="kicker">Interactive · Jo &amp; Hong-Dwyer (2024)</div>
+      <h1>Which spatial concepts does a GIS course actually teach — and why are some so slippery?</h1>
+      <p>24 GIS students marked 16 spatial concepts as <b>already known</b>, <b>newly learned</b>, or <b>deepened</b> by their course. The pattern reveals which terms come from everyday life, which GIS introduces — and why a few, like <i>spatial association</i>, keep tripping students up.</p>
+      <div class="cite">Jo, I. &amp; Hong-Dwyer, J. J. (2024). GIS learning and college students' acquisition and understanding of spatial concepts. <i>Journal of Geography in Higher Education</i> 48(5):763–774.</div>
+      <div class="stats">
+        <div class="stat"><div class="v">16</div><div class="l">spatial concepts</div></div>
+        <div class="stat"><div class="v">24</div><div class="l">GIS students surveyed</div></div>
+        <div class="stat"><div class="v">3</div><div class="l">questions: known / new / deepened</div></div>
+        <div class="stat"><div class="v">3</div><div class="l">types of technical term (Glessmer &amp; Brose)</div></div>
+      </div>
+    </header>
+
+    <!-- Q1 bar -->
+    <section>
+      <h2 class="sec">What students already knew — before GIS</h2>
+      <p class="sub">Question 1: “Select all concepts you already knew before taking a GIS course.” The split is clean — <b>everyday-vocabulary</b> concepts sit at the top; the <b>technical GIS terms</b> at the bottom are ones almost no one had met.</p>
+      <div class="card">
+        <div class="q1" id="q1"></div>
+        <div class="splitnote"><span>◀ everyday vocabulary (top)</span><span>GIS-technical terms (bottom) ▶</span></div>
+      </div>
+    </section>
+
+    <!-- framework -->
+    <section>
+      <h2 class="sec">Why some concepts are easy and others aren't</h2>
+      <p class="sub">The study borrows Glessmer &amp; Brose's (2014) idea that a technical term's difficulty depends on how it collides with everyday language. Click a type to see which concepts fall in it.</p>
+      <div class="card">
+        <div class="fw" id="fw"></div>
+        <div class="fwdef" id="fwdef">Tip: the third type — <b>hindering associations</b> — is where the trouble lives.</div>
+        <div class="gapnote"><b>The framework isn't quite enough.</b> Two hard concepts don't fit cleanly. <b>Interpolation</b> is “neutral” (a brand-new word) yet students still struggled — some just gave up. And <b>reference frame</b> is hard not because of everyday baggage, but because instructors mostly use its synonym, <i>coordinate system</i> — so the term never sticks. The authors propose the framework needs more categories.</div>
+      </div>
+    </section>
+
+    <!-- misconception game -->
+    <section>
+      <h2 class="sec">Spot the misconception</h2>
+      <p class="sub">Here are real things these students said in follow-up interviews. Some show a solid grasp; some are tangled up with an everyday meaning. Can you tell which is which?</p>
+      <div class="card game" id="game">
+        <div class="prog" id="prog"></div>
+        <div id="gameBody"></div>
+        <div class="summary" id="summary"></div>
+      </div>
+    </section>
+
+    <!-- GIS adds -->
+    <section>
+      <h2 class="sec">What GIS actually adds</h2>
+      <p class="sub">Beyond refining everyday words, GIS introduces genuinely new terms (Q2) and deepens others (Q3). The concepts below topped each list.</p>
+      <div class="card">
+        <div class="two">
+          <div class="mini a"><h4>Most often <i>newly learned</i> in GIS</h4><div id="q2"></div></div>
+          <div class="mini b"><h4>Most often <i>deepened</i> by GIS</h4><div id="q3"></div></div>
+        </div>
+      </div>
+      <div class="foot">Source: Jo &amp; Hong-Dwyer (2024), <i>Journal of Geography in Higher Education</i> 48(5):763–774 (full text in the connected Zotero library). Exploratory mixed-method study; n = 24 GIS students (mostly geography majors). Q1 figures are the study's full reported values; Q2/Q3 lists show the concepts the paper reports by percentage. Framework: Glessmer &amp; Brose (2014), three types of technical term. Concept list drawn from Golledge, Jo (2007), and Gersmehl. Interview quotes are verbatim (lightly trimmed) from the paper. Chart palette validated for color-vision accessibility.</div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* Q1 data (complete) */
+  var Q1=[['distance',96],['region',88],['scale',83],['pattern',79],['density',79],['boundary',75],['proximity',71],
+    ['diffusion',33],['map projection',33],['gradient',30],['overlay',25],['profile',25],['spatial association',13],
+    ['buffer',8],['reference frame',8],['interpolation',4]];
+  var q1=document.getElementById('q1');
+  q1.innerHTML=Q1.map(function(c){
+    var col = c[1]>=70?'#2a78d6':(c[1]>=34?'#7aa8dd':'#c65f96');
+    return '<div class="row"><span class="cl">'+c[0]+'</span><span class="t"><span class="f" style="width:'+c[1]+'%;background:'+col+'"></span></span><span class="n">'+c[1]+'%</span></div>';
+  }).join('');
+
+  /* framework */
+  var FW=[
+    {key:'neutral',name:'Neutral',color:'#2a78d6',
+     def:'Brand-new vocabulary. Students have no prior experience with the word, so nothing helps or hurts — and with good hands-on teaching these become well understood.',
+     concepts:['map scale','map projection'], why:'Learned cleanly as new disciplinary vocabulary — the “orange-peel” map-projection analogy stuck.'},
+    {key:'helpful',name:'Helpful associations',color:'#0a7d3a',
+     def:'The everyday meaning already matches the technical meaning, so the word “neither attracts attention nor poses problems.”',
+     concepts:['overlay','density'], why:'“Overlay is just something on top of something else” — everyday sense ≈ GIS sense, so no friction.'},
+    {key:'hindering',name:'Hindering associations',color:'#b5820f',
+     def:'The everyday meaning is close but imprecise, or clashes with the technical one — so students import the wrong idea.',
+     concepts:['spatial association'], why:'Everyday “association” ≈ “relationship,” so students describe proximity (“the Walmart by the school”) instead of value-similarity-by-distance.'}
+  ];
+  var fw=document.getElementById('fw'), fwdef=document.getElementById('fwdef');
+  fw.innerHTML=FW.map(function(f){
+    return '<div class="fcard" data-k="'+f.key+'" style="--fc:'+f.color+'"><div class="fh" style="background:'+f.color+'">'+f.name+'</div>'+
+      '<div class="fb">'+f.def.slice(0,60)+'…<div class="cc">'+f.concepts.map(function(c){return '<span>'+c+'</span>';}).join('')+'</div></div></div>';
+  }).join('');
+  fw.querySelectorAll('.fcard').forEach(function(el){
+    el.onclick=function(){
+      fw.querySelectorAll('.fcard').forEach(function(x){x.classList.toggle('on',x===el);});
+      var f=FW.filter(function(x){return x.key===el.dataset.k;})[0];
+      fwdef.innerHTML='<b style="color:'+f.color+'">'+f.name+'.</b> '+f.def+' <b>Example:</b> '+f.why;
+    };
+  });
+
+  /* misconception game */
+  var ITEMS=[
+    {concept:'Map projection', quote:'You can put a lightbulb inside a globe and project it onto a 2-D plane… or it’s like peeling an orange, getting that 3-D surface onto a flat plane.', sound:true,
+      correct:'A strong, accurate mental model. Map projection was new to almost everyone, so there was no everyday baggage to unlearn — hands-on GIS teaching produced a genuinely good grasp.'},
+    {concept:'Spatial association', quote:'The Walmart, it’s over by the school. Then you can spatially associate where those two things are.', sound:false,
+      correct:'That’s spatial <i>relationship</i> / proximity — not spatial association. Spatial association is about values being similar when features are close and dissimilar when far. Everyday “association” ≈ “relationship” misleads students here.'},
+    {concept:'Interpolation', quote:'You have data collected before, and maybe you’re trying to figure out what the weather’s going to be like tomorrow.', sound:false,
+      correct:'That’s <i>modeling</i> (predicting future values), not interpolation (estimating unknown values <i>between</i> known sample points in one dataset). Interpolation is a “neutral” new word, yet still hard — the framework’s blind spot.'},
+    {concept:'Reference frame', quote:'I thought the base layer was the reference layer — the layer that determines what the other layers look like.', sound:false,
+      correct:'Confuses reference frame with a base map layer. The real culprit: instructors mostly say <i>coordinate system</i> instead, so “reference frame” never sticks — a difficulty everyday vocabulary can’t explain.'},
+    {concept:'Scale', quote:'Before, I thought large scale meant a picture of the whole world. Through GIS I learned that’s actually small scale.', sound:true,
+      correct:'A corrected, sound understanding. Scale is an everyday word GIS <i>sharpened</i> to its disciplinary meaning — the “broadened vocabulary” case.'}
+  ];
+  var gi=0, correctCount=0;
+  var prog=document.getElementById('prog'), gameBody=document.getElementById('gameBody'), summaryEl=document.getElementById('summary');
+  function renderProg(){ prog.innerHTML=ITEMS.map(function(_,i){return '<span class="pdot '+(i<gi?'done':(i===gi?'on':''))+'"></span>';}).join('')+'<span class="step">'+(gi+1)+' of '+ITEMS.length+'</span>'; }
+  function renderItem(){
+    if(gi>=ITEMS.length) return renderSummary();
+    renderProg();
+    var it=ITEMS[gi];
+    gameBody.innerHTML='<div class="quote">“'+it.quote+'”</div><div class="qwho">— a GIS student, on <b>'+it.concept+'</b></div>'+
+      '<div class="judge"><button class="jb sound" data-v="1">✓ Sound understanding</button><button class="jb conf" data-v="0">✗ Confused / misconception</button></div>'+
+      '<div class="verdict" id="verdict"></div>'+
+      '<button class="nextbtn" id="nextbtn">'+(gi===ITEMS.length-1?'See results →':'Next →')+'</button>';
+    gameBody.querySelectorAll('.jb').forEach(function(b){ b.onclick=function(){ judge(+b.dataset.v===1, b); }; });
+    document.getElementById('nextbtn').onclick=function(){ gi++; renderItem(); };
+  }
+  function judge(guessSound, btn){
+    var it=ITEMS[gi]; var right=(guessSound===it.sound); if(right)correctCount++;
+    gameBody.querySelectorAll('.jb').forEach(function(b){ b.disabled=true; b.style.opacity=.6; });
+    btn.style.opacity=1;
+    var v=document.getElementById('verdict');
+    v.className='verdict on '+(right?'right':'wrong');
+    v.innerHTML='<div class="vh">'+(right?'✓ Correct':'✗ Not quite')+' — this is '+(it.sound?'a <b>sound</b> understanding.':'a <b>misconception</b>.')+'</div>'+
+      '<div class="correct"><b>Here’s the concept:</b> '+it.correct+'</div>';
+    document.getElementById('nextbtn').style.display='inline-block';
+  }
+  function renderSummary(){
+    prog.innerHTML=''; gameBody.style.display='none'; summaryEl.classList.add('on');
+    summaryEl.innerHTML='<div class="big">'+correctCount+' / '+ITEMS.length+'</div>'+
+      '<p>You told sound understanding from misconception in '+correctCount+' of '+ITEMS.length+' cases.</p>'+
+      '<p>The three that trip students up — <b>spatial association</b>, <b>interpolation</b>, and <b>reference frame</b> — are exactly the ones GIS “teaches” yet students still can’t explain. The lesson of the study: knowing a word is not the same as understanding a concept, so these terms need <b>explicit, intentional</b> teaching (e.g., introduce spatial association alongside its confusable cousins, spatial relationship and spatial pattern).</p>'+
+      '<button class="nextbtn" style="display:inline-block;background:#fff;color:var(--ink-2);border:1px solid var(--line)" id="again">↺ Play again</button>';
+    document.getElementById('again').onclick=function(){ gi=0; correctCount=0; gameBody.style.display='block'; summaryEl.classList.remove('on'); renderItem(); };
+  }
+  renderItem();
+
+  /* Q2/Q3 lists */
+  var Q2=[['reference frame',83],['buffer',83],['overlay',75],['map projection',71],['spatial association',63],['interpolation',63]];
+  var Q3=[['scale',75],['density',75],['overlay',75],['spatial association',75],['interpolation',71],['pattern',67]];
+  function renderMini(el,data,color){
+    document.getElementById(el).innerHTML=data.map(function(c){
+      return '<div class="minirow"><span>'+c[0]+'</span><span class="mt"><span class="mf" style="width:'+c[1]+'%;background:'+color+'"></span></span><span style="text-align:right;font-weight:700;font-size:12px">'+c[1]+'%</span></div>';
+    }).join('');
+  }
+  // fix: minirow has 2 cols in CSS but 3 spans — adjust inline
+  renderMini('q2',Q2,'#2a78d6'); renderMini('q3',Q3,'#0a7d3a');
+})();
+</script>
+</body>
+</html>

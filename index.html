@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dr. Injeong Jo — Instrument Lab</title>
+<meta name="description" content="An interactive tour of the research instruments Dr. Injeong Jo built and reused across 2009–2024 in geography education.">
+<style>
+  :root{
+    --blue:#2a78d6;
+    --green:#008300;
+    --magenta:#e87ba4;
+    --yellow:#eda100;
+    --orange:#eb6834;
+    --ink:#1a2230;
+    --sub:#54607a;
+    --hair:#dfe4ee;
+    --bg:#f4f6fb;
+    --card:#ffffff;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font);
+    font-size:16px;
+    line-height:1.55;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);
+    color:#fff;
+    padding:64px 24px 72px;
+  }
+  .hero-inner{max-width:940px;margin:0 auto;}
+  .eyebrow{
+    font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:#a9c8f0;margin:0 0 14px;
+  }
+  .hero h1{
+    margin:0 0 16px;
+    font-size:clamp(30px,5.2vw,50px);
+    line-height:1.12;
+    letter-spacing:-.02em;
+    font-weight:800;
+  }
+  .hero p.sub{
+    margin:0;
+    max-width:64ch;
+    font-size:clamp(16px,2.1vw,19px);
+    color:#dce8fb;
+  }
+  .hero .meta{
+    margin:26px 0 0;
+    display:flex;flex-wrap:wrap;gap:10px 26px;
+    font-size:13px;color:#bcd5f4;
+  }
+  .hero .meta b{color:#fff;font-weight:700;}
+
+  /* ---------- shell ---------- */
+  .wrap{max-width:940px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- legend ---------- */
+  .legend{
+    background:var(--card);
+    border:1px solid var(--hair);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:18px 22px;
+    margin:-34px auto 44px;
+    display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;
+  }
+  .legend h2{
+    margin:0;font-size:12px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--sub);
+  }
+  .legend-item{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--sub);}
+
+  /* ---------- badges ---------- */
+  .badge{
+    display:inline-block;
+    font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+    padding:4px 10px;border-radius:999px;
+    border:1px solid transparent;
+    white-space:nowrap;
+  }
+  .badge-built{background:#e3f3e3;color:#00600b;border-color:#b6dfb6;}
+  .badge-reused{background:#e2eefc;color:#164e91;border-color:#b8d5f4;}
+  .badge-context{background:#eef0f5;color:#5c677d;border-color:var(--hair);}
+
+  /* ---------- timeline ---------- */
+  .timeline{position:relative;padding:0 0 8px 0;margin:0 0 56px;}
+  .timeline::before{
+    content:"";position:absolute;left:57px;top:10px;bottom:10px;
+    width:2px;background:var(--hair);border-radius:2px;
+  }
+
+  .year-row{position:relative;display:flex;gap:28px;margin:0 0 34px;}
+  .year-label{
+    flex:0 0 116px;
+    position:relative;
+    padding-top:14px;
+    text-align:right;
+    padding-right:34px;
+  }
+  .year-label span{
+    font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--ink);
+  }
+  /* the node dot sits on the spine */
+  .year-label::after{
+    content:"";position:absolute;right:-7px;top:22px;
+    width:14px;height:14px;border-radius:50%;
+    background:var(--blue);border:3px solid var(--bg);
+    box-shadow:0 0 0 2px var(--blue);
+  }
+  .year-row.is-context .year-label span{color:var(--sub);font-size:16px;font-weight:700;}
+  .year-row.is-context .year-label::after{
+    background:var(--bg);box-shadow:0 0 0 2px var(--hair);top:18px;
+    width:10px;height:10px;right:-5px;
+  }
+
+  .year-cards{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:14px;}
+
+  /* ---------- cards ---------- */
+  .card{
+    display:block;
+    background:var(--card);
+    border:1px solid var(--hair);
+    border-left:5px solid var(--hair);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:18px 22px;
+    text-decoration:none;
+    color:inherit;
+    transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;
+  }
+  .card:hover,.card:focus-visible{
+    transform:translateY(-2px);
+    box-shadow:0 2px 5px rgba(24,39,75,.10),0 12px 30px rgba(24,39,75,.12);
+    outline:none;
+  }
+  .card:focus-visible{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,120,214,.35);}
+  .card-built{border-left-color:var(--green);}
+  .card-reused{border-left-color:var(--blue);}
+
+  .card-top{
+    display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px 12px;
+    margin-bottom:6px;
+  }
+  .card h3{
+    margin:0;flex:1 1 260px;min-width:0;
+    font-size:18px;line-height:1.32;font-weight:700;letter-spacing:-.01em;
+  }
+  .flagship{
+    color:var(--yellow);font-size:15px;line-height:1;
+    margin-left:2px;
+  }
+  .cite{
+    margin:0 0 8px;
+    font-size:13px;color:var(--sub);font-style:italic;
+  }
+  .blurb{margin:0;font-size:14.5px;color:var(--sub);}
+  .go{
+    display:inline-block;margin-top:12px;
+    font-size:13px;font-weight:700;color:var(--blue);
+  }
+  .card:hover .go{text-decoration:underline;}
+
+  /* ---------- context markers ---------- */
+  .context-note{
+    border:1px dashed var(--hair);
+    border-radius:12px;
+    background:transparent;
+    padding:12px 18px;
+    color:var(--sub);
+    font-size:13.5px;
+  }
+  .context-note .badge{margin-right:10px;vertical-align:1px;}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--hair);
+    background:#fff;
+    padding:34px 24px 46px;
+  }
+  footer .wrap{max-width:940px;}
+  footer p{margin:0 0 12px;font-size:13.5px;color:var(--sub);max-width:74ch;}
+  footer a{color:var(--blue);}
+  footer p:last-child{margin-bottom:0;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:720px){
+    .hero{padding:46px 20px 56px;}
+    .wrap{padding:0 20px;}
+    .legend{margin:-28px auto 34px;padding:16px 18px;gap:12px 18px;}
+    /* spine simplifies: move to far left, stack year above cards */
+    .timeline::before{left:6px;}
+    .year-row{flex-direction:column;gap:12px;padding-left:28px;margin-bottom:28px;}
+    .year-label{
+      flex:none;text-align:left;padding:0 0 0 0;
+    }
+    .year-label::after{right:auto;left:-28px;top:8px;}
+    .year-row.is-context .year-label::after{left:-26px;top:8px;}
+    .card{padding:16px 18px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .card{transition:none;}
+    .card:hover,.card:focus-visible{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Texas State University · Geography Education</p>
+    <h1>Dr. Injeong Jo — Instrument Lab</h1>
+    <p class="sub">An interactive tour of the research instruments Dr. Injeong Jo built and reused across 2009&ndash;2024 &mdash; each one rebuilt here as a hands-on page you can actually click through.</p>
+    <p class="meta">
+      <span><b>12</b> interactive instruments</span>
+      <span><b>2009&ndash;2024</b> chronological</span>
+      <span><b>8</b> built &middot; <b>4</b> reused</span>
+    </p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="legend" aria-label="Legend">
+    <h2>Legend</h2>
+    <span class="legend-item"><span class="badge badge-built">Built</span> instrument she developed</span>
+    <span class="legend-item"><span class="badge badge-reused">Reused</span> existing instrument she applied</span>
+    <span class="legend-item"><span class="flagship" aria-hidden="true">&#9733;</span> flagship contribution</span>
+    <span class="legend-item"><span class="badge badge-context">Context</span> throughline year, no page</span>
+  </section>
+
+  <div class="timeline">
+
+    <!-- 2009 -->
+    <div class="year-row">
+      <div class="year-label"><span>2009</span></div>
+      <div class="year-cards">
+        <a class="card card-built" href="instruments/taxonomy-3d-cube.html">
+          <div class="card-top">
+            <h3>Taxonomy of Spatial Thinking &mdash; 3D rotatable cube <span class="flagship" aria-hidden="true">&#9733;</span></h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo &amp; Bednarz (2009)</p>
+          <p class="blurb">The 4&times;2&times;3 = 24-cell taxonomy as a rotatable 3D WebGL cube you can walk cell by cell.</p>
+          <span class="go">Open the cube &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2010 context -->
+    <div class="year-row is-context">
+      <div class="year-label"><span>2010</span></div>
+      <div class="year-cards">
+        <div class="context-note">
+          <span class="badge badge-context">Context &middot; no page</span>
+          Conceptual guidance on designing spatially demanding questions extends the taxonomy into practice.
+        </div>
+      </div>
+    </div>
+
+    <!-- 2011 -->
+    <div class="year-row">
+      <div class="year-label"><span>2011</span></div>
+      <div class="year-cards">
+        <a class="card card-built" href="instruments/where-spatial-questions-hide.html">
+          <div class="card-top">
+            <h3>Question-Location Coding Scheme</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo &amp; Bednarz (2011)</p>
+          <p class="blurb">Five-category scheme for <em>where</em> spatial questions hide in a textbook (in-text, margin, supplemental, end-of-section, end-of-chapter).</p>
+          <span class="go">Explore the scheme &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2013 -->
+    <div class="year-row">
+      <div class="year-label"><span>2013</span></div>
+      <div class="year-cards">
+        <a class="card card-built" href="instruments/college-readiness-geography.html">
+          <div class="card-top">
+            <h3>Seven-Goal College-Readiness Scheme</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo &amp; Milson (2013)</p>
+          <p class="blurb">Seven college-readiness goals crosswalked across national standards, with importance/proficiency/challenge gaps.</p>
+          <span class="go">Explore the goals &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2014 -->
+    <div class="year-row">
+      <div class="year-label"><span>2014</span></div>
+      <div class="year-cards">
+        <a class="card card-built" href="instruments/disposition-inventory.html">
+          <div class="card-top">
+            <h3>Teaching Spatial Thinking Disposition Inventory <span class="flagship" aria-hidden="true">&#9733;</span></h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo &amp; Bednarz (2014)</p>
+          <p class="blurb">40-item, 5-point Likert inventory of a teacher's disposition to teach spatial thinking, with reverse-scored safeguards.</p>
+          <span class="go">Take the inventory &rarr;</span>
+        </a>
+        <div class="context-note">
+          <span class="badge badge-context">Context &middot; no page</span>
+          The 2009 Taxonomy is reused this same year to code lesson plans &mdash; the first of several downstream applications.
+        </div>
+      </div>
+    </div>
+
+    <!-- 2016 -->
+    <div class="year-row">
+      <div class="year-label"><span>2016</span></div>
+      <div class="year-cards">
+        <a class="card card-built" href="instruments/methods-review-2016.html">
+          <div class="card-top">
+            <h3>191-Article Methods-Review Database</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Zadrozny, McClure, Lee &amp; Jo (2016)</p>
+          <p class="blurb">A coded database of 191 research-methods articles auditing the subfield's rigor.</p>
+          <span class="go">Browse the database &rarr;</span>
+        </a>
+        <a class="card card-reused" href="instruments/stat-explorer.html">
+          <div class="card-top">
+            <h3>Spatial Thinking Ability Test (STAT)</h3>
+            <span class="badge badge-reused">Reused</span>
+          </div>
+          <p class="cite">Instrument: Lee &amp; Bednarz (2012); applied by Jo, Hong &amp; Verma (2016)</p>
+          <p class="blurb">The standardized 16-item spatial-thinking test Jo reused as a pre/post measure &mdash; 8-component explorer plus her 2016 Web-GIS results.</p>
+          <span class="go">Open the explorer &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2018 context -->
+    <div class="year-row is-context">
+      <div class="year-label"><span>2018</span></div>
+      <div class="year-cards">
+        <div class="context-note">
+          <span class="badge badge-context">Context &middot; no page</span>
+          The Taxonomy is adapted again to analyse astronaut-photograph tasks, showing its reach beyond textbooks.
+        </div>
+      </div>
+    </div>
+
+    <!-- 2019 -->
+    <div class="year-row">
+      <div class="year-label"><span>2019</span></div>
+      <div class="year-cards">
+        <a class="card card-built" href="instruments/scientific-literacy-coding.html">
+          <div class="card-top">
+            <h3>Four-Domain Scientific-Literacy Coding</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Xuan et al. (2019)</p>
+          <p class="blurb">Four-domain scientific-literacy framework applied to 100 Chinese curriculum objectives.</p>
+          <span class="go">Explore the framework &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2020 -->
+    <div class="year-row">
+      <div class="year-label"><span>2020</span></div>
+      <div class="year-cards">
+        <a class="card card-reused" href="instruments/spatial-concept-test.html">
+          <div class="card-top">
+            <h3>Spatial-Concept Generation &amp; Recognition Test</h3>
+            <span class="badge badge-reused">Reused</span>
+          </div>
+          <p class="cite">Instrument: Marsh, Golledge &amp; Battersby (2007); applied by Jo &amp; Hong (2020)</p>
+          <p class="blurb">Marsh et al.'s generation &amp; recognition test of appropriate spatial concepts, replicated online for the 2020 GIS study.</p>
+          <span class="go">Take the test &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2022 -->
+    <div class="year-row">
+      <div class="year-label"><span>2022</span></div>
+      <div class="year-cards">
+        <a class="card card-built" href="instruments/geoactivity-optic-scrap.html">
+          <div class="card-top">
+            <h3>GeoActivity Scaffolds &mdash; OPTIC &amp; SCRAP</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo, Crane, Hong &amp; Huh (2022)</p>
+          <p class="blurb">OPTIC (photo analysis) and SCRAP (map analysis) student-facing classroom routines as interactive &ldquo;analysis machines.&rdquo;</p>
+          <span class="go">Run the scaffolds &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2023 -->
+    <div class="year-row">
+      <div class="year-label"><span>2023</span></div>
+      <div class="year-cards">
+        <a class="card card-reused" href="instruments/tpack-gst-rubric.html">
+          <div class="card-top">
+            <h3>TPACK-Based GST Lesson-Assessment Rubric</h3>
+            <span class="badge badge-reused">Reused</span>
+          </div>
+          <p class="cite">Instrument: Harris, Grandgenett &amp; Hofer (2010); applied by Huh &amp; Jo (2023)</p>
+          <p class="blurb">The TPACK lesson-assessment rubric adapted for geospatial-technology lessons, with an interactive TPACK Venn and scorer.</p>
+          <span class="go">Score a lesson &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2024 -->
+    <div class="year-row">
+      <div class="year-label"><span>2024</span></div>
+      <div class="year-cards">
+        <a class="card card-reused" href="instruments/vsr-explainer.html">
+          <div class="card-top">
+            <h3>Video-Stimulated Recall &amp; Interview Protocols</h3>
+            <span class="badge badge-reused">Reused</span>
+          </div>
+          <p class="cite">Endacott &amp; Sturtz (2015) et al.; applied by Huh &amp; Jo (2024)</p>
+          <p class="blurb">An animated explainer of video-stimulated recall and interview protocols from the 2024 pedagogical-reasoning study.</p>
+          <span class="go">Watch the explainer &rarr;</span>
+        </a>
+        <a class="card card-built" href="instruments/spatial-concepts-gis-2024.html">
+          <div class="card-top">
+            <h3>16-Spatial-Concepts Self-Report Survey</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo &amp; Hong-Dwyer (2024)</p>
+          <p class="blurb">A self-report survey of which spatial concepts students know, newly learned, or deepened through a GIS course.</p>
+          <span class="go">Take the survey &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /.timeline -->
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>These pages are <strong>interactive learning aids</strong> &mdash; recreations built to make each instrument's logic explorable, not official research instruments or scoring tools.</p>
+    <p>For the <strong>reused</strong> instruments, the sample items shown are <strong>original illustrations written for this site</strong> in the style of the published instrument, not the copyrighted original items. Consult the cited source for the authoritative instrument.</p>
+    <p>Source and issues: <a href="https://github.com/edgeoinnovations-resources/Texas-State-University">github.com/edgeoinnovations-resources/Texas-State-University</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

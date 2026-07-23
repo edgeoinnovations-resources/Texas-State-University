@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spatial-Concept Test — Marsh, Golledge &amp; Battersby (2007), replicated</title>
+<style>
+  :root{
+    --bg:#f4f2ec; --panel:#ffffff; --panel-2:#fbfaf5;
+    --ink:#232a2f; --ink-soft:#4c5760; --muted:#8a929b; --line:#e4ded1;
+    --teal:#0f766e; --teal-deep:#0b4f49; --teal-soft:#e6f1ef;
+    --amber:#b45309; --amber-soft:#f7efe1;
+    --good:#0f9d6e; --bad:#c2544d;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 34px rgba(30,30,30,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:820px;margin:0 auto;padding:26px 20px 70px}
+  h1,h2,h3{font-family:var(--sans);letter-spacing:-.01em}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
+  a{color:var(--teal)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:30px 32px}
+  .card + .card{margin-top:18px}
+
+  /* progress */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+  .steplabel{font-size:12.5px;color:var(--ink-soft);font-weight:600}
+  .prog{height:7px;background:#e7e1d4;border-radius:4px;flex:1;overflow:hidden;max-width:340px}
+  .prog i{display:block;height:100%;background:linear-gradient(90deg,#2dd4bf,#0f766e);border-radius:4px;transition:width .3s}
+  .phasepill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:4px 10px;border-radius:999px;background:var(--teal-soft);color:var(--teal-deep)}
+  .phasepill.rec{background:var(--amber-soft);color:var(--amber)}
+
+  h1.title{font-size:30px;margin:2px 0 8px;line-height:1.12}
+  p.sub{font-size:17px;color:var(--ink-soft);margin:0 0 18px}
+  p{margin:0 0 14px}
+  .lead{font-size:16.5px}
+
+  .diagram{background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:16px;margin:8px 0 6px;text-align:center}
+  .diagram svg{max-width:100%;height:auto}
+  .figcap{font-size:11.5px;color:var(--muted);margin-top:8px}
+  .formtag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--teal-deep);background:var(--teal-soft);padding:3px 10px;border-radius:999px;margin-bottom:10px}
+  .formtag.real{color:var(--amber);background:var(--amber-soft)}
+
+  .prompt{font-family:var(--serif);font-size:19px;line-height:1.4;margin:14px 0 12px}
+  textarea{width:100%;min-height:92px;border:1px solid var(--line);border-radius:11px;padding:13px 14px;
+    font-family:var(--sans);font-size:15.5px;color:var(--ink);background:#fff;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--teal)}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:7px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+  .chip{font-size:14px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;
+    color:var(--ink-soft);cursor:pointer;transition:.1s;user-select:none}
+  .chip:hover{border-color:var(--teal)}
+  .chip.on{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
+  .chips.locked .chip{opacity:.55;pointer-events:none}
+
+  .timer{font-size:13px;font-weight:700;color:var(--amber);font-variant-numeric:tabular-nums}
+  .timer.done{color:var(--bad)}
+
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px}
+  button.btn{font-family:var(--sans);font-size:15px;font-weight:700;border-radius:11px;padding:12px 22px;cursor:pointer;border:1px solid transparent;transition:.12s}
+  .btn.primary{background:var(--teal);color:#fff}
+  .btn.primary:hover{background:var(--teal-deep)}
+  .btn.ghost{background:#fff;border-color:var(--line);color:var(--ink-soft)}
+  .btn.ghost:hover{border-color:var(--teal);color:var(--ink)}
+  .btn.big{width:100%;padding:15px;font-size:16px;margin-top:8px}
+  .btn:disabled{opacity:.45;cursor:default}
+
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 6px}
+  .opt{border:1px solid var(--line);border-radius:13px;padding:16px 18px;cursor:pointer;background:#fff;transition:.12s}
+  .opt:hover{border-color:var(--teal)}
+  .opt.on{border-color:var(--teal);box-shadow:inset 0 0 0 1px var(--teal);background:var(--teal-soft)}
+  .opt h4{margin:0 0 5px;font-size:15px}
+  .opt p{margin:0;font-size:13px;color:var(--ink-soft)}
+
+  .toggle{display:flex;align-items:center;gap:11px;margin:14px 0 2px;font-size:14px;color:var(--ink-soft)}
+  .sw{width:42px;height:24px;border-radius:999px;background:#d8d2c4;position:relative;transition:.15s;flex:0 0 auto;cursor:pointer}
+  .sw i{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .sw.on{background:var(--teal)} .sw.on i{left:21px}
+
+  ul.clean{margin:6px 0 14px;padding-left:0;list-style:none}
+  ul.clean li{position:relative;padding-left:22px;margin:8px 0;font-size:14.5px;color:var(--ink-soft)}
+  ul.clean li:before{content:"";position:absolute;left:2px;top:8px;width:7px;height:7px;border-radius:2px;background:var(--teal)}
+
+  /* results */
+  .scoregrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 18px}
+  .scorebox{border:1px solid var(--line);border-radius:13px;padding:18px 20px;background:var(--panel-2)}
+  .scorebox .big{font-size:34px;font-weight:800;line-height:1;color:var(--teal-deep)}
+  .scorebox .lbl{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;font-weight:700}
+  .scorebox .note{font-size:13px;color:var(--ink-soft);margin-top:9px}
+  .rd{border:1px solid var(--line);border-radius:13px;padding:16px 18px;margin:12px 0;background:#fff}
+  .rd h4{margin:0 0 3px;font-size:15px}
+  .rd .meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+  .conc{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .cpill{font-size:12.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);display:inline-flex;align-items:center;gap:6px}
+  .cpill.got{background:#e7f6ee;border-color:#bfe6d2;color:#0b6b4b}
+  .cpill.miss{background:#fbeceb;border-color:#f0cfcc;color:#a23c37}
+  .cpill.extra{background:#eef3f2;border-color:#d6e6e3;color:var(--teal-deep)}
+  .cpill .pct{font-size:11px;color:var(--muted);font-weight:600}
+  .yourwords{font-family:var(--serif);font-size:15px;background:var(--panel-2);border-radius:9px;padding:9px 12px;margin:8px 0;color:var(--ink-soft)}
+  .callout{background:var(--amber-soft);border-left:4px solid var(--amber);border-radius:8px;padding:15px 18px;margin:16px 0;font-size:14.5px}
+  .callout b{color:var(--amber)}
+  .foot{font-size:12px;color:var(--muted);margin-top:22px;border-top:1px solid var(--line);padding-top:14px}
+
+  @media(max-width:640px){
+    .card{padding:22px 18px}
+    .opts,.scoregrid{grid-template-columns:1fr}
+    h1.title{font-size:24px}
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+<div class="wrap">
+  <div id="app"></div>
+</div>
+
+<script>
+(function(){
+  /* ---------------- data ---------------- */
+  var DIAGRAMS=[
+    {id:1,type:'point',form:'Abstract',prompt:'Write all of the words you can think of to describe the relationship between the unfilled points.'},
+    {id:2,type:'line',form:'Abstract',prompt:'Write all of the words you can think of to describe the relationship between these lines.'},
+    {id:3,type:'polygon',form:'Abstract',prompt:'Write all of the words you can think of to describe the relationship between these polygons.'},
+    {id:4,type:'point',form:'Real-world',prompt:'Write all of the words you can think of to describe the relationship between the circled giraffe sightings.'},
+    {id:5,type:'line',form:'Real-world',prompt:'Write all of the words you can think of to describe the set of streets.'},
+    {id:6,type:'polygon',form:'Real-world',prompt:'Write all of the words you can think of to describe the relationship between the habitat and the resort development area.'}
+  ];
+  var CORE={
+    point:['close','clustered','near','proximal','together'],
+    line:['arrangement','connected','linked','network','patterned'],
+    polygon:['arrangement','connected','in','inside','linked','over','together','under']
+  };
+  var EXTRA={
+    point:['adjacent','grouped','nearest neighbor','grouping','dense'],
+    line:['grid','intersect','parallel','perpendicular','pattern'],
+    polygon:['overlap','overlay','intersect','contained','within']
+  };
+  var WORDLIST=['above','beside','isolated','patterned','along','center','linked','peripheral','among','close',
+    'near','proximal','apart','clustered','network','together','around','connected','node','top','arrangement',
+    'far','on','toward','away','in','outside','under','behind','inside','over','up','below'];
+  // Marsh, Golledge & Battersby (2007) college-student selection %, per diagram
+  var BENCH={
+    1:{close:68,clustered:83,near:68,proximal:30,together:48},
+    4:{close:68,clustered:83,near:68,proximal:40,together:75},
+    2:{arrangement:73,connected:93,linked:85,network:85,patterned:78},
+    5:{arrangement:85,connected:93,linked:88,network:75,patterned:75},
+    3:{arrangement:20,connected:85,'in':23,inside:53,linked:78,over:53,together:70,under:25},
+    6:{arrangement:18,connected:85,'in':28,inside:50,linked:73,over:28,together:68,under:18}
+  };
+
+  /* ---------------- diagrams (SVG, reconstructed) ---------------- */
+  function svgFor(id){
+    var W=360,H=250, s='<svg viewBox="0 0 '+W+' '+H+'" width="360" height="250" xmlns="http://www.w3.org/2000/svg">';
+    s+='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fbfaf5" stroke="#e4ded1" rx="10"/>';
+    if(id===1){ // point abstract — cluster of unfilled points
+      var pts=[[150,90],[178,80],[205,98],[160,118],[192,120],[214,128],[168,146],[198,150],[182,132],[224,108],[146,124],[210,158]];
+      pts.forEach(function(p){ s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="9" fill="none" stroke="#2b3540" stroke-width="2"/>'; });
+    }
+    else if(id===4){ // point real — circled giraffe sightings
+      s+='<rect x="14" y="14" width="332" height="222" fill="#eef3ec" stroke="none" rx="8"/>';
+      var d=[[150,90],[178,82],[205,100],[165,116],[193,120],[214,126],[172,146],[198,150],[184,132],[70,60],[300,200],[60,200],[315,70]];
+      d.forEach(function(p){ s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5.5" fill="#6b4f2a"/>'; });
+      s+='<ellipse cx="186" cy="118" rx="78" ry="56" fill="none" stroke="#b45309" stroke-width="2.4" stroke-dasharray="7 5"/>';
+      s+='<g font-family="Helvetica,Arial" font-size="11" fill="#6b4f2a"><circle cx="30" cy="228" r="4.5" fill="#6b4f2a"/><text x="42" y="232">giraffe sighting</text></g>';
+    }
+    else if(id===2){ // line abstract — network of lines
+      var N={A:[70,60],B:[160,48],C:[262,72],D:[300,138],E:[228,158],F:[110,166],G:[184,110]};
+      var E=[['A','B'],['B','C'],['C','D'],['D','E'],['E','F'],['F','A'],['B','G'],['G','E'],['C','G'],['A','G']];
+      E.forEach(function(e){ s+='<line x1="'+N[e[0]][0]+'" y1="'+N[e[0]][1]+'" x2="'+N[e[1]][0]+'" y2="'+N[e[1]][1]+'" stroke="#2b3540" stroke-width="2.1"/>'; });
+      Object.keys(N).forEach(function(k){ s+='<circle cx="'+N[k][0]+'" cy="'+N[k][1]+'" r="4.5" fill="#0f766e"/>'; });
+    }
+    else if(id===5){ // line real — set of streets
+      s+='<rect x="14" y="14" width="332" height="222" fill="#eef1f3" rx="8"/>';
+      function road(x1,y1,x2,y2){ return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#c9cfd6" stroke-width="12" stroke-linecap="round"/>'+
+        '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#fff" stroke-width="1.4" stroke-dasharray="6 6"/>'; }
+      s+=road(30,86,330,86)+road(30,150,330,150)+road(30,205,330,205);
+      s+=road(96,40,96,225)+road(186,40,186,225)+road(272,40,272,225);
+      s+=road(40,40,150,225);
+    }
+    else if(id===3){ // polygon abstract — overlapping polygons
+      s+='<polygon points="96,68 208,56 176,166 110,150" fill="rgba(15,118,110,.30)" stroke="#0f766e" stroke-width="1.8"/>';
+      s+='<polygon points="150,92 272,84 288,178 176,190" fill="rgba(180,83,9,.26)" stroke="#b45309" stroke-width="1.8"/>';
+      s+='<polygon points="120,120 236,128 190,204 132,196" fill="rgba(56,116,203,.24)" stroke="#3a68b0" stroke-width="1.8"/>';
+    }
+    else if(id===6){ // polygon real — habitat + resort development
+      s+='<rect x="14" y="14" width="332" height="222" fill="#eef3ec" rx="8"/>';
+      s+='<polygon points="52,96 150,58 226,104 202,196 84,188" fill="rgba(46,140,74,.34)" stroke="#2e8c4a" stroke-width="1.8"/>';
+      s+='<polygon points="168,78 306,96 296,206 160,186" fill="rgba(180,83,9,.30)" stroke="#b45309" stroke-width="1.8"/>';
+      s+='<g font-family="Helvetica,Arial" font-size="12" font-weight="700">'+
+         '<text x="70" y="150" fill="#1f6b37">Habitat</text>'+
+         '<text x="238" y="150" fill="#8a4408">Resort dev.</text></g>';
+    }
+    s+='</svg>';
+    return s;
+  }
+
+  /* ---------------- state ---------------- */
+  var state={ phase:'intro', idx:0, mode:'full', timerOn:false,
+    gen:['','','','','',''], rec:[[],[],[],[],[],[]] };
+  var app=document.getElementById('app');
+  var timerHandle=null, timeLeft=30;
+
+  function clearTimer(){ if(timerHandle){ clearInterval(timerHandle); timerHandle=null; } }
+
+  /* ---------------- normalization for generation ---------------- */
+  var NORM={ cluster:'clustered',clustering:'clustered',clusters:'clustered',clustered:'clustered',
+    connect:'connected',connecting:'connected',connection:'connected',connections:'connected',connected:'connected',
+    link:'linked',links:'linked',linking:'linked',linked:'linked',
+    near:'near',nearby:'near',nearness:'near',
+    proximal:'proximal',proximity:'proximal',proximate:'proximal',
+    close:'close',closeness:'close',
+    together:'together',togetherness:'together',
+    arrangement:'arrangement',arranged:'arrangement',arrange:'arrangement',
+    network:'network',networks:'network',networked:'network',
+    pattern:'patterned',patterns:'patterned',patterned:'patterned',
+    overlap:'overlap',overlapping:'overlap',overlaps:'overlap',overlapped:'overlap',
+    overlay:'overlay',overlaid:'overlay',overlays:'overlay',
+    intersect:'intersect',intersecting:'intersect',intersection:'intersect',intersects:'intersect',intersections:'intersect',
+    inside:'inside',within:'within',contained:'contained',containing:'contained',containment:'contained',
+    adjacent:'adjacent',adjacency:'adjacent',
+    grouped:'grouped',grouping:'grouping',group:'grouped',groups:'grouped',
+    grid:'grid',gridded:'grid',
+    parallel:'parallel',parallels:'parallel',
+    perpendicular:'perpendicular',
+    dense:'dense',density:'dense',
+    'nearest neighbor':'nearest neighbor','nearest neighbour':'nearest neighbor'
+  };
+  function normList(text){
+    return text.split(/[,;\n\/]+/).map(function(t){
+      t=t.toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim();
+      return NORM[t]||t;
+    }).filter(function(t){ return t.length; });
+  }
+
+  /* ---------------- render ---------------- */
+  function render(){
+    clearTimer();
+    if(state.phase==='intro') return renderIntro();
+    if(state.phase==='results') return renderResults();
+    return renderQuestion();
+  }
+
+  function renderIntro(){
+    app.innerHTML=
+    '<div class="card">'+
+      '<div class="kicker">Interactive Instrument</div>'+
+      '<h1 class="title">The Spatial-Concept Test</h1>'+
+      '<p class="sub">Marsh, Golledge &amp; Battersby (2007) generation &amp; recognition tasks — the online (Qualtrics) version replicated by Jo &amp; Hong (2020).</p>'+
+      '<p class="lead">You’ll see six diagrams — points, lines, and polygons, each shown once as an abstract figure and once as a real-world scene. For each, you’ll do the two tasks the study used:</p>'+
+      '<ul class="clean">'+
+        '<li><b>Generation</b> — you <i>write</i> every word you can think of to describe the spatial relationship, with nothing to prompt you.</li>'+
+        '<li><b>Recognition</b> — you <i>select</i> the fitting words from a fixed list of 33 terms.</li>'+
+      '</ul>'+
+      '<p style="font-size:14px;color:var(--ink-soft)">At the end you’ll be scored against the study’s “appropriate concept” key and compared to Marsh et al.’s college students. The point isn’t to win — it’s to feel the gap between what you can <i>recognize</i> and what you can <i>generate</i>, which is the study’s central finding.</p>'+
+      '<div class="opts">'+
+        '<div class="opt '+(state.mode==='full'?'on':'')+'" data-mode="full"><h4>Full experience</h4><p>Generation (6) then recognition (6). ~5–10 min. As the study ran it.</p></div>'+
+        '<div class="opt '+(state.mode==='rec'?'on':'')+'" data-mode="rec"><h4>Recognition only</h4><p>Skip the writing task and just select from the list. ~3 min.</p></div>'+
+      '</div>'+
+      '<div class="toggle"><div class="sw '+(state.timerOn?'on':'')+'" id="swTimer"><i></i></div>'+
+        '<span>Authentic 30-second limit on the recognition task <span style="color:var(--muted)">(the original kept 30s here; generation had no limit)</span></span></div>'+
+      '<button class="btn primary big" id="beginBtn">Begin the test →</button>'+
+      '<div class="foot">Diagrams reconstructed from Marsh, Golledge &amp; Battersby (2007), <i>Annals of the AAG</i> 97(4). Replication design: Jo &amp; Hong (2020), <i>Journal of Geography</i> 119(3):87–97.</div>'+
+    '</div>';
+    app.querySelectorAll('.opt').forEach(function(o){ o.onclick=function(){ state.mode=o.dataset.mode; render(); }; });
+    app.querySelector('#swTimer').onclick=function(){ state.timerOn=!state.timerOn; render(); };
+    app.querySelector('#beginBtn').onclick=function(){ state.phase=(state.mode==='rec')?'rec':'gen'; state.idx=0; render(); };
+  }
+
+  function totalSteps(){ return state.mode==='rec'?6:12; }
+  function globalStep(){ return state.phase==='rec'?(state.mode==='rec'?state.idx:6+state.idx):state.idx; }
+
+  function renderQuestion(){
+    var d=DIAGRAMS[state.idx];
+    var isRec=state.phase==='rec';
+    var stepN=globalStep()+1, total=totalSteps();
+    var phaseName=isRec?'Recognition':'Generation';
+    var partTxt=(state.mode==='full')?('Part '+(isRec?'2':'1')+' of 2 · '):'';
+
+    var html='<div class="card">'+
+      '<div class="topbar">'+
+        '<span class="phasepill '+(isRec?'rec':'')+'">'+phaseName+'</span>'+
+        '<div class="prog"><i style="width:'+((stepN-0.001)/total*100)+'%"></i></div>'+
+        '<span class="steplabel">'+partTxt+'Diagram '+(state.idx+1)+' of 6</span>'+
+      '</div>'+
+      '<span class="formtag '+(d.form==='Real-world'?'real':'')+'">'+d.type+' · '+d.form+'</span>'+
+      '<div class="diagram">'+svgFor(d.id)+
+        '<div class="figcap">Diagram '+d.id+' — reconstructed from Marsh, Golledge &amp; Battersby (2007)</div></div>';
+
+    if(!isRec){
+      html+='<div class="prompt">'+d.prompt+'</div>'+
+        '<textarea id="genInput" placeholder="Separate words with commas — e.g. clustered, near, grouped…">'+escapeHtml(state.gen[state.idx])+'</textarea>'+
+        '<div class="hint">Write as many as you can. There’s no time limit on this task (as in Jo &amp; Hong 2020). Don’t peek at the recognition list yet — that’s the point.</div>';
+    } else {
+      html+='<div class="prompt">Select every word that appropriately describes the spatial relationship shown.</div>';
+      if(state.timerOn) html+='<div style="margin-bottom:6px"><span class="timer" id="timer">0:30</span> <span style="font-size:12px;color:var(--muted)">— original allowed 30 seconds</span></div>';
+      html+='<div class="chips" id="chips">'+WORDLIST.map(function(w){
+        var on=state.rec[state.idx].indexOf(w)>=0;
+        return '<span class="chip '+(on?'on':'')+'" data-w="'+w+'">'+w+'</span>';
+      }).join('')+'</div>';
+    }
+
+    html+='<div class="nav">'+
+      '<button class="btn ghost" id="backBtn" '+(stepN===1?'disabled':'')+'>← Back</button>'+
+      '<button class="btn primary" id="nextBtn">'+(stepN===total?'See my results →':'Next →')+'</button>'+
+    '</div></div>';
+    app.innerHTML=html;
+
+    if(!isRec){
+      var ta=app.querySelector('#genInput');
+      ta.oninput=function(){ state.gen[state.idx]=ta.value; };
+      ta.focus();
+    } else {
+      app.querySelectorAll('.chip').forEach(function(c){
+        c.onclick=function(){
+          var w=c.dataset.w, arr=state.rec[state.idx], i=arr.indexOf(w);
+          if(i>=0){ arr.splice(i,1); c.classList.remove('on'); } else { arr.push(w); c.classList.add('on'); }
+        };
+      });
+      if(state.timerOn) startTimer();
+    }
+    app.querySelector('#backBtn').onclick=goBack;
+    app.querySelector('#nextBtn').onclick=goNext;
+  }
+
+  function startTimer(){
+    timeLeft=30; var el=app.querySelector('#timer');
+    timerHandle=setInterval(function(){
+      timeLeft--; if(el) el.textContent='0:'+(timeLeft<10?'0':'')+Math.max(0,timeLeft);
+      if(timeLeft<=0){ clearTimer(); if(el){ el.textContent='Time’s up'; el.classList.add('done'); }
+        var chips=app.querySelector('#chips'); if(chips) chips.classList.add('locked'); }
+    },1000);
+  }
+
+  function goBack(){
+    clearTimer();
+    if(state.phase==='rec' && state.idx===0){
+      if(state.mode==='full'){ state.phase='gen'; state.idx=5; } // back into generation
+    } else if(state.idx===0){ state.phase='intro'; }
+    else { state.idx--; }
+    render();
+  }
+  function goNext(){
+    clearTimer();
+    if(state.phase==='gen'){
+      if(state.idx===5){ state.phase='rec'; state.idx=0; } else state.idx++;
+    } else { // rec
+      if(state.idx===5){ state.phase='results'; } else state.idx++;
+    }
+    render();
+  }
+
+  /* ---------------- results ---------------- */
+  function renderResults(){
+    // Recognition scoring
+    var recAppropriate=0, recTotal=0, recInappropriate=0;
+    var recRows=DIAGRAMS.map(function(d){
+      var core=CORE[d.type], chosen=state.rec[d.id-1];
+      var got=core.filter(function(w){ return chosen.indexOf(w)>=0; });
+      var missed=core.filter(function(w){ return chosen.indexOf(w)<0; });
+      var wrong=chosen.filter(function(w){ return core.indexOf(w)<0; });
+      recAppropriate+=got.length; recTotal+=core.length; recInappropriate+=wrong.length;
+      return {d:d,got:got,missed:missed,wrong:wrong,core:core};
+    });
+    var recPct=recTotal?Math.round(recAppropriate/recTotal*100):0;
+
+    // Generation scoring
+    var genAppropriate=0, genCoreCount=0, genRows=[];
+    if(state.mode==='full'){
+      genRows=DIAGRAMS.map(function(d){
+        var core=CORE[d.type], extra=EXTRA[d.type];
+        var produced=normList(state.gen[d.id-1]);
+        var gotCore=core.filter(function(w){ return produced.indexOf(w)>=0; });
+        var gotExtra=extra.filter(function(w){ return produced.indexOf(w)>=0; });
+        var missedCore=core.filter(function(w){ return produced.indexOf(w)<0; });
+        genAppropriate+=gotCore.length+gotExtra.length; genCoreCount+=gotCore.length;
+        return {d:d,produced:produced,gotCore:gotCore,gotExtra:gotExtra,missedCore:missedCore,core:core};
+      });
+    }
+
+    var html='<div class="card">'+
+      '<div class="kicker">Your results</div>'+
+      '<h1 class="title">How your spatial vocabulary held up</h1>'+
+      '<div class="scoregrid">'+
+        '<div class="scorebox"><div class="big">'+recPct+'%</div><div class="lbl">Recognition — appropriate concepts found</div>'+
+          '<div class="note">'+recAppropriate+' of '+recTotal+' appropriate terms selected'+(recInappropriate?(' · '+recInappropriate+' inappropriate also chosen'):'')+'.<br>Benchmark: Marsh’s college students ~59%; Jo &amp; Hong’s groups ~60–68%.</div></div>';
+    if(state.mode==='full'){
+      html+='<div class="scorebox"><div class="big">'+genAppropriate+'</div><div class="lbl">Generation — appropriate concepts produced</div>'+
+        '<div class="note">Words you generated cold that match the key ('+genCoreCount+' from the core list).<br>In the study, generation ran <b>below 20%</b> for most concepts — far below recognition.</div></div>';
+    } else {
+      html+='<div class="scorebox" style="background:var(--teal-soft);border-color:#cfe6e1"><div class="lbl" style="color:var(--teal-deep)">Recognition-only run</div>'+
+        '<div class="note">Try the full version to feel the generation gap — producing these words unaided is dramatically harder than picking them off a list.</div></div>';
+    }
+    html+='</div>';
+
+    if(state.mode==='full'){
+      html+='<div class="callout"><b>The gap is the finding.</b> Marsh, Golledge &amp; Battersby argued that if you can <i>recognize</i> a concept but can’t <i>generate</i> it, your understanding was probably picked up incidentally — absorbed as everyday vocabulary rather than ever taught. That gap is exactly what motivated their call for a “minimal GIS”: teach the fundamental spatial concepts explicitly, in spatial contexts, before the software.</div>';
+    }
+
+    // Recognition detail
+    html+='<h3 style="margin:22px 0 4px;font-size:17px">Recognition — concept by concept</h3>'+
+      '<p style="font-size:13.5px;color:var(--ink-soft)">Green = you selected an appropriate concept; red = appropriate but missed. The small % is how many of Marsh’s college students selected that term for this diagram.</p>';
+    recRows.forEach(function(r){
+      html+='<div class="rd"><h4>Diagram '+r.d.id+' · '+r.d.type+' · '+r.d.form+'</h4>'+
+        '<div class="meta">Appropriate concepts: '+r.core.length+' · you found '+r.got.length+'</div><div class="conc">';
+      r.core.forEach(function(w){
+        var got=r.got.indexOf(w)>=0, b=(BENCH[r.d.id]&&BENCH[r.d.id][w]!=null)?('<span class="pct">'+BENCH[r.d.id][w]+'%</span>'):'';
+        html+='<span class="cpill '+(got?'got':'miss')+'">'+(got?'✓':'✗')+' '+w+' '+b+'</span>';
+      });
+      html+='</div>';
+      if(r.wrong.length){ html+='<div style="font-size:12.5px;color:var(--muted);margin-top:9px">Also selected (not on the appropriate key): '+r.wrong.join(', ')+'</div>'; }
+      html+='</div>';
+    });
+
+    // Generation detail
+    if(state.mode==='full'){
+      html+='<h3 style="margin:24px 0 4px;font-size:17px">Generation — what you produced cold</h3>';
+      genRows.forEach(function(r){
+        html+='<div class="rd"><h4>Diagram '+r.d.id+' · '+r.d.type+' · '+r.d.form+'</h4>';
+        html+='<div class="yourwords">'+(r.produced.length?('You wrote: '+r.produced.join(', ')):'<i>(left blank)</i>')+'</div>';
+        html+='<div class="conc">';
+        r.gotCore.forEach(function(w){ html+='<span class="cpill got">✓ '+w+'</span>'; });
+        r.gotExtra.forEach(function(w){ html+='<span class="cpill extra">+ '+w+' <span class="pct">also apt</span></span>'; });
+        r.missedCore.forEach(function(w){ html+='<span class="cpill miss">✗ '+w+'</span>'; });
+        html+='</div></div>';
+      });
+    }
+
+    html+='<div class="callout" style="background:var(--teal-soft);border-color:var(--teal)"><b style="color:var(--teal-deep)">What Jo &amp; Hong (2020) found.</b> Re-running this online with 119 undergraduates, GIS coursework produced <i>no</i> overall gain on these basic concepts — students who’d never taken GIS scored just as well. GIS training only showed up in technical terms tied to software tools (<i>clustered, proximal, network, overlay, nearest neighbor</i>), while the everyday relations stayed shallow and incidental. Their conclusion echoed Marsh et al.: teach the fundamental concepts explicitly, before the software.</div>';
+
+    html+='<div class="nav"><button class="btn ghost" id="retake">↺ Retake</button>'+
+      '<button class="btn primary" id="review">Review the diagrams again</button></div>'+
+      '<div class="foot">Appropriate-concept key and college benchmarks from Marsh, Golledge &amp; Battersby (2007). Replication: Jo &amp; Hong (2020). This is a faithful reconstruction for learning, not the original stimuli.</div>'+
+      '</div>';
+    app.innerHTML=html;
+    app.querySelector('#retake').onclick=function(){ state.phase='intro'; state.idx=0; state.gen=['','','','','','']; state.rec=[[],[],[],[],[],[]]; render(); };
+    app.querySelector('#review').onclick=function(){ state.phase=state.mode==='rec'?'rec':'gen'; state.idx=0; render(); };
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  render();
+})();
+</script>
+</body>
+</html>

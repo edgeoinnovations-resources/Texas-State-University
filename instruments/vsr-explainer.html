@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Video-Stimulated Recall Works — Huh &amp; Jo (2024)</title>
+<style>
+  :root{
+    --bg:#0f141a; --panel:#182029; --panel-2:#131a21; --edge:#243240;
+    --ink:#eaf1f5; --soft:#a9bcc7; --muted:#6f8494;
+    --teal:#2dd4bf; --teal-d:#0f766e; --gold:#f4c04a; --red:#ef5b5b;
+    --blue:#6ea8fe; --purple:#a78bfa; --green:#34d399; --orange:#fb923c;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --shadow:0 2px 6px rgba(0,0,0,.3),0 16px 44px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--teal)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--teal)}
+  h1,h2,h3{letter-spacing:-.01em}
+
+  header.hero{padding:56px 0 26px;text-align:center;border-bottom:1px solid var(--edge);
+    background:radial-gradient(120% 120% at 50% 0%,#17222c 0%,#0f141a 70%)}
+  header.hero h1{font-size:34px;margin:10px auto 12px;max-width:720px;line-height:1.14}
+  header.hero p{font-size:17.5px;color:var(--soft);max-width:680px;margin:0 auto}
+  .cite{margin-top:16px;font-size:12.5px;color:var(--muted)}
+
+  section{padding:38px 0 4px}
+  h2.sec{font-size:25px;margin:0 0 6px}
+  .sub{font-size:15px;color:var(--soft);margin:0 0 18px;max-width:720px}
+  .card{background:var(--panel);border:1px solid var(--edge);border-radius:16px;box-shadow:var(--shadow);padding:24px 26px;margin:16px 0}
+
+  /* pipeline stepper */
+  .pipe{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:6px 2px 4px}
+  .pstep{flex:1 0 118px;min-width:118px;text-align:center;position:relative;padding:0 6px}
+  .pstep .bub{width:46px;height:46px;border-radius:13px;margin:0 auto 9px;display:flex;align-items:center;justify-content:center;
+    font-size:20px;background:#1e2833;border:1.5px solid var(--edge);transition:.3s}
+  .pstep .lb{font-size:11.5px;color:var(--muted);line-height:1.3;transition:.3s}
+  .pstep:not(:last-child):after{content:"";position:absolute;top:23px;left:calc(50% + 30px);right:calc(-50% + 30px);height:2px;background:var(--edge)}
+  .pstep.on .bub{background:var(--teal-d);border-color:var(--teal);color:#eafffb;box-shadow:0 0 18px rgba(45,212,191,.4);transform:translateY(-2px)}
+  .pstep.on .lb{color:var(--ink);font-weight:600}
+  .pstep.vsr.on .bub{background:#7a5c12;border-color:var(--gold);box-shadow:0 0 18px rgba(244,192,74,.45)}
+  .replay{font-family:var(--sans);font-size:12px;color:var(--soft);background:#1e2833;border:1px solid var(--edge);border-radius:8px;padding:6px 12px;cursor:pointer;margin-top:6px}
+  .replay:hover{border-color:var(--teal)}
+
+  /* VSR simulator */
+  .sim{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
+  .player{background:#0a0f14;border:1px solid var(--edge);border-radius:14px;overflow:hidden;position:relative}
+  .screen{position:relative;aspect-ratio:16/10;background:linear-gradient(180deg,#1a2530,#0c1218)}
+  .screen svg{width:100%;height:100%;display:block}
+  .rec{position:absolute;top:11px;left:12px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#ffb4b4}
+  .rec .dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:blink 1.1s infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .tc{position:absolute;top:11px;right:12px;font-size:11.5px;color:#9fb2be;font-variant-numeric:tabular-nums;background:rgba(0,0,0,.35);padding:2px 8px;border-radius:6px}
+  .divov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    background:rgba(122,92,18,.30);backdrop-filter:blur(1px);opacity:0;pointer-events:none;transition:.3s;text-align:center;padding:20px}
+  .divov.on{opacity:1}
+  .divov .tag{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--gold);border:1px solid var(--gold);border-radius:999px;padding:4px 12px}
+  .divov .txt{font-family:var(--serif);font-size:16px;color:#fff;max-width:90%;line-height:1.45;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+  .transport{display:flex;align-items:center;gap:12px;padding:11px 14px;background:#0e141a;border-top:1px solid var(--edge)}
+  .playbtn{width:40px;height:40px;border-radius:50%;background:var(--teal);color:#04201d;border:none;cursor:pointer;font-size:16px;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+  .playbtn:hover{background:#5fe6d5}
+  .seg{font-size:11.5px;color:var(--soft);flex:1;min-width:0}
+  .seg b{color:var(--ink)}
+
+  .timeline{padding:14px}
+  .lane{margin:9px 0}
+  .lane .ln{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+  .track{position:relative;height:26px;border-radius:7px;background:#0c1218;border:1px solid var(--edge);overflow:visible}
+  .planseg{position:absolute;top:3px;height:18px;border-radius:5px;background:linear-gradient(180deg,#1c9c8f,#0f766e);opacity:.85}
+  .planseg .dl{position:absolute;left:7px;top:2px;font-size:9.5px;color:#d9fff8;white-space:nowrap}
+  .pin{position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:var(--gold);border:2px solid #0a0f14;
+    transform:translateX(-50%);cursor:pointer;transition:.15s;box-shadow:0 0 0 0 rgba(244,192,74,.5)}
+  .pin:hover{transform:translateX(-50%) scale(1.2)}
+  .pin.active{animation:pinpulse 1.2s infinite}
+  @keyframes pinpulse{0%{box-shadow:0 0 0 0 rgba(244,192,74,.55)}70%{box-shadow:0 0 0 10px rgba(244,192,74,0)}100%{box-shadow:0 0 0 0 rgba(244,192,74,0)}}
+  .playhead{position:absolute;top:-6px;bottom:-6px;width:2px;background:#fff;left:0;transition:left .08s linear;box-shadow:0 0 8px rgba(255,255,255,.6)}
+  .tlwrap{position:relative}
+
+  /* recall panel */
+  .recall{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:20px;display:flex;flex-direction:column}
+  .recall .idle{color:var(--muted);font-size:14px;margin:auto;text-align:center;padding:20px}
+  .recall .step{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+  .qbubble{background:#101922;border:1px solid var(--edge);border-left:3px solid var(--gold);border-radius:10px;padding:12px 14px;margin-bottom:14px}
+  .qbubble .who{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+  .qbubble .q{font-size:15px;color:#fff;min-height:22px}
+  .qbubble .cur{border-right:2px solid var(--gold);animation:caret .8s steps(1) infinite}
+  @keyframes caret{50%{border-color:transparent}}
+  .answer{background:#0f1720;border:1px solid var(--edge);border-radius:10px;padding:13px 15px;opacity:0;transform:translateY(8px);transition:.5s}
+  .answer.on{opacity:1;transform:none}
+  .answer .who{font-size:10.5px;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;font-weight:700}
+  .answer .a{font-family:var(--serif);font-size:15.5px;color:#e9f2f5;line-height:1.5}
+  .coded{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;opacity:0;transform:translateY(8px);transition:.5s .25s}
+  .coded.on{opacity:1;transform:none}
+  .coded .arrow{color:var(--muted);font-size:13px}
+  .chip{font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:999px}
+  .chip.phase{background:#3a2f12;color:var(--gold);border:1px solid #5c4c1c}
+  .chip.theme{background:#12302c;color:#7fe9db;border:1px solid #1f4b47}
+  .resumebtn{margin-top:16px;align-self:flex-start;font-family:var(--sans);font-size:13px;font-weight:700;background:var(--gold);color:#3a2c05;border:none;border-radius:9px;padding:9px 16px;cursor:pointer;opacity:0;transition:.4s .4s}
+  .resumebtn.on{opacity:1}
+  .resumebtn:hover{filter:brightness(1.08)}
+
+  /* PR&A cycle */
+  .cyclewrap{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:center}
+  .cy-node{cursor:pointer}
+  .cy-node circle{transition:.2s}
+  .cy-node:hover circle{stroke-width:3}
+  .cy-center{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:18px 20px;min-height:150px}
+  .cy-center .pname{font-size:18px;font-weight:800;margin:0 0 3px}
+  .cy-center .pdef{font-size:14px;color:var(--soft);margin:0 0 12px}
+  .cy-center .src{font-size:13px;color:var(--ink)}
+  .cy-center .src b{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px}
+  .vsrbadge{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#3a2c05;background:var(--gold);border-radius:6px;padding:2px 8px;margin-left:8px}
+
+  /* protocol accordion */
+  .acc{border:1px solid var(--edge);border-radius:12px;overflow:hidden;margin:9px 0}
+  .acc .ah{display:flex;align-items:center;gap:11px;padding:13px 16px;cursor:pointer;background:var(--panel-2)}
+  .acc .ah:hover{background:#1a232c}
+  .acc .ah .pdot{width:12px;height:12px;border-radius:4px;flex:0 0 auto}
+  .acc .ah h4{margin:0;font-size:15px;flex:1}
+  .acc .ah .vt{font-size:10px;font-weight:800;color:#3a2c05;background:var(--gold);border-radius:5px;padding:2px 7px}
+  .acc .ah .caret{color:var(--muted);transition:.2s}
+  .acc.open .ah .caret{transform:rotate(90deg)}
+  .acc .body{max-height:0;overflow:hidden;transition:max-height .3s}
+  .acc .body ul{margin:0;padding:6px 20px 16px 34px}
+  .acc .body li{font-family:var(--serif);font-size:15px;color:#dfeaf0;margin:7px 0}
+  .acc .body .note{font-size:12.5px;color:var(--gold);padding:0 20px 10px 34px;font-family:var(--sans)}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .mini{background:var(--panel);border:1px solid var(--edge);border-radius:13px;padding:18px 20px}
+  .mini h4{margin:0 0 6px;font-size:15px}
+  .mini.plan h4{color:var(--teal)} .mini.improv h4{color:var(--gold)}
+  .mini p{margin:0;font-size:13.5px;color:var(--soft)}
+  ul.clean{margin:8px 0 0;padding-left:0;list-style:none}
+  ul.clean li{position:relative;padding-left:20px;margin:7px 0;font-size:13.5px;color:var(--soft)}
+  ul.clean li:before{content:"";position:absolute;left:2px;top:8px;width:7px;height:7px;border-radius:2px;background:var(--teal)}
+
+  .foot{font-size:12px;color:var(--muted);margin-top:20px;border-top:1px solid var(--edge);padding-top:14px}
+  @media(max-width:780px){
+    .sim,.cyclewrap,.two{grid-template-columns:1fr}
+    header.hero h1{font-size:26px}
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="kicker">Method, animated · Huh &amp; Jo (2024)</div>
+      <h1>How do you study a decision a teacher never said out loud?</h1>
+      <p>Most of teaching happens in a teacher’s head — split-second choices to drop a slide, shift scale, or dodge a controversy. This is how the 2024 pedagogical-reasoning study made that invisible reasoning visible: it filmed the lesson, then played the footage <i>back to the teacher</i> and asked, “what were you thinking right there?” Below, you can watch the method work.</p>
+      <div class="cite">Huh, S. &amp; Jo, I. (2024). Geography Teachers’ Pedagogical Reasoning and Action While Integrating Sustainable Development into APHG Courses. <i>Journal of Geography</i> 123(4):97–111.</div>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+  <!-- Pipeline -->
+  <section>
+    <h2 class="sec">The chain that captures a teacher’s reasoning</h2>
+    <p class="sub">Seven AP Human Geography teachers were followed across the whole teaching cycle. Watch how the data was collected — the gold step is where video-stimulated recall happens.</p>
+    <div class="card">
+      <div class="pipe" id="pipe">
+        <div class="pstep" data-i="0"><div class="bub">📝</div><div class="lb">Pre-PD<br>questionnaire</div></div>
+        <div class="pstep" data-i="1"><div class="bub">🎓</div><div class="lb">6-week PD<br>seminars</div></div>
+        <div class="pstep" data-i="2"><div class="bub">🗒️</div><div class="lb">Initial<br>lesson plan</div></div>
+        <div class="pstep" data-i="3"><div class="bub">🎥</div><div class="lb">Teach &amp;<br>video-record</div></div>
+        <div class="pstep" data-i="4"><div class="bub">✏️</div><div class="lb">Revised<br>lesson plan</div></div>
+        <div class="pstep" data-i="5"><div class="bub">✂️</div><div class="lb">Pick divergent<br>clips</div></div>
+        <div class="pstep vsr" data-i="6"><div class="bub">⏯️</div><div class="lb">Video-stimulated<br>recall interview</div></div>
+        <div class="pstep" data-i="7"><div class="bub">🧩</div><div class="lb">Code in<br>NVivo</div></div>
+      </div>
+      <button class="replay" id="pipeReplay">↻ Replay the sequence</button>
+    </div>
+  </section>
+
+  <!-- VSR simulator -->
+  <section>
+    <h2 class="sec">Try it: the video-stimulated recall session</h2>
+    <p class="sub">Press play. The lesson runs against the teacher’s written plan; wherever the teacher went <b style="color:var(--gold)">off-script</b>, a gold pin marks it. The playback stops there — and the teacher tells you the reasoning behind the move, which then gets coded to a phase of Shulman’s cycle. (Clips are dramatized from the study’s real teacher cases.)</p>
+    <div class="card">
+      <div class="sim">
+        <div class="player">
+          <div class="screen">
+            <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" id="scene">
+              <rect x="0" y="0" width="320" height="200" fill="#141d26"/>
+              <rect x="0" y="150" width="320" height="50" fill="#101821"/>
+              <!-- whiteboard -->
+              <rect x="30" y="26" width="150" height="86" rx="4" fill="#e9eef2" stroke="#c7d0d8"/>
+              <text id="board" x="105" y="72" font-family="Helvetica,Arial" font-size="10" fill="#33414d" text-anchor="middle">Sustainable Development</text>
+              <text id="board2" x="105" y="88" font-family="Helvetica,Arial" font-size="9" fill="#6a7783" text-anchor="middle">— three pillars —</text>
+              <!-- teacher -->
+              <circle cx="215" cy="70" r="12" fill="#e6b98f"/><rect x="203" y="84" width="24" height="40" rx="8" fill="#2f8f80"/>
+              <!-- students -->
+              <g fill="#7f8c98">
+                <circle cx="70" cy="150" r="8"/><rect x="58" y="160" width="24" height="18" rx="4"/>
+                <circle cx="150" cy="150" r="8"/><rect x="138" y="160" width="24" height="18" rx="4"/>
+                <circle cx="230" cy="150" r="8"/><rect x="218" y="160" width="24" height="18" rx="4"/>
+              </g>
+            </svg>
+            <div class="rec"><span class="dot"></span>REC</div>
+            <div class="tc" id="tc">00:00</div>
+            <div class="divov" id="divov">
+              <span class="tag">⏸ DIVERGENCE FROM PLAN</span>
+              <div class="txt" id="divtxt"></div>
+            </div>
+          </div>
+          <div class="transport">
+            <button class="playbtn" id="playBtn">▶</button>
+            <div class="seg" id="segLabel"><b>Day 1</b> · ready to play</div>
+          </div>
+          <div class="timeline">
+            <div class="tlwrap">
+              <div class="lane"><div class="ln">Planned lesson</div><div class="track" id="planTrack"></div></div>
+              <div class="lane"><div class="ln">What actually happened</div><div class="track" id="actTrack"></div></div>
+              <div class="playhead" id="playhead" style="left:0"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="recall" id="recall">
+          <div class="idle" id="idle">▶ Press play to begin the lesson.<br><br>The recall panel fills in each time the teacher does something the plan didn’t predict.</div>
+          <div id="recallBody" style="display:none">
+            <div class="step" id="rStep">Clip 1 — reflect</div>
+            <div class="qbubble"><div class="who">Researcher, watching the clip with the teacher</div><div class="q" id="rQ"></div></div>
+            <div class="answer" id="rAns"><div class="who">Teacher, recalling</div><div class="a" id="rA"></div></div>
+            <div class="coded" id="rCoded"><span class="arrow">coded →</span><span class="chip phase" id="rPhase"></span><span class="chip theme" id="rTheme"></span></div>
+            <button class="resumebtn" id="resumeBtn">Resume ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PR&A cycle -->
+  <section>
+    <h2 class="sec">Where the recall lands: Shulman’s reasoning cycle</h2>
+    <p class="sub">The study is built on Shulman’s six-phase Pedagogical Reasoning &amp; Action cycle — a recursive loop, not a straight line. Each data source captures a different phase. Click a phase to see what captured it; the two <span style="color:var(--gold)">gold</span> phases are exactly what video-stimulated recall reaches.</p>
+    <div class="card">
+      <div class="cyclewrap">
+        <div style="display:flex;justify-content:center">
+          <svg viewBox="0 0 300 300" width="300" height="300" id="cycle" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="cy-center" id="cyCenter">
+          <p class="pname">Click a phase →</p>
+          <p class="pdef">Shulman’s model runs comprehension → transformation → instruction → evaluation → reflection → new comprehension, then loops. The authors mapped each phase to a specific data source.</p>
+          <div class="src"><b>Why it matters</b>Video-stimulated recall is the only source that reaches <i>Reflection</i> and <i>New Comprehension</i> — the phases where teachers reconsider what they did and rebuild their understanding.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Protocol -->
+  <section>
+    <h2 class="sec">The interview protocol</h2>
+    <p class="sub">A single semi-structured, post-lesson interview walked each teacher back through all six phases — questions adapted from <b>Peterson &amp; Treagust (1995)</b> and <b>Nguyen et al. (2013)</b>. The <span style="color:var(--gold)">Reflection</span> questions are the ones asked <i>while the clip is playing</i>. Click to open each phase.</p>
+    <div class="card" id="protocol"></div>
+  </section>
+
+  <!-- Findings -->
+  <section>
+    <h2 class="sec">What the method surfaced</h2>
+    <p class="sub">Reading the recordings against the plans let the researchers separate two kinds of reasoning — and the recall interviews explained both.</p>
+    <div class="two">
+      <div class="mini plan"><h4>Planned pedagogical reasoning</h4><p>Deliberate, pre-thought choices:</p>
+        <ul class="clean"><li>Placing the sustainability lesson in Unit 1, before exam pressure</li><li>Scale-shifting to build relational thinking (school → bay → ocean)</li><li>Local, authentic data — students’ own litter, real flood maps</li><li>Tailoring to students’ backgrounds and prior knowledge</li></ul>
+      </div>
+      <div class="mini improv"><h4>Reasoning under pressure (the improvised moves)</h4><p>Wisdom-of-practice, decided mid-lesson:</p>
+        <ul class="clean"><li>Neutralizing political controversy on the fly</li><li>Flipping a lecture to homework when discussion overran</li><li>Working around a ban on the words “climate change”</li><li>Abandoning an action project blocked by administration</li></ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <p style="margin:0;font-size:14.5px;color:var(--soft)">The hardest thing to reach, the study found, was the last step of real sustainability education — moving from teaching <i>about</i> it to letting students <i>act</i> on it. Time, curriculum crowding, and institutional resistance kept getting in the way. Without video-stimulated recall, those quiet in-the-moment decisions — and the reasons behind them — would have stayed invisible.</p>
+      <div class="foot">Method sources: video-stimulated recall — Endacott &amp; Sturtz (2015) and Nguyen, McFadden, Tangen &amp; Beutel (2013); interview protocol — Peterson &amp; Treagust (1995) and Nguyen et al. (2013); framework — Shulman (1987), Pedagogical Reasoning &amp; Action; analysis — Braun &amp; Clarke (2006) thematic analysis in NVivo 14. Clips are dramatized composites of the study’s reported teacher cases, not transcript quotations.</div>
+    </div>
+  </section>
+
+  </div>
+
+<script>
+(function(){
+  /* ---------- pipeline auto-play ---------- */
+  var pipe=document.getElementById('pipe'), psteps=[].slice.call(pipe.querySelectorAll('.pstep'));
+  var pTimer=null;
+  function playPipe(){
+    psteps.forEach(function(s){ s.classList.remove('on'); });
+    var i=0;
+    clearInterval(pTimer);
+    pTimer=setInterval(function(){
+      if(i>0) {} // keep prior lit for trail effect? no — sequential highlight
+      psteps.forEach(function(s,j){ s.classList.toggle('on', j<=i); });
+      i++;
+      if(i>=psteps.length){ clearInterval(pTimer); }
+    },520);
+  }
+  document.getElementById('pipeReplay').onclick=playPipe;
+  setTimeout(playPipe,400);
+
+  /* ---------- divergence data (dramatized from the study's cases) ---------- */
+  var DIV=[
+    { t:0.20, seg:'Day 1 · Concept formation', board:['▶ LIVE: sea-level data','(not the causes)'],
+      clip:'The teacher drops the planned slide on the causes of sea-level rise and says: “We’re not debating what causes it — it’s happening. What’s the problem, and what can be done?”',
+      q:'What were you thinking when you decided to do this?',
+      a:'I could feel it turning political, and in my state that’s a minefield. So I pivoted to the documented data and the consequences — kept it about geography, not blame.',
+      phase:'Reflection', theme:'Neutralizing controversy' },
+    { t:0.44, seg:'Day 2 · GIS activity', board:['▶ LIVE ArcGIS','flood map — zoom out'],
+      clip:'Instead of the slide deck, the teacher pulls up a live ArcGIS flood map and zooms from the school → Chesapeake Bay → the Atlantic.',
+      q:'Why did you decide to do this?',
+      a:'The static map wasn’t landing. I wanted them to feel the scale connection — that their own watershed links to the ocean. Shifting scale live made the relationship visible.',
+      phase:'Reflection', theme:'Relational (scale) thinking' },
+    { t:0.68, seg:'Day 2 → 3 · Time crunch', board:['▶ mini-lecture','→ homework video'],
+      clip:'The teacher cuts the closing lecture and reassigns it as a flipped-classroom video for homework.',
+      q:'What changes did you make to the original teaching plan?',
+      a:'Day 1’s discussion ran long. Rather than rush the analysis, I moved my mini-lecture to a video they’d watch at home, so class time stayed hands-on.',
+      phase:'New comprehension', theme:'Congested curriculum & time' },
+    { t:0.90, seg:'Day 3 · Action project', board:['▶ posters…','(cafeteria denied)'],
+      clip:'The teacher quietly shelves the plan to display student posters in the cafeteria.',
+      q:'Which instructions posed opportunities and challenges for student learning?',
+      a:'Admin wouldn’t approve a public display. Moving from learning about sustainability to acting on it is the hardest part — next year I’ll partner with the student Sustainability Council.',
+      phase:'New comprehension', theme:'Barriers to informed action' }
+  ];
+  var SEGS=[{n:'Day 1 · Concept formation',x:0,w:0.33,l:'Day 1'},{n:'Day 2 · GIS activity',x:0.33,w:0.34,l:'Day 2'},{n:'Day 3 · Action project',x:0.67,w:0.33,l:'Day 3'}];
+
+  /* build tracks */
+  var planTrack=document.getElementById('planTrack'), actTrack=document.getElementById('actTrack');
+  SEGS.forEach(function(s){
+    ['plan','act'].forEach(function(k){
+      var d=document.createElement('div'); d.className='planseg';
+      d.style.left=(s.x*100)+'%'; d.style.width=(s.w*100-1.5)+'%';
+      if(k==='plan') d.innerHTML='<span class="dl">'+s.l+'</span>';
+      (k==='plan'?planTrack:actTrack).appendChild(d);
+    });
+  });
+  DIV.forEach(function(d,i){
+    var p=document.createElement('div'); p.className='pin'; p.style.left=(d.t*100)+'%'; p.dataset.i=i;
+    p.title='Divergence '+(i+1); p.onclick=function(){ jumpTo(i); };
+    actTrack.appendChild(p); d.pin=p;
+  });
+
+  /* ---------- player state ---------- */
+  var playing=false, ph=0, visited=[false,false,false,false], atDiv=-1, raf=null, lastT=0;
+  var SWEEP=26; // seconds for a full uninterrupted sweep
+  var playBtn=document.getElementById('playBtn'), playhead=document.getElementById('playhead'),
+      tc=document.getElementById('tc'), segLabel=document.getElementById('segLabel'),
+      board=document.getElementById('board'), board2=document.getElementById('board2'),
+      divov=document.getElementById('divov'), divtxt=document.getElementById('divtxt');
+
+  function fmt(p){ var total=45*60, s=Math.floor(p*total), m=Math.floor(s/60); s=s%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
+  function curSeg(p){ for(var i=SEGS.length-1;i>=0;i--){ if(p>=SEGS[i].x) return SEGS[i]; } return SEGS[0]; }
+
+  function setPlay(on){
+    playing=on; playBtn.textContent=on?'❚❚':'▶';
+    if(on){ lastT=performance.now(); raf=requestAnimationFrame(loop); }
+    else if(raf){ cancelAnimationFrame(raf); raf=null; }
+  }
+  function loop(now){
+    if(!playing){ return; }
+    var dt=Math.min(0.05,(now-lastT)/1000); lastT=now;
+    ph += dt/SWEEP;
+    // check divergence
+    for(var i=0;i<DIV.length;i++){
+      if(!visited[i] && ph>=DIV[i].t){ ph=DIV[i].t; hitDivergence(i); return; }
+    }
+    if(ph>=1){ ph=1; render(); setPlay(false); segLabel.innerHTML='<b>Done</b> · every off-script moment explained'; return; }
+    render();
+    raf=requestAnimationFrame(loop);
+  }
+  function render(){
+    playhead.style.left=(ph*100)+'%';
+    tc.textContent=fmt(ph);
+    var s=curSeg(ph); segLabel.innerHTML='<b>'+s.n.split(' · ')[0]+'</b> · '+s.n.split(' · ')[1];
+  }
+  function hitDivergence(i){
+    visited[i]=true; atDiv=i; setPlay(false);
+    ph=DIV[i].t; render();
+    var d=DIV[i];
+    segLabel.innerHTML='<b>'+d.seg.split(' · ')[0]+'</b> · '+d.seg.split(' · ')[1];
+    board.textContent=d.board[0]; board2.textContent=d.board[1]; board.setAttribute('fill','#b4630f');
+    divtxt.textContent=d.clip; divov.classList.add('on');
+    d.pin.classList.add('active');
+    openRecall(i);
+  }
+  function jumpTo(i){
+    // jump straight to a divergence (mark earlier ones visited)
+    for(var k=0;k<=i;k++) visited[k]=true;
+    setPlay(false); atDiv=i; ph=DIV[i].t; render();
+    var d=DIV[i];
+    board.textContent=d.board[0]; board2.textContent=d.board[1]; board.setAttribute('fill','#b4630f');
+    divtxt.textContent=d.clip; divov.classList.add('on');
+    DIV.forEach(function(x){ x.pin.classList.remove('active'); }); d.pin.classList.add('active');
+    openRecall(i);
+  }
+  playBtn.onclick=function(){
+    if(atDiv>=0){ resume(); return; }
+    setPlay(!playing);
+  };
+
+  /* ---------- recall panel ---------- */
+  var idle=document.getElementById('idle'), body=document.getElementById('recallBody'),
+      rStep=document.getElementById('rStep'), rQ=document.getElementById('rQ'),
+      rAns=document.getElementById('rAns'), rA=document.getElementById('rA'),
+      rCoded=document.getElementById('rCoded'), rPhase=document.getElementById('rPhase'),
+      rTheme=document.getElementById('rTheme'), resumeBtn=document.getElementById('resumeBtn');
+  var typeTimer=null;
+
+  function openRecall(i){
+    var d=DIV[i];
+    idle.style.display='none'; body.style.display='block';
+    rStep.textContent='Clip '+(i+1)+' of '+DIV.length+' — reflect';
+    rAns.classList.remove('on'); rCoded.classList.remove('on'); resumeBtn.classList.remove('on');
+    rA.textContent=d.a; rPhase.textContent='Phase: '+d.phase; rTheme.textContent='Theme: '+d.theme;
+    // typewriter the question
+    clearInterval(typeTimer); rQ.innerHTML='<span class="cur">&nbsp;</span>';
+    var full=d.q, n=0;
+    typeTimer=setInterval(function(){
+      n++; rQ.innerHTML=full.slice(0,n)+'<span class="cur">&nbsp;</span>';
+      if(n>=full.length){ clearInterval(typeTimer); rQ.textContent=full;
+        setTimeout(function(){ rAns.classList.add('on'); },350);
+        setTimeout(function(){ rCoded.classList.add('on'); },1100);
+        setTimeout(function(){ resumeBtn.classList.add('on'); },1500);
+      }
+    },26);
+  }
+  function resume(){
+    if(atDiv<0) return;
+    DIV[atDiv].pin.classList.remove('active');
+    divov.classList.remove('on'); board.setAttribute('fill','#33414d');
+    board.textContent='Sustainable Development'; board2.textContent='— three pillars —';
+    atDiv=-1;
+    // hide recall if all done
+    var remaining=visited.some(function(v){return !v;});
+    if(!remaining){ /* keep last panel */ }
+    ph += 0.001;
+    setPlay(true);
+  }
+  resumeBtn.onclick=resume;
+
+  /* ---------- PR&A cycle ---------- */
+  var PHASES=[
+    {name:'Comprehension', color:'#6ea8fe', def:'Grasping the content, curriculum, and why it’s worth teaching.', src:'Pre-PD questionnaire', vsr:false},
+    {name:'Transformation', color:'#a78bfa', def:'Turning content into teachable forms — the heart of PCK.', src:'Post-PD questionnaire + initial lesson plan', vsr:false},
+    {name:'Instruction', color:'#2dd4bf', def:'The visible act of teaching in the classroom.', src:'Classroom video recording', vsr:false},
+    {name:'Evaluation', color:'#34d399', def:'Checking and responding to student understanding.', src:'Classroom video recording', vsr:false},
+    {name:'Reflection', color:'#f4c04a', def:'Reconsidering what happened and why, after the fact.', src:'Video-stimulated recall interview', vsr:true},
+    {name:'New comprehension', color:'#fb923c', def:'Rebuilt understanding of content, students, and self.', src:'Video-stimulated recall interview', vsr:true}
+  ];
+  var cy=document.getElementById('cycle'), cx=150, cyy=150, R=105;
+  var pos=PHASES.map(function(_,i){ var a=(-90+i*60)*Math.PI/180; return {x:cx+R*Math.cos(a), y:cyy+R*Math.sin(a)}; });
+  // ring arrows
+  var ring='<circle cx="150" cy="150" r="105" fill="none" stroke="#243240" stroke-width="1.5" stroke-dasharray="4 5"/>';
+  var nodes='';
+  PHASES.forEach(function(p,i){
+    var short=p.name==='New comprehension'?'New':p.name==='Transformation'?'Transf.':p.name==='Comprehension'?'Compr.':p.name==='Instruction'?'Instr.':p.name==='Evaluation'?'Eval.':'Reflect';
+    nodes+='<g class="cy-node" data-i="'+i+'">'+
+      '<circle cx="'+pos[i].x+'" cy="'+pos[i].y+'" r="30" fill="#131a21" stroke="'+p.color+'" stroke-width="2"/>'+
+      '<text x="'+pos[i].x+'" y="'+(pos[i].y+1)+'" font-family="Helvetica,Arial" font-size="10.5" font-weight="700" fill="'+p.color+'" text-anchor="middle">'+short+'</text>'+
+      (p.vsr?'<circle cx="'+(pos[i].x+22)+'" cy="'+(pos[i].y-22)+'" r="6" fill="#f4c04a"/>':'')+
+    '</g>';
+  });
+  cy.innerHTML=ring+'<text x="150" y="147" font-family="Helvetica,Arial" font-size="10" fill="#6f8494" text-anchor="middle">PR&amp;A</text><text x="150" y="160" font-family="Helvetica,Arial" font-size="9" fill="#6f8494" text-anchor="middle">cycle ↻</text>'+nodes;
+  var cyCenter=document.getElementById('cyCenter');
+  cy.querySelectorAll('.cy-node').forEach(function(g){
+    g.addEventListener('click',function(){
+      var p=PHASES[+g.dataset.i];
+      cyCenter.innerHTML='<p class="pname" style="color:'+p.color+'">'+p.name+(p.vsr?'<span class="vsrbadge">VSR</span>':'')+'</p>'+
+        '<p class="pdef">'+p.def+'</p>'+
+        '<div class="src"><b>Captured by</b>'+p.src+'</div>';
+    });
+  });
+
+  /* ---------- protocol accordion ---------- */
+  var PROTO=[
+    {phase:'Comprehension',color:'#6ea8fe',qs:['What do you know or understand about the topic you will be investigating?','Which ideas do you fully understand?','Which ideas do you not understand?']},
+    {phase:'Transformation',color:'#a78bfa',qs:['How will SD ideas be presented and explained through geography to students?','In what order will you present the SD ideas?','How will the SD ideas be explained?']},
+    {phase:'Instruction',color:'#2dd4bf',qs:['How did you teach the SD topic to students?']},
+    {phase:'Evaluation',color:'#34d399',qs:['What aspects of the lesson went well?','What aspects did not go as well as expected?','How well were the ideas understood by the students?']},
+    {phase:'Reflection',color:'#f4c04a',vsr:true,qs:['What were your thoughts while doing this activity?','What were you thinking when you decided to do this?','Why did you decide to do this?','Which instructions posed opportunities and challenges for student learning?','What changes did you make to the original teaching plan?','What changes would you make to improve teaching?']},
+    {phase:'New comprehension',color:'#fb923c',vsr:true,qs:['Do you have a new understanding of the topic and content of geography and SD?','Do you have a new understanding of the role and value of teaching geography and SD?','What do students need to learn about geography, and for what purposes?','Do you have a new understanding of your students?','Do you have a new understanding of your confidence and disposition?']}
+  ];
+  var proto=document.getElementById('protocol');
+  PROTO.forEach(function(p){
+    var el=document.createElement('div'); el.className='acc';
+    el.innerHTML='<div class="ah"><span class="pdot" style="background:'+p.color+'"></span><h4>'+p.phase+'</h4>'+
+      (p.vsr?'<span class="vt">VSR clip prompts</span>':'')+'<span class="caret">▸</span></div>'+
+      '<div class="body">'+(p.vsr?'<div class="note">↑ These are the questions asked while the teacher watches the divergent clip.</div>':'')+
+      '<ul>'+p.qs.map(function(q){return '<li>“'+q+'”</li>';}).join('')+'</ul></div>';
+    var head=el.querySelector('.ah'), bd=el.querySelector('.body');
+    head.onclick=function(){
+      var open=el.classList.toggle('open');
+      bd.style.maxHeight=open?(bd.scrollHeight+'px'):'0';
+    };
+    proto.appendChild(el);
+    if(p.vsr){ el.classList.add('open'); setTimeout(function(){ bd.style.maxHeight=bd.scrollHeight+'px'; },50); }
+  });
+  // default select Reflection in cycle
+  cy.querySelector('.cy-node[data-i="4"]').dispatchEvent(new Event('click'));
+})();
+</script>
+</body>
+</html>

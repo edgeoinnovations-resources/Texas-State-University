@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TPACK-Based GST Lesson Rubric — interactive instrument</title>
+<style>
+  :root{
+    --bg:#f5f3ec; --panel:#fff; --panel-2:#fbfaf5;
+    --ink:#232a2f; --ink-soft:#4c5760; --muted:#8a929b; --line:#e4ded1;
+    --content:#0f766e;   /* teal */
+    --peda:#b4630f;      /* amber */
+    --tech:#6d5bd0;      /* purple */
+    --tpack:#b8860b;     /* gold */
+    --good:#0f9d6e; --warn:#c2544d;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 32px rgba(30,30,30,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--content)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--content)}
+
+  /* sticky running total */
+  .sticky{position:sticky;top:0;z-index:40;background:rgba(245,243,236,.93);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);margin-bottom:20px}
+  .sticky .row{max-width:960px;margin:0 auto;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .sticky h1{font-size:15.5px;margin:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .totalpill{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+  .totalpill .sc{font-size:20px;font-weight:800;color:var(--content);font-variant-numeric:tabular-nums}
+  .totalpill .band{font-size:12px;font-weight:700;padding:4px 11px;border-radius:999px;background:#eceee9;color:var(--ink-soft)}
+  .minibtn{font-family:var(--sans);font-size:12px;color:var(--ink-soft);background:#fff;border:1px solid var(--line);
+    border-radius:8px;padding:6px 11px;cursor:pointer}
+  .minibtn:hover{border-color:var(--content)}
+
+  header.hero{padding:26px 0 4px}
+  header.hero h2{font-size:29px;margin:6px 0 8px;line-height:1.12}
+  header.hero p{font-size:16.5px;color:var(--ink-soft);margin:0 0 4px;max-width:760px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:26px 28px;margin:18px 0}
+  h3.sec{font-size:20px;margin:0 0 4px}
+  .sec-sub{font-size:14px;color:var(--ink-soft);margin:0 0 14px}
+
+  /* TPACK primer */
+  .primer{display:grid;grid-template-columns:360px 1fr;gap:26px;align-items:center}
+  .venn{display:flex;justify-content:center}
+  .rmark{opacity:0;transition:opacity .2s}
+  .rmark.on{opacity:1}
+  .venn-legend{font-size:13px;color:var(--ink-soft)}
+  .venn-legend p{margin:0 0 10px}
+  .lchip{display:inline-flex;align-items:center;gap:7px;font-weight:600;margin-right:4px}
+  .lchip i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .maprow{display:flex;align-items:flex-start;gap:9px;margin:9px 0;font-size:13.5px}
+  .maprow .cn{flex:0 0 auto;width:22px;height:22px;border-radius:6px;color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .maprow b{color:var(--ink)}
+
+  /* criteria */
+  .crit{border:1px solid var(--line);border-radius:15px;margin:16px 0;overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+  .crit .head{padding:16px 20px;border-left:6px solid var(--accent);display:flex;justify-content:space-between;align-items:flex-start;gap:14px;cursor:default}
+  .crit .head .l .num{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .crit .head .l h4{margin:2px 0 3px;font-size:18px}
+  .crit .head .l .sub{font-size:13px;color:var(--ink-soft)}
+  .tchip{flex:0 0 auto;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:999px;color:#fff;background:var(--accent);white-space:nowrap}
+  .tchip small{display:block;font-weight:500;opacity:.9;font-size:10px}
+  .levels{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 20px 18px}
+  .lvl{border:1.5px solid var(--line);border-radius:11px;padding:12px 14px;cursor:pointer;transition:.12s;background:var(--panel-2);position:relative}
+  .lvl:hover{border-color:var(--accent)}
+  .lvl.on{border-color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);background:#fff}
+  .lvl .lt{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+  .lvl .dot{width:24px;height:24px;border-radius:7px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:13px;background:#e9e4d8;color:var(--ink-soft)}
+  .lvl.on .dot{background:var(--accent);color:#fff}
+  .lvl .nm{font-weight:700;font-size:14px}
+  .lvl .d{font-size:12.7px;color:var(--ink-soft);line-height:1.42}
+  .evidence{padding:0 20px 18px}
+  .evidence input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-family:var(--sans);font-size:13.5px}
+  .evidence input:focus{outline:none;border-color:var(--accent)}
+  .evidence label{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+
+  /* profile */
+  .bars .bar{display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:center;margin:14px 0}
+  .bars .name{font-size:13.5px;font-weight:600}
+  .bars .name small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+  .track{position:relative;height:30px;background:#ece7db;border-radius:8px;overflow:visible}
+  .fill{height:100%;border-radius:8px;transition:width .35s;display:flex;align-items:center;justify-content:flex-end;padding-right:9px;color:#fff;font-weight:800;font-size:13px;min-width:26px}
+  .bench{position:absolute;top:-4px;height:38px;width:0;border-left:2px dashed #333;opacity:.6}
+  .bench span{position:absolute;top:-16px;left:-16px;font-size:10px;color:#555;white-space:nowrap}
+  .scale{display:grid;grid-template-columns:180px 1fr;gap:14px;font-size:10.5px;color:var(--muted);margin-top:2px}
+  .scale .ticks{display:flex;justify-content:space-between}
+
+  .callout{border-radius:11px;padding:16px 18px;margin:16px 0;font-size:14.5px;border-left:4px solid}
+  .callout.gap{background:#f7efe1;border-color:var(--peda)}
+  .callout.gap b{color:var(--peda)}
+  .callout.guide{background:#e9f2f0;border-color:var(--content)}
+  .callout.guide b{color:var(--content)}
+  .callout.empty{background:#f2f0e9;border-color:var(--muted);color:var(--ink-soft)}
+
+  .band-big{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:2px 0 6px}
+  .band-big .tot{font-size:40px;font-weight:800;color:var(--content);line-height:1}
+  .band-big .lbl{font-size:14px;color:var(--muted)}
+  .band-name{font-size:19px;font-weight:800}
+
+  ul.clean{margin:8px 0 4px;padding-left:0;list-style:none}
+  ul.clean li{position:relative;padding-left:22px;margin:8px 0;font-size:14px;color:var(--ink-soft)}
+  ul.clean li:before{content:"";position:absolute;left:2px;top:8px;width:7px;height:7px;border-radius:2px;background:var(--content)}
+
+  .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+  .actions{display:flex;gap:10px;margin-top:6px}
+  .btn{font-family:var(--sans);font-size:14px;font-weight:700;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid transparent}
+  .btn.primary{background:var(--content);color:#fff}.btn.primary:hover{background:#0b4f49}
+  .btn.ghost{background:#fff;border-color:var(--line);color:var(--ink-soft)}.btn.ghost:hover{border-color:var(--content);color:var(--ink)}
+
+  @media(max-width:720px){
+    .primer{grid-template-columns:1fr}
+    .levels{grid-template-columns:1fr}
+    .bars .bar,.scale{grid-template-columns:120px 1fr}
+    header.hero h2{font-size:23px}
+  }
+  @media print{ .sticky,.actions,.evidence input{display:none} body{background:#fff} .card{box-shadow:none} }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+<div class="sticky">
+  <div class="row">
+    <h1>TPACK-Based GST Lesson-Assessment Rubric</h1>
+    <div class="totalpill">
+      <span class="sc" id="stotal">—</span>
+      <span class="band" id="sband">score a lesson ↓</span>
+      <button class="minibtn" id="resetBtn">Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">Interactive Instrument · adapted from Harris, Grandgenett &amp; Hofer (2010)</div>
+    <h2>Score how well a geography lesson integrates geospatial technology</h2>
+    <p>This is the TPACK-based rubric Huh &amp; Jo (2023) used to evaluate 14 teachers' GST-integrated lessons — turned into a tool you can actually score with. Rate a lesson on the four criteria below and watch its <b>TPACK profile</b> build, compared against the study's teachers. It works as a diagnostic <i>and</i> as a design checklist while you build a lesson.</p>
+  </header>
+
+  <!-- TPACK primer -->
+  <div class="card">
+    <h3 class="sec">First, the idea it measures: TPACK</h3>
+    <p class="sec-sub">Good tech integration isn't tech skill bolted onto a lesson — it's the fusion of three knowledges. Hover a criterion below to see which overlap it lives in.</p>
+    <div class="primer">
+      <div class="venn">
+        <svg viewBox="0 0 340 300" width="340" height="300" xmlns="http://www.w3.org/2000/svg" id="vennSvg">
+          <circle cx="170" cy="112" r="88" fill="rgba(109,91,208,.20)" stroke="#6d5bd0" stroke-width="1.6"/>
+          <circle cx="118" cy="192" r="88" fill="rgba(15,118,110,.18)" stroke="#0f766e" stroke-width="1.6"/>
+          <circle cx="222" cy="192" r="88" fill="rgba(180,99,15,.16)" stroke="#b4630f" stroke-width="1.6"/>
+          <!-- region highlight rings -->
+          <circle class="rmark" id="rm-TCK" cx="124" cy="140" r="21" fill="none" stroke="#b8860b" stroke-width="3"/>
+          <circle class="rmark" id="rm-TPK" cx="216" cy="140" r="21" fill="none" stroke="#b8860b" stroke-width="3"/>
+          <circle class="rmark" id="rm-TPACK" cx="170" cy="158" r="24" fill="none" stroke="#b8860b" stroke-width="3.4"/>
+          <g font-family="Helvetica,Arial" font-weight="800" font-size="14" text-anchor="middle">
+            <text x="170" y="60" fill="#5344a8">TK</text>
+            <text x="86" y="214" fill="#0b5850">CK</text>
+            <text x="256" y="214" fill="#8a4a0b">PK</text>
+          </g>
+          <g font-family="Helvetica,Arial" font-weight="700" font-size="11" text-anchor="middle" fill="#4c5760">
+            <text x="122" y="142">TCK</text>
+            <text x="218" y="142">TPK</text>
+            <text x="170" y="222">PCK</text>
+            <text x="170" y="161" font-size="12" font-weight="800" fill="#8a6608">TPACK</text>
+          </g>
+          <g font-family="Helvetica,Arial" font-size="10.5" text-anchor="middle" fill="#8a929b">
+            <text x="170" y="26">Technology</text>
+            <text x="40" y="250">Content</text>
+            <text x="300" y="250">Pedagogy</text>
+          </g>
+        </svg>
+      </div>
+      <div class="venn-legend">
+        <p><span class="lchip"><i style="background:#6d5bd0"></i>Technology</span> · <span class="lchip"><i style="background:#0f766e"></i>Content</span> · <span class="lchip"><i style="background:#b4630f"></i>Pedagogy</span></p>
+        <p>Overlap two circles and you get a blended knowledge; overlap all three and you reach <b style="color:#8a6608">TPACK</b> — the ability to teach <i>this</i> content, with <i>this</i> pedagogy, using <i>this</i> tool. The rubric's four criteria each probe a different region:</p>
+        <div class="maprow"><span class="cn" style="background:#4b8f86">1</span><div><b>Curriculum Goals &amp; GST</b> → probes <b>TCK</b> (does the tool serve the geography content/standards?)</div></div>
+        <div class="maprow"><span class="cn" style="background:#b06a2e">2</span><div><b>Instructional Strategies &amp; GST</b> → probes <b>TPK</b> (does the tool serve the pedagogy?)</div></div>
+        <div class="maprow"><span class="cn" style="background:#b8860b">3</span><div><b>Technology Selection</b> → probes <b>TPACK</b> (is this specific tool right for both?)</div></div>
+        <div class="maprow"><span class="cn" style="background:#a9791a">4</span><div><b>Fit</b> → probes <b>TPACK</b> (do content, pedagogy &amp; tool cohere as a whole?)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rubric scorer -->
+  <div class="card">
+    <h3 class="sec">The rubric — score the lesson</h3>
+    <p class="sec-sub">Pick the level that best matches the lesson for each criterion. 4 = Outstanding · 3 = Accomplished · 2 = Developing · 1 = Beginning.</p>
+    <div id="crits"></div>
+  </div>
+
+  <!-- Profile -->
+  <div class="card" id="profileCard">
+    <h3 class="sec">Your TPACK profile</h3>
+    <p class="sec-sub">Dashed marks = Huh &amp; Jo's (2023) 14-teacher averages. See where this lesson sits — and where it needs work.</p>
+    <div class="band-big"><span class="tot" id="ptot">0</span><span class="lbl">/ 16 &nbsp;·&nbsp; average <b id="pavg">—</b> / 4</span><span class="band-name" id="pband"></span></div>
+    <div class="bars" id="bars"></div>
+    <div id="analysis"></div>
+    <div class="actions">
+      <button class="btn ghost" id="printBtn">🖶 Print / Save PDF summary</button>
+      <button class="btn ghost" id="reset2">Reset scores</button>
+    </div>
+    <div class="foot">Rubric adapted from Harris, Grandgenett &amp; Hofer (2010), <i>Testing a TPACK-Based Technology Integration Assessment Rubric</i>. Geography/GST adaptation, descriptors, and 14-teacher benchmarks: Huh &amp; Jo (2023), <i>Journal of Geography</i> 122(5):126–139. TPACK framework: Mishra &amp; Koehler (2006).</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var CRIT=[
+    { key:'goals', n:1, title:'Curriculum Goals & GST', sub:'Geography-curriculum–based GST use',
+      tpack:'TCK', tpackFull:'Technological Content Knowledge', region:'TCK', bench:3.86, accent:'#4b8f86',
+      levels:[
+        {v:4,name:'Outstanding',d:'GST is <b>strongly</b> aligned and assessed with the geography curriculum goals — standard, learning objectives, and assessment are consistent and clearly driven by the GST use.'},
+        {v:3,name:'Accomplished',d:'GST is aligned and assessed with the curriculum goals; standards, objectives, and assessment are clearly stated and consistent, and GST is used to achieve them.'},
+        {v:2,name:'Developing',d:'GST is only <b>partially</b> aligned with the curriculum goals; about two of the alignment components (standard / objective / assessment) are evident.'},
+        {v:1,name:'Beginning',d:'GST is <b>not</b> aligned with the curriculum goals; standards or objectives may be stated but are not connected to the GST use.'}
+      ]},
+    { key:'strategies', n:2, title:'Instructional Strategies & GST', sub:'Using GST in teaching & learning',
+      tpack:'TPK', tpackFull:'Technological Pedagogical Knowledge', region:'TPK', bench:3.93, accent:'#b06a2e',
+      levels:[
+        {v:4,name:'Outstanding',d:'GST is <b>optimally</b> used to support the strategies — its functions target higher-order cognition (analyze, synthesize, create) and/or the plan anticipates student challenges and precautions.'},
+        {v:3,name:'Accomplished',d:'GST supports the strategies with detailed step-by-step guidance (links, datasets, timing) and inquiry-style prompts; GST functions mainly serve lower-order activity (observe, understand).'},
+        {v:2,name:'Developing',d:'GST is <b>minimally</b> used to support the strategies; instructions exist but activities target lower-order thinking and GST is used for simple tasks.'},
+        {v:1,name:'Beginning',d:'GST use <b>does not</b> support the instructional strategies; instructions are brief and largely unrelated to the GST.'}
+      ]},
+    { key:'selection', n:3, title:'Technology Selection(s)', sub:'Compatibility with goals & strategies',
+      tpack:'TPACK', tpackFull:'Technological Pedagogical Content Knowledge', region:'TPACK', bench:3.85, accent:'#b8860b',
+      levels:[
+        {v:4,name:'Outstanding',d:'The GST selection is <b>exemplary</b> given the geography curriculum goals and instructional strategies.'},
+        {v:3,name:'Accomplished',d:'The GST selection is <b>appropriate</b>, though not exemplary, given the goals and strategies.'},
+        {v:2,name:'Developing',d:'The GST selection is <b>marginally appropriate</b> given the goals and strategies.'},
+        {v:1,name:'Beginning',d:'The GST selection is <b>inappropriate</b> for the goals and strategies.'}
+      ]},
+    { key:'fit', n:4, title:'Fit', sub:'Geography content, pedagogy & GST together',
+      tpack:'TPACK', tpackFull:'Technological Pedagogical Content Knowledge', region:'TPACK', bench:3.21, accent:'#a9791a',
+      levels:[
+        {v:4,name:'Outstanding',d:'Geography content, instructional strategies, and GST fit together <b>strongly</b> within the lesson.'},
+        {v:3,name:'Accomplished',d:'Content, strategies, and GST <b>fit together</b> within the lesson.'},
+        {v:2,name:'Developing',d:'Content, strategies, and GST fit together only <b>somewhat</b>.'},
+        {v:1,name:'Beginning',d:'Content, strategies, and GST <b>do not fit together</b>.'}
+      ]}
+  ];
+  var GUIDE={
+    goals:'Tie the GST to a specific standard + objective + assessment. Ask: exactly what will students know or be able to do, and how does this tool produce evidence of it? (Strengthens <b>TCK</b>.)',
+    strategies:'Push the GST toward higher-order work — analyze / synthesize / create, not just view. Add inquiry questions, step-by-step scaffolding, and anticipate where students will get stuck. (Strengthens <b>TPK</b>.)',
+    selection:'Re-check whether this specific tool can actually do what the goal + strategy require — can its functions and data perform the analysis the objective names? Swap the tool if not. (Strengthens <b>TPACK</b>.)',
+    fit:'This is the classic struggle Huh &amp; Jo found. Make content, pedagogy, and GST all point at the same outcome — no orphan activities, and confirm the tool’s data can support the objective. Fit is exactly where <b>TCK</b> and <b>TPK</b> meet. (Strengthens <b>TPACK</b>.)'
+  };
+  var scores={goals:0,strategies:0,selection:0,fit:0};
+  var notes={goals:'',strategies:'',selection:'',fit:''};
+
+  /* build criteria */
+  var host=document.getElementById('crits');
+  CRIT.forEach(function(c){
+    var el=document.createElement('div'); el.className='crit'; el.style.setProperty('--accent',c.accent);
+    var lv=c.levels.map(function(l){
+      return '<div class="lvl" data-k="'+c.key+'" data-v="'+l.v+'"><div class="lt"><span class="dot">'+l.v+'</span><span class="nm">'+l.name+'</span></div><div class="d">'+l.d+'</div></div>';
+    }).join('');
+    el.innerHTML=
+      '<div class="head" data-region="'+c.region+'">'+
+        '<div class="l"><div class="num">Criterion '+c.n+'</div><h4>'+c.title+'</h4><div class="sub">'+c.sub+'</div></div>'+
+        '<span class="tchip">Assesses '+c.tpack+'<small>'+c.tpackFull+'</small></span>'+
+      '</div>'+
+      '<div class="levels">'+lv+'</div>'+
+      '<div class="evidence"><label>Evidence / note (optional)</label><input data-note="'+c.key+'" placeholder="e.g., which tool, which standard, where it falls short…"></div>';
+    host.appendChild(el);
+    // hover to highlight venn region
+    var head=el.querySelector('.head');
+    el.addEventListener('mouseenter',function(){ highlight(c.region); });
+    el.addEventListener('mouseleave',function(){ highlight(null); });
+  });
+
+  host.querySelectorAll('.lvl').forEach(function(l){
+    l.addEventListener('click',function(){
+      var k=l.dataset.k, v=+l.dataset.v;
+      scores[k]=(scores[k]===v)?0:v;   // click again to clear
+      host.querySelectorAll('.lvl[data-k="'+k+'"]').forEach(function(x){ x.classList.toggle('on', +x.dataset.v===scores[k]); });
+      update();
+    });
+  });
+  host.querySelectorAll('input[data-note]').forEach(function(inp){
+    inp.addEventListener('input',function(){ notes[inp.dataset.note]=inp.value; });
+  });
+
+  function highlight(region){
+    ['TCK','TPK','TPACK'].forEach(function(r){ var m=document.getElementById('rm-'+r); if(m) m.classList.toggle('on', r===region); });
+  }
+
+  function bandFor(total, minv, complete){
+    if(total===0) return {name:'', cls:''};
+    var base = total>=14?{name:'Outstanding integration', cls:'good'} :
+               total>=11?{name:'Accomplished', cls:'good'} :
+               total>=8 ?{name:'Developing', cls:'mid'} :
+                         {name:'Beginning', cls:'low'};
+    if(complete && minv<=2 && total>=11){ base={name:base.name+' — but uneven', cls:'mid'}; }
+    return base;
+  }
+
+  function update(){
+    var vals=CRIT.map(function(c){ return scores[c.key]; });
+    var scored=vals.filter(function(v){ return v>0; });
+    var total=vals.reduce(function(a,b){ return a+b; },0);
+    var avg=scored.length?(total/scored.length):0;
+    var complete=scored.length===4;
+
+    // sticky
+    document.getElementById('stotal').textContent = total? (total+' / 16') : '—';
+    var minv = complete ? Math.min.apply(null, vals) : 99;
+    var band=bandFor(total, minv, complete);
+    document.getElementById('sband').textContent = total? (band.name||'') : 'score a lesson ↓';
+
+    // profile header
+    document.getElementById('ptot').textContent=total;
+    document.getElementById('pavg').textContent=scored.length?avg.toFixed(2):'—';
+    document.getElementById('pband').textContent=band.name;
+    document.getElementById('pband').style.color = band.cls==='good'?'#0f9d6e':(band.cls==='low'?'#c2544d':'#b4630f');
+
+    // bars
+    var bars=document.getElementById('bars'); bars.innerHTML='';
+    CRIT.forEach(function(c){
+      var v=scores[c.key], pct=(v/4*100), bpct=(c.bench/4*100);
+      var row=document.createElement('div'); row.className='bar';
+      row.innerHTML='<div class="name">'+c.n+'. '+c.title+'<small>assesses '+c.tpack+' · benchmark '+c.bench.toFixed(2)+'</small></div>'+
+        '<div><div class="track">'+
+          '<div class="fill" style="width:'+(v?pct:0)+'%;background:'+c.accent+'">'+(v||'')+'</div>'+
+          '<div class="bench" style="left:'+bpct+'%"><span>avg '+c.bench.toFixed(2)+'</span></div>'+
+        '</div></div>';
+      bars.appendChild(row);
+    });
+
+    // analysis
+    var box=document.getElementById('analysis');
+    if(!complete){
+      box.innerHTML='<div class="callout empty">Score all four criteria to see the full profile, the Fit-gap check, and tailored guidance for the weakest area.</div>';
+      return;
+    }
+    var html='';
+    // fit-gap check
+    var others=(scores.goals+scores.strategies+scores.selection)/3;
+    if(scores.fit < others - 0.4){
+      html+='<div class="callout gap"><b>Fit is your gap.</b> This lesson aligns and selects well (avg '+others.toFixed(2)+' on the other three) but scores '+scores.fit+' on Fit — exactly the pattern Huh &amp; Jo found across their 14 teachers (Fit 3.21 vs ~3.9 elsewhere). The pieces are individually sound but don’t yet cohere: the usual cause is a tool whose data or functions can’t actually deliver the stated objective, or an activity that doesn’t serve the goal.</div>';
+    } else if(scores.fit>=4 && others>=3.6){
+      html+='<div class="callout guide"><b>Strong, coherent lesson.</b> Content, pedagogy, and GST reinforce each other — this is the TPACK center working as intended.</div>';
+    }
+    // weakest-criterion guidance
+    var min=Math.min.apply(null,CRIT.map(function(c){return scores[c.key];}));
+    var weak=CRIT.filter(function(c){ return scores[c.key]===min; });
+    var w=weak.sort(function(a,b){ return (a.key==='fit'?-1:1)-(b.key==='fit'?-1:1); })[0]; // prefer fit if tied
+    html+='<div class="callout guide"><b>To move up your weakest criterion — '+w.n+'. '+w.title+' ('+min+'/4):</b> '+GUIDE[w.key]+'</div>';
+    box.innerHTML=html;
+  }
+
+  /* actions */
+  function reset(){
+    scores={goals:0,strategies:0,selection:0,fit:0}; notes={goals:'',strategies:'',selection:'',fit:''};
+    host.querySelectorAll('.lvl').forEach(function(x){ x.classList.remove('on'); });
+    host.querySelectorAll('input[data-note]').forEach(function(i){ i.value=''; });
+    update(); window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.getElementById('resetBtn').onclick=reset;
+  document.getElementById('reset2').onclick=reset;
+  document.getElementById('printBtn').onclick=function(){ window.print(); };
+
+  update();
+})();
+</script>
+</body>
+</html>

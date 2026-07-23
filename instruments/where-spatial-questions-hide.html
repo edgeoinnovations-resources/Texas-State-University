@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where Spatial Questions Hide — Jo &amp; Bednarz (2011)</title>
+<style>
+  .viz-root{
+    color-scheme:light;
+    --surface:#fcfcfb; --plane:#f3f1ea; --panel:#fff; --page:#fdfcf7;
+    --ink:#14150f; --ink-2:#52514e; --muted:#8b8a83; --line:#e4ded1; --grid:#e6e2d8;
+    --accent:#1c5cab; --gold:#b8860b; --warn:#c2544d;
+    /* spatiality heat ramp (light = low, dark = high) */
+    --h1:#cfe0f7; --h2:#a9caf2; --h3:#86b6ef; --h4:#4a93e8; --h5:#1c5cab;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --shadow:0 1px 2px rgba(30,30,30,.04),0 10px 30px rgba(30,30,30,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--accent)}
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+  header.hero{padding:48px 0 18px;border-bottom:1px solid var(--line)}
+  header.hero h1{font-size:30px;margin:8px 0 10px;line-height:1.14;max-width:730px}
+  header.hero p{font-size:16.5px;color:var(--ink-2);max-width:710px;margin:0}
+  .cite{margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 2px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow)}
+  .stat .v{font-size:24px;font-weight:800;line-height:1}
+  .stat .l{font-size:11.5px;color:var(--muted);margin-top:5px}
+
+  section{padding:34px 0 2px}
+  h2.sec{font-size:23px;margin:0 0 5px}
+  .sub{font-size:15px;color:var(--ink-2);margin:0 0 16px;max-width:730px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin:14px 0}
+
+  /* textbook spread */
+  .spread{display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start}
+  .page{background:var(--page);border:1px solid #e7e0cf;border-radius:8px;box-shadow:inset 0 0 0 1px #fff, 0 2px 10px rgba(0,0,0,.05);
+    padding:18px;position:relative;display:grid;grid-template-columns:1fr 92px;gap:12px}
+  .pmain{display:flex;flex-direction:column;gap:11px}
+  .phead{font-family:var(--serif);font-size:15px;font-weight:700;color:#3a3a34}
+  .lines{display:flex;flex-direction:column;gap:5px;margin:2px 0}
+  .lines i{height:5px;border-radius:3px;background:#e7e2d5}
+  .lines i:last-child{width:70%}
+  .zone{border-radius:9px;padding:9px 11px;cursor:pointer;border:2px solid transparent;transition:.12s;position:relative}
+  .zone:hover{filter:brightness(.97)}
+  .zone.sel{border-color:#12130f;box-shadow:0 0 0 3px rgba(184,134,11,.4)}
+  .zone .zt{font-size:11px;font-weight:800;letter-spacing:.02em}
+  .zone .zl{font-size:10.5px;opacity:.85}
+  .zone .zbadge{position:absolute;top:7px;right:9px;font-size:10px;font-weight:800;background:rgba(255,255,255,.75);border-radius:5px;padding:1px 6px}
+  .pmargin{display:flex;flex-direction:column;gap:9px}
+  .mapicon{height:56px;border-radius:7px;background:linear-gradient(135deg,#dcecdc,#cfe0f7);border:1px solid #d5dcc9;position:relative;overflow:hidden}
+  .mapicon:after{content:"🗺";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;opacity:.55}
+  .darklab{color:#fff}
+
+  .detail{background:var(--panel-2,#fbfaf6);border:1px solid var(--line);border-radius:13px;padding:18px 20px;position:sticky;top:14px}
+  .detail .dn{font-size:18px;font-weight:800;margin:0}
+  .detail .dlab{font-size:12.5px;color:var(--muted);margin:2px 0 10px}
+  .detail .dpurpose{font-size:13.5px;color:var(--ink-2);margin-bottom:14px;font-style:italic}
+  .metric{margin:11px 0}
+  .metric .mt{font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between}
+  .metric .mbar{height:12px;background:#eceadf;border-radius:6px;overflow:hidden;margin-top:4px}
+  .metric .mbar i{display:block;height:100%;border-radius:6px;transition:width .4s}
+  .metric .mv{font-weight:800}
+  .dmore{font-size:12.5px;color:var(--ink-2);border-top:1px dashed var(--line);padding-top:10px;margin-top:12px}
+  .dmore b{color:var(--ink)}
+
+  /* scatter */
+  .scatterwrap{position:relative}
+  svg.scatter{width:100%;height:auto;display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink-2);margin:4px 0 8px;align-items:center}
+  .legend .ramp{display:inline-flex;height:12px;border-radius:3px;overflow:hidden;width:90px}
+  .legend .ramp i{flex:1}
+
+  /* representation bars */
+  .bars .brow{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;margin:7px 0}
+  .bars .bl{font-size:13px;font-weight:600}
+  .btrack{position:relative;height:26px;background:#f1eee6;border-radius:7px}
+  .bfill{height:100%;border-radius:7px;transition:width .5s;display:flex;align-items:center;justify-content:flex-end;padding-right:9px;color:#fff;font-weight:800;font-size:12.5px;min-width:34px}
+
+  .callout{background:#f6ecd3;border-left:4px solid var(--gold);border-radius:9px;padding:15px 17px;margin:16px 0;font-size:14.5px}
+  .callout b{color:#8a6608}
+  .recs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+  .rec{border:1px solid var(--line);border-radius:12px;padding:15px;background:var(--panel);box-shadow:var(--shadow)}
+  .rec .rn{width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px;margin-bottom:8px}
+  .rec p{margin:0;font-size:13.5px;color:var(--ink-2)}
+  #tip{position:fixed;pointer-events:none;background:#12130f;color:#fff;font-size:12px;border-radius:8px;padding:8px 11px;opacity:0;transition:opacity .1s;z-index:60;max-width:230px;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+  #tip .m{color:#c9c7bf}
+  .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:760px){
+    .stats{grid-template-columns:1fr 1fr}
+    .spread{grid-template-columns:1fr}
+    .recs{grid-template-columns:1fr}
+    header.hero h1{font-size:23px}
+    .bars .brow{grid-template-columns:110px 1fr}
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+<div class="viz-root">
+  <div class="wrap">
+    <header class="hero">
+      <div class="kicker">Interactive · Jo &amp; Bednarz (2011)</div>
+      <h1>The best spatial questions are hiding in the margins teachers skip</h1>
+      <p>Using the 24-cell taxonomy of spatial thinking, this study coded all <b>3,010 questions</b> in four world-geography textbooks — and asked a new question: <b>where on the page</b> do the spatially rich questions live? The answer is a trap. Click the zones of the page below to see it.</p>
+      <div class="cite">Jo, I. &amp; Bednarz, S. W. (2011). Textbook Questions to Support Spatial Thinking: Differences in Spatiality by Question Location. <i>Journal of Geography</i> 110(2):70–80.</div>
+      <div class="stats">
+        <div class="stat"><div class="v">3,010</div><div class="l">questions coded</div></div>
+        <div class="stat"><div class="v">5</div><div class="l">page locations</div></div>
+        <div class="stat"><div class="v">73%</div><div class="l">of questions sit in the two assessment blocks</div></div>
+        <div class="stat"><div class="v">75%<span style="font-size:13px;color:var(--muted)"> vs 6%</span></div><div class="l">integrated: page margin vs end-of-section</div></div>
+      </div>
+    </header>
+
+    <!-- textbook spread -->
+    <section>
+      <h2 class="sec">A textbook page, by question location</h2>
+      <p class="sub">Every question was tagged by <b>where it sits</b> on the page. Zones are shaded by their <b>spatiality</b> — darker = more questions that integrate all three components of spatial thinking. Click a zone to inspect it.</p>
+      <div class="card">
+        <div class="spread">
+          <div class="page" id="page">
+            <div class="pmain">
+              <div class="phead">Chapter 3 · Climate &amp; Vegetation</div>
+              <div class="lines"><i></i><i></i><i></i></div>
+              <div class="zone" id="z-intext" data-k="intext"><span class="zbadge">15% spatial</span><div class="zt">IN-TEXT QUESTION</div><div class="zl">“Reading Check”</div></div>
+              <div class="lines"><i></i><i></i></div>
+              <div class="zone" id="z-supp" data-k="supp"><span class="zbadge">53% spatial</span><div class="zt">SUPPLEMENTAL FEATURE</div><div class="zl">boxed section feature</div></div>
+              <div class="lines"><i></i><i></i><i></i></div>
+              <div class="zone" id="z-eos" data-k="eos"><span class="zbadge">6% spatial</span><div class="zt">END-OF-SECTION</div><div class="zl">“Section Assessment” · 1,131 questions</div></div>
+              <div class="zone" id="z-eoc" data-k="eoc"><span class="zbadge">21% spatial</span><div class="zt">END-OF-CHAPTER</div><div class="zl">“Chapter Assessment” · 1,076 questions</div></div>
+            </div>
+            <div class="pmargin">
+              <div class="mapicon"></div>
+              <div class="zone" id="z-margin" data-k="margin" style="flex:1"><span class="zbadge">75%</span><div class="zt darklab">PAGE MARGIN</div><div class="zl darklab">“Skill Builder”</div></div>
+            </div>
+          </div>
+          <div class="detail" id="detail"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- inverse scatter -->
+    <section>
+      <h2 class="sec">The trap, in one chart</h2>
+      <p class="sub">Plot each location by <b>how many questions it holds</b> (across) against <b>how spatial those questions are</b> (up). The relationship runs <b>backwards</b>: the locations packed with questions are the least spatial, and the richest location holds the fewest questions.</p>
+      <div class="card">
+        <div class="legend"><span>Bubble size = number of questions</span><span>Color = spatiality&nbsp; <span class="ramp"><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i></span> low→high</span></div>
+        <div class="scatterwrap"><svg viewBox="0 0 580 380" class="scatter" id="scatter" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      </div>
+    </section>
+
+    <!-- representation bars -->
+    <section>
+      <h2 class="sec">The sharpest split: do questions even use a map?</h2>
+      <p class="sub">Using a representation (map, diagram, graph) is one of the three components. The gap between where the rich questions live and where teachers look is almost total — <b>98% vs. 8%</b>.</p>
+      <div class="card">
+        <div class="bars" id="repBars"></div>
+        <div class="callout"><b>The marginalized margins.</b> Over 90% of “Section Assessment” questions have nothing to do with using a spatial representation — yet these, plus chapter assessments, are exactly the questions teachers lean on because their titles promise to “cover everything.” The genuinely spatial questions — ~98% using a representation, ~75% integrating all three components — are the “Skill Builder” prompts in the margins that get treated as optional extras.</div>
+      </div>
+    </section>
+
+    <!-- recommendations -->
+    <section>
+      <h2 class="sec">What the study tells teachers to do</h2>
+      <div class="recs">
+        <div class="rec"><div class="rn">1</div><p><b>Mine the margins.</b> Use the page-margin “Skill Builder” questions frequently — don’t treat them as filler.</p></div>
+        <div class="rec"><div class="rn">2</div><p><b>Pick questions with a representation.</b> Favor questions built around a map, diagram, or graph.</p></div>
+        <div class="rec"><div class="rn">3</div><p><b>Push the cognition higher.</b> Choose questions that ask not just “where,” but “why there.”</p></div>
+      </div>
+      <div class="foot">Source: Jo &amp; Bednarz (2011), <i>Journal of Geography</i> 110(2):70–80 (full text in the connected Zotero library). Corpus: 3,010 questions in units 1–2 of four Texas world-geography textbooks, coded with the Jo &amp; Bednarz (2009) 24-cell taxonomy of spatial thinking — the same instrument in the “Taxonomy” explorer. “Spatiality” = share of questions integrating all three components (concepts of space, tools of representation, cognitive processes). Counts &amp; percentages from Table 2 and the Results section; representation-use and integration figures are the study’s reported values (≈ where the paper states “about”). Location colors encode spatiality on a validated sequential ramp.</div>
+    </section>
+  </div>
+</div>
+<div id="tip"></div>
+
+<script>
+(function(){
+  var LOCS={
+    intext:{name:'In text', label:'“Reading Check”', purpose:'Woven into the body text to check comprehension as students read — not to build map skills.',
+      n:185, pct:6.15, integ:15.1, rep:19, heat:'#a9caf2', dark:false,
+      concept:'Mostly non-spatial (~34%).', cog:'47% input-level recall; output rare.'},
+    margin:{name:'Page margin', label:'“Skill Builder” · “Interpreting the Map / Diagram”', purpose:'Skill prompts printed beside a map, diagram, or graph — built to exercise skills, not check recall.',
+      n:375, pct:12.46, integ:74.9, rep:98, heat:'#1c5cab', dark:true,
+      concept:'The most spatial-primitive (33%) and simple-spatial (29%) of any location.', cog:'Over 60% require processing or output.'},
+    supp:{name:'Supplemental section', label:'Boxed section features', purpose:'Feature boxes covering the knowledge and skills of a specific section.',
+      n:243, pct:8.07, integ:52.7, rep:70, heat:'#4a93e8', dark:true,
+      concept:'Non-spatial most; complex-spatial least.', cog:'More processing than input.'},
+    eos:{name:'End of section', label:'“Section Assessment”', purpose:'Meant to comprehensively cover the section — and one of the two blocks teachers rely on most.',
+      n:1131, pct:37.57, integ:6.1, rep:8, heat:'#cfe0f7', dark:false,
+      concept:'55% non-spatial; only 6% complex-spatial.', cog:'Over 60% just define or recall.'},
+    eoc:{name:'End of chapter', label:'“Chapter Assessment”', purpose:'Meant to comprehensively cover the chapter — the other block teachers rely on.',
+      n:1076, pct:35.75, integ:20.5, rep:25, heat:'#86b6ef', dark:false,
+      concept:'Non-spatial most; complex-spatial least.', cog:'Recall-heavy; output rare.'}
+  };
+  var ORDER=['intext','margin','supp','eos','eoc'];
+
+  var tip=document.getElementById('tip');
+  function showTip(h,e){ tip.innerHTML=h; tip.style.opacity=1; var x=e.clientX+14; if(x>window.innerWidth-240)x=e.clientX-226; tip.style.left=x+'px'; tip.style.top=(e.clientY+14)+'px'; }
+  function hideTip(){ tip.style.opacity=0; }
+  window.addEventListener('scroll',hideTip,{passive:true});
+
+  /* apply heat colors to zones */
+  ORDER.forEach(function(k){
+    var z=document.getElementById('z-'+k); if(!z) return;
+    z.style.background=LOCS[k].heat;
+    if(LOCS[k].dark) z.querySelectorAll('.zt,.zl').forEach(function(x){x.style.color='#fff';});
+    z.onclick=function(){ selectZone(k); };
+  });
+
+  var detail=document.getElementById('detail');
+  function selectZone(k){
+    document.querySelectorAll('.zone').forEach(function(z){ z.classList.toggle('sel', z.dataset.k===k); });
+    var d=LOCS[k];
+    detail.innerHTML=
+      '<p class="dn">'+d.name+'</p><div class="dlab">'+d.label+'</div>'+
+      '<div class="dpurpose">'+d.purpose+'</div>'+
+      metric('Share of all 3,010 questions', d.pct, d.n+' questions', d.heat, 40)+
+      metric('Integrate all three components', d.integ, d.integ+'%', d.heat, 100, true)+
+      metric('Require using a representation', d.rep, '~'+d.rep+'%', d.heat, 100)+
+      '<div class="dmore"><b>Concepts:</b> '+d.concept+'<br><b>Cognition:</b> '+d.cog+'</div>';
+  }
+  function metric(label,val,valtext,color,scaleMax,headline){
+    var w=Math.min(val/scaleMax*100,100);
+    return '<div class="metric"><div class="mt"><span>'+label+'</span><span class="mv" style="color:'+(headline?'#12130f':'var(--ink-2)')+'">'+valtext+'</span></div>'+
+      '<div class="mbar"><i style="width:'+w+'%;background:'+color+'"></i></div></div>';
+  }
+  selectZone('margin');
+
+  /* ---- scatter: volume (x) vs spatiality (y) ---- */
+  var sc=document.getElementById('scatter');
+  var W=580,H=380, mL=58,mR=120,mT=24,mB=48;
+  var xMax=40, yMax=80;
+  function X(v){ return mL+(v/xMax)*(W-mL-mR); }
+  function Y(v){ return H-mB-(v/yMax)*(H-mT-mB); }
+  var s='';
+  // gridlines + axes
+  for(var gx=0;gx<=40;gx+=10){ s+='<line x1="'+X(gx)+'" y1="'+mT+'" x2="'+X(gx)+'" y2="'+(H-mB)+'" stroke="#eceadf" stroke-width="1"/>'+
+    '<text x="'+X(gx)+'" y="'+(H-mB+16)+'" font-family="system-ui" font-size="10.5" fill="#8b8a83" text-anchor="middle">'+gx+'%</text>'; }
+  for(var gy=0;gy<=80;gy+=20){ s+='<line x1="'+mL+'" y1="'+Y(gy)+'" x2="'+(W-mR)+'" y2="'+Y(gy)+'" stroke="#eceadf" stroke-width="1"/>'+
+    '<text x="'+(mL-8)+'" y="'+(Y(gy)+3)+'" font-family="system-ui" font-size="10.5" fill="#8b8a83" text-anchor="end">'+gy+'%</text>'; }
+  // axis titles
+  s+='<text x="'+((mL+W-mR)/2)+'" y="'+(H-6)+'" font-family="system-ui" font-size="11.5" fill="#52514e" text-anchor="middle" font-weight="600">Share of all questions in this location →</text>';
+  s+='<text transform="translate(15,'+((mT+H-mB)/2)+') rotate(-90)" font-family="system-ui" font-size="11.5" fill="#52514e" text-anchor="middle" font-weight="600">↑ % integrating all three components</text>';
+  // "reliance" shaded band (high volume)
+  s+='<rect x="'+X(30)+'" y="'+mT+'" width="'+(X(40)-X(30))+'" height="'+(H-mB-mT)+'" fill="#fbeded" opacity=".6"/>';
+  s+='<text x="'+X(35)+'" y="'+(mT+14)+'" font-family="system-ui" font-size="10" fill="#a23c37" text-anchor="middle" font-weight="700">where teachers rely</text>';
+  // points
+  ORDER.forEach(function(k){
+    var d=LOCS[k], cx=X(d.pct), cy=Y(d.integ), r=Math.sqrt(d.n)/2.1;
+    s+='<circle class="pt" data-k="'+k+'" cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+d.heat+'" stroke="#12130f" stroke-opacity=".25" stroke-width="1.5"/>';
+    // label
+    var lx=cx, ly=cy, anchor='middle', dy=-r-8;
+    if(k==='eos'){ dy=r+16; }
+    if(k==='margin'){ anchor='start'; lx=cx+r+8; dy=4; }
+    if(k==='supp'){ anchor='start'; lx=cx+r+8; dy=4; }
+    if(k==='intext'){ anchor='start'; lx=cx+r+8; dy=4; }
+    s+='<text x="'+lx+'" y="'+(cy+dy)+'" font-family="system-ui" font-size="11" font-weight="700" fill="#14150f" text-anchor="'+anchor+'">'+d.name+' ('+d.integ+'%)</text>';
+  });
+  // goldmine marker on margin
+  var m=LOCS.margin;
+  s+='<circle cx="'+X(m.pct)+'" cy="'+Y(m.integ)+'" r="'+(Math.sqrt(m.n)/2.1+7)+'" fill="none" stroke="#b8860b" stroke-width="2" stroke-dasharray="4 4"/>';
+  s+='<text x="'+X(m.pct)+'" y="'+(Y(m.integ)-Math.sqrt(m.n)/2.1-14)+'" font-family="system-ui" font-size="10.5" font-weight="800" fill="#8a6608" text-anchor="middle">★ the goldmine</text>';
+  sc.innerHTML=s;
+  sc.querySelectorAll('.pt').forEach(function(p){
+    var d=LOCS[p.dataset.k];
+    var show=function(e){ showTip('<b>'+d.name+'</b><br>'+d.n+' questions ('+d.pct+'% of all)<br>Integrated: <b>'+d.integ+'%</b> · uses a map: ~'+d.rep+'%<br><span class="m">Click the page zone to inspect.</span>',e); };
+    p.addEventListener('mouseover',show); p.addEventListener('mousemove',show); p.addEventListener('mouseleave',hideTip);
+    p.style.cursor='pointer'; p.addEventListener('click',function(){ selectZone(p.dataset.k); document.getElementById('page').scrollIntoView({behavior:'smooth',block:'center'}); });
+  });
+
+  /* ---- representation bars ---- */
+  var repBars=document.getElementById('repBars');
+  var byRep=ORDER.slice().sort(function(a,b){ return LOCS[b].rep-LOCS[a].rep; });
+  repBars.innerHTML=byRep.map(function(k){
+    var d=LOCS[k];
+    return '<div class="brow"><div class="bl">'+d.name+'</div>'+
+      '<div class="btrack"><div class="bfill" style="width:'+d.rep+'%;background:'+d.heat+';color:'+(d.rep<14?'#a23c37':'#fff')+';'+(d.rep<14?'justify-content:flex-start;padding-left:9px':'')+'">~'+d.rep+'%</div></div></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>
