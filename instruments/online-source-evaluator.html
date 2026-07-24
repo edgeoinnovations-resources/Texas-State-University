@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Source Evaluator — Hong & Jo (2017) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:33px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:710px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:24px;font-weight:800;line-height:1;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:790px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* study design cards */
+  .sd-grid{display:flex;gap:14px;flex-wrap:wrap}
+  .sd{flex:1 1 150px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-top:4px solid var(--blue)}
+  .sd .big{font-size:24px;font-weight:800;color:var(--blue);line-height:1}
+  .sd p{margin:7px 0 0;font-size:12.5px;color:var(--sub)}
+
+  /* chart */
+  .chart-toggle{display:inline-flex;background:var(--bg);border:1px solid var(--hair);border-radius:999px;padding:4px;margin-bottom:18px}
+  .chart-toggle button{border:0;background:transparent;padding:8px 18px;border-radius:999px;font-size:13px;font-weight:800;
+    cursor:pointer;font-family:var(--font);color:var(--sub)}
+  .chart-toggle button.on{background:var(--ink);color:#fff}
+  .chart{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:9px;cursor:pointer;padding:3px;border-radius:8px;transition:.12s}
+  .bar-row:hover{background:var(--bg)}
+  .bar-label{flex:0 0 178px;font-size:13px;font-weight:600;text-align:right}
+  .bar-track{flex:1;background:#eef1f7;border-radius:999px;height:20px;position:relative;overflow:hidden}
+  .bar-fill{height:100%;border-radius:999px;transition:width .5s}
+  .bar-val{flex:0 0 92px;font-size:12.5px;font-weight:700;color:var(--sub)}
+  .bar-row.hi .bar-label{color:var(--green)}
+  .bar-row.lo .bar-label{color:var(--orange)}
+  .type-detail{margin-top:14px;background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:14px 16px;font-size:13.5px;display:none}
+  .type-detail.show{display:block}
+  .type-detail .td-ex{color:var(--sub)}
+  .chart-note{font-size:12px;color:var(--sub);margin-top:12px}
+
+  /* reason pairs */
+  .pairs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .pair{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+  .pair h4{margin:0 0 10px;font-size:14px}
+  .pside{display:flex;gap:10px;padding:7px 0;font-size:13px;align-items:flex-start}
+  .pside .badge{flex:0 0 auto;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:3px 8px;border-radius:6px;color:#fff;margin-top:1px}
+  .pside .badge.u{background:var(--green)}
+  .pside .badge.n{background:var(--orange)}
+  .pside .pd b{font-weight:800}
+  .pside .pd span{color:var(--sub)}
+
+  /* table 3 viz */
+  .t3{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-top:22px}
+  .t3 h4{margin:0 0 4px;font-size:15px}
+  .t3 .t3sub{font-size:12.5px;color:var(--sub);margin:0 0 16px}
+  .t3-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .t3-name{flex:0 0 130px;font-size:12.5px;font-weight:700;text-align:right}
+  .t3-bars{flex:1;display:flex;flex-direction:column;gap:3px}
+  .t3-bar{display:flex;align-items:center;gap:8px;font-size:11.5px}
+  .t3-bar .tb{height:13px;border-radius:4px;transition:width .5s}
+  .t3-bar .tbl{color:var(--sub);white-space:nowrap}
+
+  /* try it */
+  .try{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .src-card{border:1px solid var(--hair);border-radius:12px;padding:15px 17px;margin-bottom:13px}
+  .src-card .sc-head{display:flex;gap:10px;align-items:baseline;margin-bottom:4px}
+  .src-card .sc-n{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:12px;
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .src-card h4{margin:0;font-size:15px}
+  .src-card .sc-blurb{font-size:13px;color:var(--sub);margin:2px 0 12px 34px}
+  .sc-controls{display:flex;gap:10px;flex-wrap:wrap;margin-left:34px}
+  .sc-controls label{font-size:11.5px;font-weight:700;color:var(--sub);display:block;margin-bottom:3px}
+  select{font-family:var(--font);font-size:13px;padding:8px 10px;border:1.5px solid var(--hair);border-radius:9px;background:#fff;color:var(--ink);cursor:pointer;min-width:150px}
+  select:focus{outline:none;border-color:var(--blue)}
+  .sc-reveal{margin:12px 0 0 34px;font-size:13.5px;padding:12px 15px;border-radius:10px;display:none}
+  .sc-reveal.show{display:block}
+  .sc-reveal.ok{background:rgba(0,131,0,.08);border:1px solid rgba(0,131,0,.3)}
+  .sc-reveal.miss{background:rgba(235,104,52,.08);border:1px solid rgba(235,104,52,.3)}
+  .sc-reveal .rv-type{font-weight:800}
+  .sc-reveal .rv-insight{margin-top:6px;color:var(--ink)}
+  .try-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:11px 20px;font-size:14px;font-weight:800;
+    cursor:pointer;font-family:var(--font);transition:.15s}
+  .btn:hover{background:#2568bd}
+  .btn.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+  .btn.ghost:hover{background:rgba(42,120,214,.08)}
+  .try-score{display:none;margin-top:16px;background:linear-gradient(160deg,#0f2b52,#1d4b8f);color:#fff;border-radius:12px;padding:16px 20px}
+  .try-score.show{display:block}
+  .try-score .ts-big{font-size:20px;font-weight:800}
+  .try-score p{margin:8px 0 0;font-size:13.5px;color:#cfe0f5}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  @media(max-width:760px){.hero h1{font-size:26px}.pairs{grid-template-columns:1fr}.bar-label{flex-basis:120px}.t3-name{flex-basis:96px}}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>Online Source Evaluator</h1>
+    <p class="lede">How do students judge online information? In this study, 65 undergraduates found and ranked 1,300 web sources on oil prices — sorted into 13 source types and tagged with seven paired usefulness criteria. Explore the real data, then classify sample sources yourself and compare.</p>
+    <span class="built-tag"><span class="dot"></span>Instrument she built &nbsp;·&nbsp; Hong &amp; Jo (2017)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">13</span><span class="l">source types</span></div>
+      <div class="chip"><span class="n">7</span><span class="l">criteria pairs</span></div>
+      <div class="chip"><span class="n">1,300</span><span class="l">sources ranked</span></div>
+      <div class="chip"><span class="n">65</span><span class="l">students</span></div>
+      <div class="chip"><span class="n">20</span><span class="l">sources each</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = instrument Jo <b>built</b></span>
+    <span><i style="background:var(--green)"></i> Useful criteria</span>
+    <span><i style="background:var(--orange)"></i> Not-useful criteria</span>
+    <span>A different domain from the spatial-thinking instruments: media / information literacy.</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this instrument is</h2></div>
+    <p class="sec-intro">Students are "digital natives" who reach for the web first — but using online information well means being able to find, evaluate, and select it. This case study looked at exactly that: what source types undergraduates in a world geography course actually chose for an assignment, and what criteria they used to decide a source was useful. The task centered on a real global issue — recent changes in oil prices — tied to the North Africa &amp; Southwest Asia unit.</p>
+
+    <div class="sd-grid">
+      <div class="sd"><span class="big">65</span><p>undergraduates in a world geography course (fall 2015), mostly freshmen &amp; sophomores.</p></div>
+      <div class="sd"><span class="big">20</span><p>online sources each student found on changes in oil prices.</p></div>
+      <div class="sd"><span class="big">1–20</span><p>usefulness rank each student assigned (1 = most useful), with a rationale.</p></div>
+      <div class="sd"><span class="big">1,300</span><p>sources in total (702 unique; one source was picked by 30 different students).</p></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>The 13 source types</h2></div>
+    <p class="sec-intro">Every source was classified into one of 13 types. Toggle between how <em>often</em> each type was used and how <em>useful</em> students judged it to be — then click any bar for examples. The twist: the type students used most is not the one they rated most useful.</p>
+
+    <div class="chart-toggle" id="chartToggle">
+      <button data-mode="freq" class="on">By frequency of use</button>
+      <button data-mode="use">By usefulness rank</button>
+    </div>
+    <div class="chart">
+      <div id="barChart"></div>
+      <div class="type-detail" id="typeDetail"></div>
+      <div class="chart-note" id="chartNote"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>The seven usefulness criteria</h2></div>
+    <p class="sec-intro">Students tagged each source with reasons from seven paired criteria — a useful quality and its exact opposite. Definitions were adopted from Lee, Paik &amp; Jo (2012); the "not useful" mirror-reasons were added for this study.</p>
+
+    <div class="pairs" id="pairs"></div>
+
+    <div class="t3">
+      <h4>Which reasons actually drove the rankings?</h4>
+      <p class="t3sub">Reasons students gave for their five <b>most</b>-useful vs five <b>least</b>-useful sources (n = 325 each). Comprehensiveness made a source useful; limited detail made it useless.</p>
+      <div id="t3chart"></div>
+      <p class="chart-note">Percentages exceed neither 100% nor sum tidily — students could give more than one reason per source.</p>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Try it: classify &amp; compare</h2></div>
+    <p class="sec-intro">Here are six sample sources a student might find on oil prices (illustrative examples, not from the study). For each, pick its source type and the main reason you'd rank it useful or not. Then reveal what the study's data says.</p>
+
+    <div class="try">
+      <div id="tryList"></div>
+      <div class="try-actions">
+        <button class="btn" id="revealBtn">Reveal study data</button>
+        <button class="btn ghost" id="tryReset">Reset</button>
+      </div>
+      <div class="try-score" id="tryScore"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>Real data, illustrative sample sources</h4>
+      <p>Every frequency, percentage, and usefulness ranking here is reproduced from the article's Tables 1–3. The six sources in the "Try it" section are <strong>original illustrations</strong> written to represent each type — the study did not publish its actual source list. The criteria definitions are the study's own wording, adopted from Lee, Paik &amp; Jo (2012).</p>
+    </div>
+    <div class="callout">
+      <h4>What the study can and can't tell us</h4>
+      <p>This is a single case study of 65 students on one topic, so the authors caution against over-generalizing. Students were asked only to <em>select</em> reasons, not explain them, so the "why" behind each judgment wasn't captured. Note the one true outlier: <strong>online discussion forums</strong> show a strong average rank of 9/20, but that's based on a single source out of 1,300 — not a reliable signal. The headline finding is sobering: students prioritized <em>comprehensiveness and ease of understanding</em> over credibility, judging sources mostly on surface features rather than actual content.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Hong, J.&nbsp;E., &amp; Jo, I. (2017). Undergraduate Students' Use of Online Information in World Geography: Source Types and Selection Criteria. <em>Review of International Geographical Education Online (RIGEO), 7</em>(2), 171–189.</p>
+    <p>Criteria definitions adopted from Lee, J.&nbsp;Y., Paik, W., &amp; Joo, S. (2012), <em>Information Research, 17</em>(1), paper 511.</p>
+    <p class="small" style="color:#8b98af">Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------- Table 2: 13 source types ---------- */
+var TYPES = [
+  {id:"onlinenews", name:"Online news sites", ex:"e.g., Vox.com, MarketWatch", freq:255, pct:19.62, rank:11.21, sd:5.57},
+  {id:"org", name:"Organizational webpages", ex:"for-profit &amp; non-profit orgs (oil, finance, energy)", freq:220, pct:16.92, rank:10.17, sd:5.55},
+  {id:"newspaper", name:"Newspaper sites", ex:"e.g., New York Times, USA Today, Wall Street Journal", freq:216, pct:16.62, rank:9.89, sd:5.67},
+  {id:"magazine", name:"Magazine sites", ex:"e.g., Fortune, Economist, Forbes", freq:196, pct:15.08, rank:9.99, sd:5.74},
+  {id:"broadcast", name:"Broadcast-channel sites", ex:"e.g., ABC, BBC, CNN", freq:181, pct:13.92, rank:10.09, sd:5.82},
+  {id:"scholarly", name:"Scholarly journals", ex:"via Google Scholar, databases, digital libraries", freq:59, pct:4.54, rank:10.97, sd:5.56},
+  {id:"instructional", name:"Instructional sites", ex:"e.g., For Dummies, HowStuffWorks", freq:47, pct:3.62, rank:7.94, sd:5.73},
+  {id:"others", name:"Others", ex:"e.g., Google Books, YouTube", freq:38, pct:2.92, rank:10.61, sd:5.25},
+  {id:"radio", name:"Radio station sites", ex:"e.g., NPR, PBS", freq:28, pct:2.15, rank:12.07, sd:5.84},
+  {id:"wikipedia", name:"Wikipedia / encyclopedia", ex:"online encyclopedias", freq:24, pct:1.85, rank:11.54, sd:6.22},
+  {id:"blogs", name:"Personal blogs / websites", ex:"individual-authored pages", freq:20, pct:1.54, rank:12.35, sd:6.17},
+  {id:"socialqa", name:"Social Q&amp;A services", ex:"e.g., Yahoo Answers", freq:15, pct:1.15, rank:14.0, sd:5.37},
+  {id:"forums", name:"Online discussion forums", ex:"threaded discussion boards", freq:1, pct:0.08, rank:9.0, sd:null}
+];
+var TMAP = {}; TYPES.forEach(function(t){ TMAP[t.id]=t; });
+
+var chartMode = "freq";
+var barChart = document.getElementById("barChart");
+var typeDetail = document.getElementById("typeDetail");
+var chartNote = document.getElementById("chartNote");
+
+function renderChart(){
+  var rows = TYPES.slice();
+  var maxFreq = 255;
+  if(chartMode==="freq"){
+    rows.sort(function(a,b){return b.freq-a.freq;});
+  } else {
+    rows.sort(function(a,b){return a.rank-b.rank;}); // lower rank = more useful, show first
+  }
+  barChart.innerHTML = rows.map(function(t){
+    var w, val, cls="", color;
+    if(chartMode==="freq"){
+      w = (t.freq/maxFreq*100);
+      val = t.freq+" ("+t.pct.toFixed(1)+"%)";
+      color = "var(--blue)";
+      if(t.id==="onlinenews") cls="hi";
+    } else {
+      w = ((20-t.rank)/20*100); // more useful = longer
+      val = t.rank.toFixed(2)+"/20";
+      color = "var(--green)";
+      if(t.id==="instructional") cls="hi";
+      if(t.id==="socialqa") cls="lo";
+    }
+    return '<div class="bar-row '+cls+'" data-id="'+t.id+'">'+
+      '<div class="bar-label">'+t.name+(chartMode==="use"&&t.id==="forums"?' *':'')+'</div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+w.toFixed(1)+'%;background:'+color+'"></div></div>'+
+      '<div class="bar-val">'+val+'</div></div>';
+  }).join("");
+  barChart.querySelectorAll(".bar-row").forEach(function(r){
+    r.addEventListener("click", function(){ showType(r.getAttribute("data-id")); });
+  });
+  chartNote.innerHTML = chartMode==="freq"
+    ? 'News-article types (online news, newspaper, magazine, broadcast) together made up <b>65.24%</b> of all sources chosen.'
+    : 'Lower rank = more useful. Most useful: <b>instructional sites (7.94)</b>; least useful: <b>social Q&amp;A (14.0)</b>. <span style="color:var(--orange)">*</span> discussion forums (9.0) rest on a single source — not reliable.';
+}
+function showType(id){
+  var t = TMAP[id];
+  typeDetail.className = "type-detail show";
+  typeDetail.innerHTML = '<b>'+t.name+'</b> &nbsp;<span class="td-ex">'+t.ex+'</span><br>'+
+    'Used <b>'+t.freq+'</b> times ('+t.pct.toFixed(2)+'% of 1,300) · average usefulness rank <b>'+t.rank.toFixed(2)+'/20</b>'+
+    (t.sd!==null?' (SD '+t.sd.toFixed(2)+')':' <span class="td-ex">(single source — SD n/a)</span>')+'.';
+}
+document.querySelectorAll("#chartToggle button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#chartToggle button").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on"); chartMode = b.getAttribute("data-mode");
+    typeDetail.className = "type-detail"; renderChart();
+  });
+});
+renderChart();
+
+/* ---------- Table 1 + 3: reason pairs ---------- */
+var PAIRS = [
+  {u:"Accessible", ud:"Easily and quickly found and available.", n:"Inaccessible", nd:"The resource is found with difficulty.", topU:13.54, botN:6.77},
+  {u:"Comprehensive", ud:"Provides broad, detailed information others don't cover.", n:"Limited", nd:"Provides less detailed information.", topU:27.69, botN:20.92},
+  {u:"Credible", ud:"The information is correct and reliable.", n:"Unreliable", nd:"The information seems incorrect.", topU:16.31, botN:8.00},
+  {u:"Easy to understand", ud:"The resource is clear.", n:"Difficult to understand", nd:"The resource is confusing.", topU:21.54, botN:12.92},
+  {u:"Organized", ud:"The information is efficiently structured.", n:"Disorganized", nd:"The information is poorly organized.", topU:16.92, botN:7.69},
+  {u:"Interesting", ud:"Provides an appealing point of view.", n:"Boring", nd:"The information is too general and typical.", topU:18.15, botN:17.23},
+  {u:"Updated", ud:"Includes current information.", n:"Outdated", nd:"Covers past information.", topU:15.38, botN:10.15}
+];
+document.getElementById("pairs").innerHTML = PAIRS.map(function(p){
+  return '<div class="pair"><h4>'+p.u+' &harr; '+p.n+'</h4>'+
+    '<div class="pside"><span class="badge u">Useful</span><span class="pd"><b>'+p.u+'</b> — <span>'+p.ud+'</span></span></div>'+
+    '<div class="pside"><span class="badge n">Not</span><span class="pd"><b>'+p.n+'</b> — <span>'+p.nd+'</span></span></div></div>';
+}).join("");
+
+/* Table 3 paired-bar chart */
+var t3max = 27.69;
+document.getElementById("t3chart").innerHTML = PAIRS.slice().sort(function(a,b){return b.topU-a.topU;}).map(function(p){
+  return '<div class="t3-row"><div class="t3-name">'+p.u+' / '+p.n+'</div><div class="t3-bars">'+
+    '<div class="t3-bar"><div class="tb" style="width:'+(p.topU/t3max*100).toFixed(1)+'%;background:var(--green)"></div><span class="tbl">'+p.topU.toFixed(2)+'% made a source useful</span></div>'+
+    '<div class="t3-bar"><div class="tb" style="width:'+(p.botN/t3max*100).toFixed(1)+'%;background:var(--orange)"></div><span class="tbl">'+p.botN.toFixed(2)+'% made a source not useful</span></div>'+
+    '</div></div>';
+}).join("");
+
+/* ---------- Section 4: try it ---------- */
+var SAMPLES = [
+  {t:"“How Oil Prices Work” — a HowStuffWorks explainer", blurb:"A plain-language walkthrough of supply, demand, and OPEC, with simple diagrams.",
+   trueType:"instructional",
+   insight:"Instructional sites were rated the <b>most useful of all 13 types (7.94/20)</b> — precisely because they're easy to understand and clearly organized — even though they were only 3.62% of sources chosen."},
+  {t:"“OPEC agrees to cut output” — a Wall Street Journal article", blurb:"A 500-word breaking-news story on a production decision.",
+   trueType:"newspaper",
+   insight:"Newspaper sites were the 2nd-most-useful (9.89/20) and often tagged <b>interesting</b> — but short news pieces were the classic <b>“limited”</b> source (limited detail was the #1 not-useful reason, 20.92%)."},
+  {t:"IEA “World Energy Outlook” — a report on the agency's site", blurb:"A detailed technical report with charts and multi-year projections.",
+   trueType:"org",
+   insight:"Organizational webpages were valued for <b>comprehensiveness</b> (the #1 useful reason, 27.69%) — but reports from bodies like the IEA or World Bank were also the ones students found <b>difficult to understand</b> without background knowledge."},
+  {t:"“Why are gas prices going up?” — a Yahoo Answers thread", blurb:"A crowd-answered question with several opinions of varying quality.",
+   trueType:"socialqa",
+   insight:"Social Q&amp;A was rated the <b>least useful type of all (14/20)</b> — students correctly flagged it as <b>unreliable</b> personal opinion rather than factual information."},
+  {t:"“Price of oil” — a Wikipedia article", blurb:"A broad encyclopedia entry with an overview and many citations.",
+   trueType:"wikipedia",
+   insight:"Wikipedia was liked for being easy to find (<b>accessible</b>) but students knew it could be <b>limited and unreliable</b> — its average rank was a middling 11.54/20."},
+  {t:"“Oil price shocks and the macroeconomy” — a journal article via Google Scholar", blurb:"A peer-reviewed study with data, methods, and references.",
+   trueType:"scholarly",
+   insight:"Scholarly journals were only <b>4.54%</b> of sources — students rarely used them (found via Google, not the library) and sometimes judged them <b>outdated</b> or hard to read, though instructors wish students used them more."}
+];
+
+var typeOptions = TYPES.map(function(t){ return '<option value="'+t.id+'">'+t.name+'</option>'; }).join("");
+var reasonOptions = '<optgroup label="Useful">'+
+  PAIRS.map(function(p){return '<option value="u:'+p.u+'">'+p.u+'</option>';}).join("")+'</optgroup>'+
+  '<optgroup label="Not useful">'+
+  PAIRS.map(function(p){return '<option value="n:'+p.n+'">'+p.n+'</option>';}).join("")+'</optgroup>';
+
+var tryList = document.getElementById("tryList");
+function renderTry(){
+  tryList.innerHTML = SAMPLES.map(function(s,i){
+    return '<div class="src-card"><div class="sc-head"><span class="sc-n">'+(i+1)+'</span><h4>'+s.t+'</h4></div>'+
+      '<p class="sc-blurb">'+s.blurb+'</p>'+
+      '<div class="sc-controls">'+
+        '<div><label>Source type</label><select data-i="'+i+'" class="sel-type"><option value="">— choose —</option>'+typeOptions+'</select></div>'+
+        '<div><label>Your main reason</label><select data-i="'+i+'" class="sel-reason"><option value="">— choose —</option>'+reasonOptions+'</select></div>'+
+      '</div>'+
+      '<div class="sc-reveal" id="rv'+i+'"></div></div>';
+  }).join("");
+}
+renderTry();
+
+document.getElementById("revealBtn").addEventListener("click", function(){
+  var correct = 0, answered = 0;
+  SAMPLES.forEach(function(s,i){
+    var typeSel = document.querySelector('.sel-type[data-i="'+i+'"]').value;
+    var rv = document.getElementById("rv"+i);
+    var isRight = (typeSel===s.trueType);
+    if(typeSel) answered++;
+    if(isRight) correct++;
+    rv.className = "sc-reveal show " + (isRight?"ok":"miss");
+    var yourLabel = typeSel ? TMAP[typeSel].name : "—";
+    rv.innerHTML = '<span class="rv-type">'+(isRight?"✓ Correct type: ":"→ Actual type: ")+TMAP[s.trueType].name+'</span>'+
+      (typeSel && !isRight ? ' <span class="small">(you picked '+yourLabel+')</span>' : '')+
+      '<div class="rv-insight">'+s.insight+'</div>';
+  });
+  var ts = document.getElementById("tryScore");
+  ts.className = "try-score show";
+  ts.innerHTML = '<span class="ts-big">You classified '+correct+' of 6 source types correctly.</span>'+
+    '<p>The bigger lesson from the study: students judged sources mostly on comprehensiveness and ease of understanding — surface features — and put credibility surprisingly low. That gap is exactly what information-literacy training targets.</p>';
+  ts.scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+document.getElementById("tryReset").addEventListener("click", function(){
+  renderTry();
+  document.getElementById("tryScore").className = "try-score";
+});
+</script>
+</body>
+</html>

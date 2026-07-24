@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>China–Korea Disposition Comparator — Lee, Jo, Xuan & Zhou (2018) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --china:#2a78d6; --korea:#d24d92;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:32px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:720px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:24px;font-weight:800;line-height:1;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:800px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  .country-legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .cl{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:800}
+  .cl .dot{width:14px;height:14px;border-radius:50%}
+
+  /* subcategory comparison */
+  .subcats{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .axis{display:flex;justify-content:space-between;font-size:11px;color:var(--sub);font-weight:700;margin:0 0 4px}
+  .axis-row{display:flex;align-items:center;gap:12px;margin-bottom:2px}
+  .axis-lab{flex:0 0 var(--lw,240px)}
+  .sc-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--hair)}
+  .sc-row:last-of-type{border-bottom:0}
+  .sc-lab{flex:0 0 240px;font-size:13.5px;font-weight:700}
+  .sc-lab small{display:block;color:var(--sub);font-weight:600;font-size:11.5px}
+  .db{flex:1;position:relative;height:26px}
+  .db-line{position:absolute;top:1px;bottom:1px;left:0;right:0;border-radius:8px;
+    background:linear-gradient(90deg,#f3f5fa,#eef1f7);border:1px solid var(--hair)}
+  .db-conn{position:absolute;top:50%;height:3px;background:#c7cede;transform:translateY(-50%);border-radius:2px}
+  .db-dot{position:absolute;top:50%;width:15px;height:15px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2);z-index:2}
+  .db-dot.china{background:var(--china)}
+  .db-dot.korea{background:var(--korea)}
+  .sc-meta{flex:0 0 150px;font-size:12px;text-align:right}
+  .sc-meta .dchip{display:inline-block;font-weight:800;padding:2px 8px;border-radius:6px;font-size:11.5px}
+  .d-large{background:rgba(235,104,52,.15);color:#b8420f}
+  .d-medium{background:rgba(237,161,0,.18);color:#8a6400}
+  .d-small{background:rgba(42,120,214,.12);color:#1f5aa8}
+  .d-ns{background:#eef1f7;color:var(--sub)}
+
+  /* item explorer */
+  .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .filters{display:flex;gap:6px;flex-wrap:wrap}
+  .fbtn{border:1.5px solid var(--hair);background:#fff;border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;
+    cursor:pointer;font-family:var(--font);color:var(--ink);transition:.12s}
+  .fbtn:hover{border-color:var(--blue)}
+  .fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .toggle-wrap{display:flex;gap:14px;align-items:center;margin-left:auto;flex-wrap:wrap}
+  .tg{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .tg input{width:16px;height:16px;accent-color:var(--green);cursor:pointer}
+  .explorer{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px}
+  .cat-h{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin:16px 0 8px}
+  .cat-h:first-child{margin-top:0}
+  .it-row{display:flex;align-items:center;gap:12px;padding:7px 0}
+  .it-lab{flex:0 0 300px;font-size:12.5px;line-height:1.35}
+  .it-lab .qn{font-weight:800;color:var(--ink)}
+  .it-lab .rev{display:inline-block;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;
+    background:#fff4e6;color:#a35a12;border:1px solid #f0d3a6;border-radius:5px;padding:1px 5px;margin-left:5px;vertical-align:middle}
+  .it-meta{flex:0 0 118px;font-size:11.5px;text-align:right}
+  @media(max-width:820px){.it-lab{flex-basis:180px}.sc-lab{flex-basis:150px}.axis-lab{--lw:150px}}
+  @media(max-width:600px){.it-meta{display:none}}
+
+  /* drill-down */
+  .seg{display:inline-flex;background:var(--bg);border:1px solid var(--hair);border-radius:999px;padding:4px;margin-bottom:16px}
+  .seg button{border:0;background:transparent;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:800;
+    cursor:pointer;font-family:var(--font);color:var(--sub)}
+  .seg button.on{background:var(--ink);color:#fff}
+  .drill{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px}
+  .uni-cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .uni-col h4{margin:0 0 10px;font-size:15px}
+  .uni-col h4 .flag{font-size:12px;font-weight:800;padding:2px 9px;border-radius:6px;color:#fff;margin-left:6px}
+  .uni-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:12.5px}
+  .uni-name{flex:0 0 150px}
+  .uni-bar{flex:1;background:#eef1f7;border-radius:6px;height:16px;overflow:hidden}
+  .uni-fill{height:100%;border-radius:6px}
+  .uni-val{flex:0 0 42px;font-weight:700;font-size:12px}
+  .demo-note{background:#eef7ff;border:1px solid #cfe4fb;border-radius:12px;padding:14px 18px;font-size:14px;margin-top:4px}
+  .demo-note b{color:var(--blue)}
+  .q8-highlight{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:16px 18px;margin-top:16px}
+  .q8-highlight h4{margin:0 0 8px;font-size:14px}
+  @media(max-width:760px){.uni-cols{grid-template-columns:1fr}}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  @media(max-width:760px){.hero h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>China–Korea Disposition Comparator</h1>
+    <p class="lede">Do future geography teachers want to teach spatial thinking — and does that differ by country? This study ran Jo's 40-item Disposition Inventory with 979 Chinese and 323 Korean pre-service teachers. Explore every item side by side, toggle the effect sizes, and drill into who scored how.</p>
+    <span class="built-tag"><span class="dot"></span>Results companion to the 2014 Disposition Inventory (built) &nbsp;·&nbsp; Lee, Jo, Xuan &amp; Zhou (2018)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">40</span><span class="l">inventory items</span></div>
+      <div class="chip"><span class="n">5</span><span class="l">subcategories</span></div>
+      <div class="chip"><span class="n">979</span><span class="l">Chinese teachers</span></div>
+      <div class="chip"><span class="n">323</span><span class="l">Korean teachers</span></div>
+      <div class="chip"><span class="n">1,302</span><span class="l">total surveyed</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = built on Jo &amp; Bednarz's 2014 Disposition Inventory</span>
+    <span><i style="background:var(--china)"></i> China</span>
+    <span><i style="background:var(--korea)"></i> Korea</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this measures</h2></div>
+    <p class="sec-intro">Knowing a subject isn't the same as being <em>disposed</em> to teach it a certain way. The Teaching Spatial Thinking through Geography Disposition Inventory (Jo &amp; Bednarz, 2014) captures teachers' attitudes, values, and beliefs across <strong>40 items</strong> in five subcategories, each rated 1 (strongly disagree) to 5 (strongly agree). Here it's applied cross-nationally. The headline: both groups sit in the <strong>low-to-moderate</strong> range, and Chinese pre-service teachers scored higher in <strong>all five</strong> subcategories — most sharply on their willingness to explicitly teach spatial concepts.</p>
+    <p class="small">A quick orientation to Cohen's <em>d</em> (effect size): ~0.2 is small, ~0.5 medium, ~0.8 large. With samples this big, almost any gap is "statistically significant," so <em>d</em> is the better guide to what actually matters.</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>The five subcategories</h2></div>
+    <p class="sec-intro">Each dot sits on the 1–5 scale; the line is the China–Korea gap. China leads everywhere, but the gap is only meaningful in one place — <strong>explicit teaching of spatial concepts</strong> (a medium-to-large effect).</p>
+
+    <div class="subcats">
+      <div class="axis-row"><div class="axis-lab"></div><div class="axis" style="flex:1"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><div class="sc-meta"></div></div>
+      <div id="subcatRows"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Item-by-item explorer</h2></div>
+    <p class="sec-intro">All 40 items. Filter by subcategory, sort by the size of the China–Korea gap, and toggle the effect sizes on. Reverse-scored items (marked) are worded so a <em>higher</em> score means a more traditional, less spatial-thinking-oriented view.</p>
+
+    <div class="controls">
+      <div class="filters" id="catFilters"></div>
+      <div class="toggle-wrap">
+        <label class="tg"><input type="checkbox" id="sortGap"> Sort by biggest gap</label>
+        <label class="tg"><input type="checkbox" id="showD" checked> Show effect size</label>
+      </div>
+    </div>
+
+    <div class="explorer">
+      <div class="axis-row"><div class="it-lab"></div><div class="axis" style="flex:1"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><div class="it-meta"></div></div>
+      <div id="itemRows"></div>
+    </div>
+    <p class="small" style="margin-top:12px">★ = statistically significant (p &lt; .05). Values are group means on the 1–5 scale (Table 2).</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Who scored how — drill-down</h2></div>
+    <p class="sec-intro">The striking non-finding: dispositions barely moved with gender, grade level, or number of geography courses taken. Where the action is, is <em>between universities</em> — and one Korean outlier tells a story.</p>
+
+    <div class="seg" id="drillSeg">
+      <button data-d="uni" class="on">By university</button>
+      <button data-d="demo">By demographics</button>
+    </div>
+    <div class="drill" id="drillPanel"></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>Every number is from the paper</h4>
+      <p>All item means, subcategory means, effect sizes, and university figures are reproduced from Tables 2–5. Nothing here is illustrative — the inventory items are the study's real wording. One caution about the source: the article's text names Shandong Normal's mean as "3.53", but its own Table 4 lists 3.93 (and calls Shandong the highest, which only 3.93 supports) — this page uses the Table 4 value.</p>
+    </div>
+    <div class="callout">
+      <h4>Read the scores conservatively</h4>
+      <p>The authors flag <strong>moderate response bias</strong> — respondents cluster near the neutral midpoint, so means of 3.0–4.0 shouldn't be read as strong positive dispositions, and the 4.0 "positive" threshold is theoretical, not empirical. The reverse-scored items (Q4, Q11, Q15, Q16, Q34) are worded negatively on purpose. And this is a snapshot of two countries at one time — it describes current conditions, not a universal ranking. The authors' takeaway is developmental: positive dispositions don't appear automatically with age or coursework; they need a deliberate spatial-thinking curriculum in teacher preparation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Lee, J., Jo, I., Xuan, X., &amp; Zhou, W. (2018). Geography preservice teachers' disposition toward teaching spatial thinking through geography: a comparison between China and Korea. <em>International Research in Geographical and Environmental Education, 27</em>(2), 135–148.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/10382046.2017.1320898" target="_blank" rel="noopener">10.1080/10382046.2017.1320898</a></p>
+    <p class="small" style="color:#8b98af">Instrument: Teaching Spatial Thinking through Geography Disposition Inventory (Jo &amp; Bednarz, 2014, <em>Journal of Geography</em> 113(5), 198–207) — the built instrument this page extends. Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+var CATS = [
+  {id:1, name:"Teaching thinking skills", cn:3.83, ko:3.74, d:0.16},
+  {id:2, name:"Teaching spatial thinking", cn:3.73, ko:3.63, d:0.29},
+  {id:3, name:"Spatial thinking in geography", cn:3.82, ko:3.78, d:0.21},
+  {id:4, name:"Explicit teaching of spatial concepts", cn:3.82, ko:3.53, d:0.63},
+  {id:5, name:"Adopting spatial representations & GSTs", cn:3.82, ko:3.73, d:0.16}
+];
+var TOTAL = {cn:3.81, ko:3.67, d:0.34};
+
+var ITEMS = [
+  {q:1,c:1,t:"Thinking skills can be taught",cn:3.74,ko:3.68,sig:false,d:null},
+  {q:2,c:1,t:"Thinking skills should be taught",cn:4.14,ko:4.51,sig:true,d:0.62},
+  {q:3,c:1,t:"Developing students' thinking skills will be my highest priority",cn:3.91,ko:3.92,sig:false,d:null},
+  {q:4,c:1,t:"I'll feel satisfied when students remember exactly what I said",cn:3.43,ko:4.31,sig:true,d:1.13,rev:true},
+  {q:5,c:1,t:"I'll frequently challenge students through questions and tasks",cn:3.75,ko:3.93,sig:true,d:0.18},
+  {q:6,c:1,t:"I'll show how I think through a problem, not just give the answer",cn:4.39,ko:4.23,sig:true,d:0.18},
+  {q:7,c:1,t:"I'll ask students to explain and support their answers",cn:4.31,ko:4.23,sig:false,d:null},
+  {q:8,c:2,t:"I know what spatial thinking is",cn:3.30,ko:3.04,sig:true,d:0.25},
+  {q:9,c:2,t:"Spatial thinking is powerful",cn:4.08,ko:3.89,sig:true,d:0.33},
+  {q:10,c:2,t:"Spatial thinking is integral to everyday life and workplace",cn:4.07,ko:3.76,sig:true,d:0.51},
+  {q:11,c:2,t:"Spatial thinking is an innate skill",cn:2.96,ko:2.88,sig:false,d:null,rev:true},
+  {q:12,c:2,t:"Spatial thinking skills can be taught",cn:3.67,ko:3.71,sig:false,d:null},
+  {q:13,c:2,t:"Spatial thinking transfers across disciplines (math, science, engineering)",cn:4.15,ko:4.09,sig:false,d:null},
+  {q:14,c:2,t:"Spatial thinking should be taught in schools",cn:3.85,ko:3.75,sig:false,d:null},
+  {q:15,c:3,t:"Geography is a collection of factual information",cn:2.82,ko:3.67,sig:true,d:1.01,rev:true},
+  {q:16,c:3,t:"Geography is best learned by rote memorization of facts",cn:2.26,ko:2.07,sig:true,d:0.23,rev:true},
+  {q:17,c:3,t:"Asking questions and solving problems is important in geography",cn:4.17,ko:3.91,sig:true,d:0.48},
+  {q:18,c:3,t:"Geography is the study of spatial aspects of human existence",cn:3.78,ko:4.29,sig:true,d:0.51},
+  {q:19,c:3,t:"Understanding spatial patterns and processes is essential in geography",cn:4.21,ko:4.03,sig:true,d:0.21},
+  {q:20,c:3,t:"Spatial thinking is an essential part of learning geography",cn:4.02,ko:3.99,sig:false,d:null},
+  {q:21,c:4,t:"Knowing spatial concepts is essential in learning geography",cn:4.13,ko:4.11,sig:false,d:null},
+  {q:22,c:4,t:"I'll explicitly teach the concept of location",cn:3.81,ko:3.33,sig:true,d:0.50},
+  {q:23,c:4,t:"I'll explicitly teach place and region",cn:3.88,ko:3.85,sig:false,d:null},
+  {q:24,c:4,t:"I'll explicitly teach distance and direction",cn:3.87,ko:3.34,sig:true,d:0.89},
+  {q:25,c:4,t:"I'll explicitly teach the concept of scale",cn:3.97,ko:3.23,sig:true,d:1.21},
+  {q:26,c:4,t:"I'll explicitly teach the concept of overlay",cn:3.71,ko:3.33,sig:true,d:0.41},
+  {q:27,c:4,t:"I'll explicitly teach distribution and pattern",cn:3.83,ko:3.86,sig:false,d:null},
+  {q:28,c:4,t:"I'll explicitly teach map projection",cn:3.72,ko:3.09,sig:true,d:1.00},
+  {q:29,c:4,t:"I'll explicitly teach the concept of density",cn:3.65,ko:3.18,sig:true,d:0.73},
+  {q:30,c:4,t:"I'll explicitly teach the concept of diffusion",cn:3.72,ko:3.66,sig:false,d:null},
+  {q:31,c:4,t:"I'll explicitly teach spatial correlation",cn:3.77,ko:3.87,sig:false,d:null},
+  {q:32,c:5,t:"Using/creating spatial representations is essential for spatial thinking",cn:4.07,ko:4.02,sig:false,d:null},
+  {q:33,c:5,t:"Using/creating spatial representations is essential for learning geography",cn:4.05,ko:3.92,sig:true,d:0.23},
+  {q:34,c:5,t:"Students can interpret spatial representations without guided practice",cn:2.96,ko:2.71,sig:true,d:0.20,rev:true},
+  {q:35,c:5,t:"I'll demonstrate how to reason using maps, diagrams, and graphs",cn:3.98,ko:3.85,sig:true,d:0.22},
+  {q:36,c:5,t:"I'll frequently ask students to create their own representations",cn:3.67,ko:3.62,sig:false,d:null},
+  {q:37,c:5,t:"Geospatial technologies (GIS/GPS) are powerful tools for spatial thinking",cn:4.07,ko:3.95,sig:true,d:0.14},
+  {q:38,c:5,t:"Geospatial technologies are a powerful tool for learning geography",cn:4.12,ko:4.04,sig:false,d:null},
+  {q:39,c:5,t:"I am familiar with the educational uses of geospatial technologies",cn:3.44,ko:2.97,sig:true,d:0.62},
+  {q:40,c:5,t:"I'll demonstrate how GSTs can be used to solve problems and decide",cn:3.95,ko:3.88,sig:false,d:null}
+];
+var CATNAMES = {1:"Cat 1 · Teaching thinking skills",2:"Cat 2 · Teaching spatial thinking",3:"Cat 3 · Spatial thinking in geography",4:"Cat 4 · Explicit teaching of spatial concepts",5:"Cat 5 · Adopting representations & GSTs"};
+
+function pos(v){ return (v-1)/4*100; } // 1..5 -> 0..100%
+function dClass(d,sig){
+  if(d===null || !sig) return "d-ns";
+  if(d>=0.8) return "d-large";
+  if(d>=0.5) return "d-medium";
+  return "d-small";
+}
+function dLabel(d,sig){
+  if(d===null) return "n.s.";
+  var lbl = d>=0.8?"large":d>=0.5?"medium":d>=0.2?"small":"tiny";
+  return "d="+d.toFixed(2)+" · "+lbl;
+}
+function dumbbell(cn,ko){
+  var pc=pos(cn), pk=pos(ko);
+  var lo=Math.min(pc,pk), hi=Math.max(pc,pk);
+  return '<div class="db"><div class="db-line"></div>'+
+    '<div class="db-conn" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div>'+
+    '<div class="db-dot china" style="left:'+pc+'%" title="China '+cn.toFixed(2)+'"></div>'+
+    '<div class="db-dot korea" style="left:'+pk+'%" title="Korea '+ko.toFixed(2)+'"></div></div>';
+}
+
+/* ---- Section 2: subcategories ---- */
+function renderSubcats(){
+  var rows = CATS.map(function(c){
+    return '<div class="sc-row"><div class="sc-lab">'+c.name+'<small>China '+c.cn.toFixed(2)+' vs Korea '+c.ko.toFixed(2)+'</small></div>'+
+      dumbbell(c.cn,c.ko)+
+      '<div class="sc-meta"><span class="dchip '+dClass(c.d,true)+'">'+dLabel(c.d,true)+'</span></div></div>';
+  }).join("");
+  rows += '<div class="sc-row" style="border-top:2px solid var(--hair)"><div class="sc-lab"><b>Overall disposition</b><small>China '+TOTAL.cn.toFixed(2)+' vs Korea '+TOTAL.ko.toFixed(2)+'</small></div>'+
+    dumbbell(TOTAL.cn,TOTAL.ko)+
+    '<div class="sc-meta"><span class="dchip '+dClass(TOTAL.d,true)+'">'+dLabel(TOTAL.d,true)+'</span></div></div>';
+  document.getElementById("subcatRows").innerHTML = rows;
+}
+renderSubcats();
+
+/* ---- Section 3: item explorer ---- */
+var catFilter = "all", sortGap=false, showD=true;
+var catFilters = document.getElementById("catFilters");
+catFilters.innerHTML = '<button class="fbtn on" data-c="all">All 40</button>'+
+  [1,2,3,4,5].map(function(i){return '<button class="fbtn" data-c="'+i+'">Cat '+i+'</button>';}).join("");
+catFilters.querySelectorAll(".fbtn").forEach(function(b){
+  b.addEventListener("click", function(){
+    catFilters.querySelectorAll(".fbtn").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on"); catFilter=b.getAttribute("data-c"); renderItems();
+  });
+});
+document.getElementById("sortGap").addEventListener("change", function(e){ sortGap=e.target.checked; renderItems(); });
+document.getElementById("showD").addEventListener("change", function(e){ showD=e.target.checked; renderItems(); });
+
+function itemRow(it){
+  var meta = showD ? '<div class="it-meta"><span class="dchip '+dClass(it.d,it.sig)+'">'+(it.sig?"★ ":"")+dLabel(it.d,it.sig)+'</span></div>' : '<div class="it-meta"></div>';
+  return '<div class="it-row"><div class="it-lab"><span class="qn">Q'+it.q+'.</span> '+it.t+(it.rev?' <span class="rev">reverse</span>':'')+'</div>'+
+    dumbbell(it.cn,it.ko)+meta+'</div>';
+}
+function renderItems(){
+  var list = ITEMS.filter(function(it){ return catFilter==="all" || it.c===parseInt(catFilter,10); });
+  var html="";
+  if(sortGap){
+    list = list.slice().sort(function(a,b){ return Math.abs(b.cn-b.ko)-Math.abs(a.cn-a.ko); });
+    html = list.map(itemRow).join("");
+  } else {
+    var lastC=null;
+    list.forEach(function(it){
+      if(it.c!==lastC){ html+='<div class="cat-h">'+CATNAMES[it.c]+'</div>'; lastC=it.c; }
+      html+=itemRow(it);
+    });
+  }
+  document.getElementById("itemRows").innerHTML = html;
+}
+renderItems();
+
+/* ---- Section 4: drill-down ---- */
+var UNI = {
+  china:[
+    {n:"Shandong Normal",m:3.93},{n:"Zhejiang Normal",m:3.87},{n:"Central China Normal",m:3.82},
+    {n:"Anhui Normal",m:3.80},{n:"Inner Mongolia Normal",m:3.80},{n:"Jiangxi Normal",m:3.76},
+    {n:"Shaanxi Normal",m:3.75},{n:"Guangxi Normal",m:3.69},{n:"South China Normal",m:3.67},{n:"Xinjiang Normal",m:3.61}
+  ],
+  korea:[
+    {n:"Kyungpook National",m:3.75},{n:"Seoul National",m:3.75},{n:"Korea Univ.",m:3.74},
+    {n:"Korea Natl. Univ. Edu.",m:3.72},{n:"Chungbuk National",m:3.63},{n:"Chonnam National",m:3.62},
+    {n:"Dongguk",m:3.62},{n:"Kongju National",m:3.54}
+  ]
+};
+function uniBars(arr,color){
+  return arr.map(function(u){
+    var w=(u.m-3.0)/(4.0-3.0)*100; // scale 3.0-4.0 to amplify
+    return '<div class="uni-row"><div class="uni-name">'+u.n+'</div>'+
+      '<div class="uni-bar"><div class="uni-fill" style="width:'+Math.max(4,Math.min(100,w)).toFixed(0)+'%;background:'+color+'"></div></div>'+
+      '<div class="uni-val">'+u.m.toFixed(2)+'</div></div>';
+  }).join("");
+}
+var drillPanel = document.getElementById("drillPanel");
+function renderDrill(mode){
+  if(mode==="uni"){
+    drillPanel.innerHTML = '<p class="small" style="margin:0 0 14px">University means on the 1–5 scale (bars scaled 3.0–4.0 to show spread). Chinese universities differ significantly from one another (p&lt;.05); Korean universities do not (p=.09).</p>'+
+      '<div class="uni-cols"><div class="uni-col"><h4>China <span class="flag" style="background:var(--china)">10 universities</span></h4>'+uniBars(UNI.china,"var(--china)")+'</div>'+
+      '<div class="uni-col"><h4>Korea <span class="flag" style="background:var(--korea)">8 universities</span></h4>'+uniBars(UNI.korea,"var(--korea)")+'</div></div>'+
+      '<div class="q8-highlight"><h4>The Seoul National outlier — item 8, “I know what spatial thinking is”</h4>'+
+      '<p class="small" style="margin:0">On overall disposition, Korean universities barely differ. But on <b>knowing what spatial thinking is</b>, Seoul National scored <b>3.82</b> against a Korean average of <b>3.02</b> (next-highest: Korea Univ. 3.16; lowest: Dongguk 2.47). The reason, per the authors: one lecturer there was a spatial-thinking expert who emphasized the concept. Exposure — not age or course count — is what moved the needle.</p></div>';
+  } else {
+    drillPanel.innerHTML = '<p class="small" style="margin:0 0 14px">Effect sizes (η²) for each grouping were tiny (≤ .02) — i.e., these factors barely explain disposition.</p>'+
+      '<div class="demo-note"><b>Gender:</b> a significant but trivial gap in China only (women 3.83 vs men 3.76, η²=.01); no gender effect in Korea.</div>'+
+      '<div class="demo-note" style="margin-top:10px"><b>Grade level:</b> freshmen to seniors span just 3.75–3.87 (China) and 3.65–3.71 (Korea) — seniors are <em>not</em> reliably more disposed than freshmen.</div>'+
+      '<div class="demo-note" style="margin-top:10px"><b>Geography courses taken:</b> from &lt;5 to &gt;20 courses, means move only 3.75→3.81 (China) and 3.63→3.76 (Korea). More coursework did not build the disposition.</div>'+
+      '<div class="demo-note" style="margin-top:10px"><b>The one thing that helped:</b> having taken <em>both</em> a geography-education course and a geospatial-technology course beat taking either alone or neither — in both countries.</div>';
+  }
+}
+document.querySelectorAll("#drillSeg button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#drillSeg button").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on"); renderDrill(b.getAttribute("data-d"));
+  });
+});
+renderDrill("uni");
+</script>
+</body>
+</html>

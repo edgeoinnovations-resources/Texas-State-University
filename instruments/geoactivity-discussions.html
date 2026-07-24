@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoActivity Types in APHG: Discussions — Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+  /* HERO */
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:34px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:690px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:110px}
+  .chip .n{font-size:24px;font-weight:800;line-height:1;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:770px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* FISHBOWL */
+  .fishbowl{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;background:var(--card);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 24px}
+  .fishbowl .fb-diagram{flex:0 0 260px;text-align:center}
+  .fishbowl .fb-text{flex:1 1 320px}
+  .fishbowl h4{margin:0 0 8px;font-size:15px;color:var(--green);text-transform:uppercase;letter-spacing:.05em}
+  .fishbowl p{margin:0 0 10px;font-size:14.5px}
+  .obs-form{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:14px 16px;margin-top:8px}
+  .obs-form .of-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin-bottom:10px}
+  .obs-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;font-size:13.5px}
+  .obs-row:last-child{margin-bottom:0}
+  .counter{display:inline-flex;align-items:center;gap:8px}
+  .cbtn{width:28px;height:28px;border-radius:8px;border:1px solid var(--hair);background:#fff;font-size:16px;font-weight:800;
+    cursor:pointer;color:var(--blue);line-height:1;font-family:var(--font)}
+  .cbtn:hover{border-color:var(--blue)}
+  .cval{min-width:26px;text-align:center;font-weight:800;font-size:15px}
+  .beh-toggle{display:inline-flex;gap:6px}
+  .beh-toggle button{border:1px solid var(--hair);background:#fff;border-radius:8px;padding:4px 10px;font-size:12.5px;font-weight:700;
+    cursor:pointer;font-family:var(--font);color:var(--sub)}
+  .beh-toggle button.pos.on{background:rgba(0,131,0,.12);border-color:var(--green);color:var(--green)}
+  .beh-toggle button.neg.on{background:rgba(235,104,52,.12);border-color:var(--orange);color:var(--orange)}
+
+  /* WHEEL */
+  .wheel-wrap{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+  .wheel-col{flex:0 0 340px;max-width:100%;text-align:center}
+  .wheel-stage{position:relative;width:340px;max-width:100%;margin:0 auto}
+  .pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;
+    border-left:15px solid transparent;border-right:15px solid transparent;border-top:26px solid var(--ink);z-index:5;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+  #wheel{transition:transform 3.4s cubic-bezier(.15,.6,.15,1)}
+  .spin-btn{margin-top:16px;background:var(--blue);color:#fff;border:0;border-radius:11px;padding:12px 28px;font-size:15px;
+    font-weight:800;cursor:pointer;font-family:var(--font);transition:.15s}
+  .spin-btn:hover{background:#2568bd}
+  .spin-btn:disabled{opacity:.5;cursor:default}
+  .legend-col{flex:1 1 300px}
+  .qt-list{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+  .qt-item{display:flex;align-items:center;gap:11px;border:1.5px solid var(--hair);background:#fff;border-radius:10px;
+    padding:9px 13px;cursor:pointer;font-size:14px;font-weight:600;text-align:left;font-family:var(--font);color:var(--ink);transition:.12s}
+  .qt-item:hover{border-color:var(--blue)}
+  .qt-item.active{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink) inset}
+  .qt-num{width:24px;height:24px;border-radius:50%;color:#fff;font-weight:800;font-size:12.5px;display:inline-flex;
+    align-items:center;justify-content:center;flex:0 0 auto}
+  .qt-result{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;border-left:5px solid var(--blue)}
+  .qt-result h3{margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:10px}
+  .qt-result .stems{margin:12px 0 0;padding:0;list-style:none}
+  .qt-result .stems li{background:var(--bg);border:1px solid var(--hair);border-radius:9px;padding:10px 13px;margin-bottom:8px;font-size:14.5px}
+  .qt-result .stems li:last-child{margin-bottom:0}
+  .qt-placeholder{color:var(--sub);font-style:italic}
+
+  /* SEMINAR BUILDER */
+  .builder{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+  .b-step{font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin:0 0 10px}
+  .topic-pick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+  .topic-btn{border:1.5px solid var(--hair);background:#fff;border-radius:10px;padding:9px 13px;cursor:pointer;
+    font-family:var(--font);font-size:13px;font-weight:700;color:var(--ink);text-align:left;transition:.12s;line-height:1.3}
+  .topic-btn small{display:block;font-weight:600;color:var(--sub);font-size:11.5px;margin-top:2px}
+  .topic-btn:hover{border-color:var(--blue)}
+  .topic-btn.active{background:var(--green);border-color:var(--green);color:#fff}
+  .topic-btn.active small{color:#d9ffd9}
+  .topic-detail{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:15px 18px;margin:14px 0 20px}
+  .topic-detail h4{margin:0 0 3px;font-size:16px}
+  .topic-detail .td-unit{font-size:12.5px;color:var(--sub);margin:0 0 10px}
+  .topic-detail ul{margin:0;padding-left:20px;font-size:14px}
+  .topic-detail li{margin-bottom:5px}
+  .type-toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .tt{border:1.5px solid var(--hair);background:#fff;border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;
+    cursor:pointer;font-family:var(--font);color:var(--ink);display:inline-flex;align-items:center;gap:7px;transition:.12s}
+  .tt .tdot{width:10px;height:10px;border-radius:50%}
+  .tt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:800;
+    cursor:pointer;font-family:var(--font);transition:.15s}
+  .btn:hover{background:#2568bd}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+  .btn.ghost:hover{background:rgba(42,120,214,.08)}
+  .b-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .sheet{margin-top:20px;border:1px solid var(--hair);border-radius:12px;padding:0;display:none;overflow:hidden}
+  .sheet.show{display:block}
+  .sheet-head{background:linear-gradient(160deg,#12305e,#2a78d6);color:#fff;padding:16px 20px}
+  .sheet-head h4{margin:0 0 3px;font-size:16px}
+  .sheet-head p{margin:0;font-size:12.5px;color:#dbe6f6}
+  .sheet-body{padding:16px 20px}
+  .sheet-block{margin-bottom:16px}
+  .sheet-block:last-child{margin-bottom:0}
+  .sheet-block h5{margin:0 0 7px;font-size:14px;display:flex;align-items:center;gap:8px}
+  .sheet-block ul{margin:0;padding-left:20px;font-size:13.5px}
+  .sheet-block li{margin-bottom:4px}
+
+  /* RUBRIC */
+  .rubric{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .r-dim{padding:14px 0;border-bottom:1px solid var(--hair)}
+  .r-dim:last-of-type{border-bottom:0}
+  .r-dim .rd-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+  .r-dim h4{margin:0;font-size:15px}
+  .r-dim .rd-def{font-size:12.5px;color:var(--sub)}
+  .r-levels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .r-level{border:1.5px solid var(--hair);background:#fff;border-radius:10px;padding:9px 11px;cursor:pointer;font-size:12px;transition:.12s}
+  .r-level:hover{border-color:var(--blue)}
+  .r-level.picked{border-color:var(--green);background:rgba(0,131,0,.07);box-shadow:0 0 0 1px var(--green) inset}
+  .r-level .rl-name{display:block;font-weight:800;font-size:12px;margin-bottom:4px}
+  .r-total{display:flex;justify-content:space-between;align-items:center;margin-top:18px;background:linear-gradient(160deg,#0f2b52,#1d4b8f);
+    color:#fff;border-radius:12px;padding:16px 20px}
+  .r-total .rt-band{font-size:20px;font-weight:800}
+  .r-total .rt-num{font-size:14px;color:#cfe0f5}
+  @media(max-width:760px){.r-levels{grid-template-columns:1fr 1fr}.hero h1{font-size:27px}.wheel-col{flex-basis:100%}}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>GeoActivity Types in APHG: Discussions</h1>
+    <p class="lede">Socratic seminars for AP Human Geography — eight question types with model stems, six unit-by-unit discussion topics, and an analytic rubric. Spin the question wheel, build a seminar for any unit, and try the rubric.</p>
+    <span class="built-tag"><span class="dot"></span>Instrument she built &nbsp;·&nbsp; Hong, Loux, Huh &amp; Jo (2022)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">8</span><span class="l">question types</span></div>
+      <div class="chip"><span class="n">24</span><span class="l">model stems</span></div>
+      <div class="chip"><span class="n">6</span><span class="l">unit topics</span></div>
+      <div class="chip"><span class="n">6</span><span class="l">rubric dimensions</span></div>
+      <div class="chip"><span class="n">2</span><span class="l">discussion formats</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = instrument Jo <b>built</b></span>
+    <span>Question stems adapted from AVID, National Geographic &amp; Facing History</span>
+    <span>Rubric dimensions after Argo Community H.S. (Fig. 2)</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this instrument is</h2></div>
+    <p class="sec-intro">Discussion is one of the "GeoActivity" types the symposium documents. This paper focuses on the <strong>Socratic seminar</strong> — a whole-class method where students examine an issue from many perspectives to build deeper understanding. The paper's toolkit is three things: a bank of question types to fuel dialogue (Table&nbsp;1), a set of unit topics to discuss (Table&nbsp;2), and a way to assess it (rubric, Fig.&nbsp;2). The recommendation: at least one Socratic seminar per unit, at the end of the unit, since it serves as a cumulative review.</p>
+
+    <div class="fishbowl">
+      <div class="fb-diagram">
+        <svg width="240" height="240" viewBox="0 0 240 240" aria-label="Inner and outer circle seating diagram">
+          <circle cx="120" cy="120" r="112" fill="none" stroke="#dfe4ee" stroke-width="2"/>
+          <circle cx="120" cy="120" r="66" fill="none" stroke="#2a78d6" stroke-width="2" stroke-dasharray="4 4"/>
+          <text x="120" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#54607a" font-family="sans-serif">OUTER CIRCLE · observers</text>
+          <!-- inner participants -->
+          <g fill="#2a78d6"><circle cx="120" cy="66" r="9"/><circle cx="167" cy="99" r="9"/><circle cx="167" cy="141" r="9"/><circle cx="120" cy="174" r="9"/><circle cx="73" cy="141" r="9"/><circle cx="73" cy="99" r="9"/></g>
+          <!-- outer observers -->
+          <g fill="#008300"><circle cx="120" cy="20" r="8"/><circle cx="176" cy="44" r="8"/><circle cx="212" cy="96" r="8"/><circle cx="212" cy="144" r="8"/><circle cx="176" cy="196" r="8"/><circle cx="120" cy="220" r="8"/><circle cx="64" cy="196" r="8"/><circle cx="28" cy="144" r="8"/><circle cx="28" cy="96" r="8"/><circle cx="64" cy="44" r="8"/></g>
+          <text x="120" y="124" text-anchor="middle" font-size="11" font-weight="700" fill="#2a78d6" font-family="sans-serif">INNER</text>
+          <text x="120" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#2a78d6" font-family="sans-serif">participants</text>
+        </svg>
+        <p class="small" style="margin-top:6px">Then students <b>flip roles</b> and discuss again.</p>
+      </div>
+      <div class="fb-text">
+        <h4>The fishbowl setup</h4>
+        <p>Students split into <strong>participants</strong> (inner circle, actively discussing) and <strong>observers</strong> (outer circle). Each observer is assigned one participant to watch, tracking engagement and conversation on a peer-evaluation form — then the two groups swap. Assigning the observer role keeps non-speaking students engaged and generates constructive feedback.</p>
+        <div class="obs-form">
+          <div class="of-title">Try it · observer peer-evaluation tally</div>
+          <div class="obs-row"><span>Questions raised</span>
+            <span class="counter"><button class="cbtn" data-c="q" data-d="-1">−</button><span class="cval" id="cq">0</span><button class="cbtn" data-c="q" data-d="1">+</button></span></div>
+          <div class="obs-row"><span>Reference citations</span>
+            <span class="counter"><button class="cbtn" data-c="r" data-d="-1">−</button><span class="cval" id="cr">0</span><button class="cbtn" data-c="r" data-d="1">+</button></span></div>
+          <div class="obs-row"><span>Discussion behavior</span>
+            <span class="beh-toggle"><button class="pos" id="behPos">＋ positive</button><button class="neg" id="behNeg">− negative</button></span></div>
+        </div>
+        <p class="small" style="margin-top:8px">The form's items — questions raised, reference citations, and positive/negative behaviors — are the ones the paper names.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>The Socratic question wheel</h2></div>
+    <p class="sec-intro">Table&nbsp;1 gives eight question types that keep a seminar moving. Spin the wheel for a random type — or click any type in the list — to see its model stems. These are the exact prompts from the paper, adapted from AVID, National Geographic, and Facing History.</p>
+
+    <div class="wheel-wrap">
+      <div class="wheel-col">
+        <div class="wheel-stage">
+          <div class="pointer"></div>
+          <svg id="wheel" width="340" height="340" viewBox="0 0 320 320"></svg>
+        </div>
+        <button class="spin-btn" id="spinBtn">Spin the wheel</button>
+      </div>
+      <div class="legend-col">
+        <div class="qt-list" id="qtList"></div>
+        <div class="qt-result" id="qtResult">
+          <p class="qt-placeholder">Spin or pick a question type to see its model stems.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Build a Socratic seminar</h2></div>
+    <p class="sec-intro">Pick a unit topic from Table&nbsp;2, choose which question types you want to drive the dialogue, and generate a ready-to-use seminar sheet that pairs the topic's example questions with your chosen question stems.</p>
+
+    <div class="builder">
+      <p class="b-step">Step 1 · Choose a unit topic</p>
+      <div class="topic-pick" id="topicPick"></div>
+      <div class="topic-detail" id="topicDetail" style="display:none"></div>
+
+      <p class="b-step">Step 2 · Pick question types to include</p>
+      <div class="type-toggles" id="typeToggles"></div>
+
+      <div class="b-actions">
+        <button class="btn" id="genBtn" disabled>Generate seminar sheet</button>
+        <button class="btn ghost" id="genReset">Reset</button>
+      </div>
+
+      <div class="sheet" id="sheet"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Discussion rubric</h2></div>
+    <p class="sec-intro">A quantitative tool like Equity Maps can chart who spoke and for how long, but it only captures quantity. To judge quality too, the paper recommends an analytic rubric spanning six dimensions. Score a hypothetical student on each to see how an analytic rubric resolves.</p>
+
+    <div class="rubric" id="rubric"></div>
+
+    <div class="callout" style="margin-top:20px">
+      <h4>What's faithful here</h4>
+      <p>The <strong>six dimensions</strong> are exactly the ones the paper names for a discussion rubric — levels of participation, content, evidence used to support an argument, critical and analytical thinking, discussion skills, and appropriate language use. The paper's actual rubric (Fig.&nbsp;2) is an image sourced from Argo Community High School and is not reproduced in the article's text, so the <strong>level descriptors and the 1–4 scoring below are original illustrations</strong> built to exercise those dimensions — not the Argo rubric itself.</p>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>Adapted, not original, question stems</h4>
+      <p>The eight question types and their stems are reproduced faithfully from Table&nbsp;1, which the authors themselves adapted from AVID Socratic Seminar (2014), National Geographic's Geographic Thinking (2017), and Facing History &amp; Ourselves' Socratic Seminar Stems (2022). The unit topics and example questions in the builder are verbatim from Table&nbsp;2.</p>
+    </div>
+    <div class="callout">
+      <h4>A practice paper, not an evaluated study</h4>
+      <p>This is a practitioner article sharing classroom methods from APHG teachers. It reports no experimental design, sample, or outcome statistics — its evidence is professional recommendation and teacher testimony ("overwhelmingly positive reactions to discussions"). Figures&nbsp;1 (Equity Maps output) and&nbsp;2 (the rubric) are example images and are described, not reproduced.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Hong, J.&nbsp;E., Loux, T., Huh, S., &amp; Jo, I. (2022). GeoActivity Types in APHG: Discussions. <em>The Geography Teacher, 19</em>(2), 60–64.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/19338341.2022.2042835" target="_blank" rel="noopener">10.1080/19338341.2022.2042835</a></p>
+    <p class="small" style="color:#8b98af">Question stems adapted by the authors from AVID Socratic Seminar (2014), National Geographic Geographic Thinking (2017), and Facing History &amp; Ourselves (2022). Rubric dimensions after the discussion rubric example (Fig. 2, Argo Community High School). Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------- DATA: Table 1 question types + stems (verbatim) ---------- */
+var COLORS = ["#2a78d6","#008300","#e87ba4","#eda100","#eb6834","#1d4b8f","#006d00","#c76694"];
+var QTYPES = [
+  {name:"Clarification", stems:[
+    "I'm not sure I understand … Do you mean … or …?",
+    "Could you explain that further?",
+    "Could you expand upon that?"]},
+  {name:"Assumption", stems:[
+    "What are you assuming?",
+    "What could we assume instead?",
+    "Why would someone make this assumption?"]},
+  {name:"Geographic inquiry", stems:[
+    "Why is it located there?",
+    "Why might … occur in [one location] but not [a different location]?",
+    "Is this issue tied to a specific place?"]},
+  {name:"Reason and evidence", stems:[
+    "Can you give us an example of …?",
+    "What is some evidence for …?",
+    "How does that apply to this case?"]},
+  {name:"Cause and effect", stems:[
+    "Why do you think that happened?",
+    "How could that have been prevented?",
+    "Do you think that would happen that way again? Why?"]},
+  {name:"Compare and contrast", stems:[
+    "How are … and … alike? Or different?",
+    "What is that similar to?",
+    "Can you think of why this feels different from …?"]},
+  {name:"Viewpoint and perspective", stems:[
+    "How did you arrive at your view?",
+    "Can/did anyone see this another way?",
+    "What would someone who disagrees say?"]},
+  {name:"Implication and consequence", stems:[
+    "When you say …, are you implying …?",
+    "What are you implying by that?",
+    "What is the probability of this result?"]}
+];
+
+/* ---------- DATA: Table 2 unit topics + example questions (verbatim) ---------- */
+var TOPICS = [
+  {unit:"Unit 2", unitFull:"Population &amp; Migration Patterns and Processes", topic:"Population policies", qs:[
+    "Is the world overpopulated?",
+    "Should countries implement pro-natalist or anti-natalist policies; if so, what countries?",
+    "How do ideas proposed by Thomas Malthus apply to today's population issues?",
+    "Where is the natural increase rate growing the fastest and how does that impact global population?"]},
+  {unit:"Unit 3", unitFull:"Cultural Patterns and Processes", topic:"Globalization's influence on cultural landscape", qs:[
+    "How does globalization lead to uniform landscapes?",
+    "Explain the impact of diffusion of popular culture on folk/local culture.",
+    "What are examples of cultural diffusion that can be seen in cultural landscapes around the world?",
+    "How do language and religion impact the cultural landscape?"]},
+  {unit:"Unit 4", unitFull:"Political Patterns and Processes", topic:"Centrifugal vs. centripetal forces", qs:[
+    "How do centrifugal forces lead to devolution?",
+    "What are current examples of centripetal forces in the United States?",
+    "What is more powerful, centripetal or centrifugal forces? Be sure to provide examples.",
+    "How can we classify movements, such as Brexit?"]},
+  {unit:"Unit 5", unitFull:"Agriculture and Rural Land-Use Patterns and Processes", topic:"GMOs in agriculture and food production", qs:[
+    "How have GMOs impacted food production since the beginning of the Third Agricultural Revolution?",
+    "Should companies use GMOs in food production, and, if yes, should they be responsible for labeling products to show the use of GMOs?"]},
+  {unit:"Unit 6", unitFull:"Cities and Urban Land-Use Patterns and Processes", topic:"Gentrification and urban renewal", qs:[
+    "What groups are impacted by gentrification?",
+    "Why might some urban planners struggle with approving investments in a community?",
+    "How can gentrification change the ethnic makeup of a neighborhood?"]},
+  {unit:"Unit 7", unitFull:"Industrial and Economic Development Patterns and Processes", topic:"Theories of development", qs:[
+    "What policies should be implemented to improve living conditions in less developed countries?",
+    "What role should organizations like the United Nations take in promoting development?",
+    "To what extent are more developed countries responsible for promoting more sustainable practices in less developed countries?"]}
+];
+
+/* =========================================================
+   SECTION 1 — observer tally
+   ========================================================= */
+var counts = {q:0, r:0};
+document.querySelectorAll(".cbtn").forEach(function(b){
+  b.addEventListener("click", function(){
+    var c = b.getAttribute("data-c"), d = parseInt(b.getAttribute("data-d"),10);
+    counts[c] = Math.max(0, counts[c]+d);
+    document.getElementById("c"+c).textContent = counts[c];
+  });
+});
+var behPos = document.getElementById("behPos"), behNeg = document.getElementById("behNeg");
+behPos.addEventListener("click", function(){ behPos.classList.toggle("on"); behNeg.classList.remove("on"); });
+behNeg.addEventListener("click", function(){ behNeg.classList.toggle("on"); behPos.classList.remove("on"); });
+
+/* =========================================================
+   SECTION 2 — question wheel
+   ========================================================= */
+var CX=160, CY=160, R=150, LBL_R=98;
+var wheel = document.getElementById("wheel");
+var SVGNS = "http://www.w3.org/2000/svg";
+
+function polar(angleDeg, radius){
+  var a = (angleDeg) * Math.PI/180;
+  return { x: CX + radius*Math.sin(a), y: CY - radius*Math.cos(a) };
+}
+function buildWheel(){
+  var seg = 360/QTYPES.length;
+  QTYPES.forEach(function(t, i){
+    var a0 = i*seg, a1 = (i+1)*seg;
+    var p0 = polar(a0, R), p1 = polar(a1, R);
+    var path = document.createElementNS(SVGNS,"path");
+    path.setAttribute("d","M"+CX+" "+CY+" L"+p0.x.toFixed(2)+" "+p0.y.toFixed(2)+
+      " A"+R+" "+R+" 0 0 1 "+p1.x.toFixed(2)+" "+p1.y.toFixed(2)+" Z");
+    path.setAttribute("fill", COLORS[i]);
+    path.setAttribute("stroke","#ffffff"); path.setAttribute("stroke-width","2");
+    path.style.cursor="pointer";
+    path.addEventListener("click", function(){ selectType(i, true); });
+    wheel.appendChild(path);
+    // number label
+    var mid = a0 + seg/2;
+    var lp = polar(mid, LBL_R);
+    var txt = document.createElementNS(SVGNS,"text");
+    txt.setAttribute("x", lp.x.toFixed(1)); txt.setAttribute("y", lp.y.toFixed(1));
+    txt.setAttribute("text-anchor","middle"); txt.setAttribute("dominant-baseline","central");
+    txt.setAttribute("fill","#ffffff"); txt.setAttribute("font-size","22"); txt.setAttribute("font-weight","800");
+    txt.setAttribute("font-family","sans-serif"); txt.style.pointerEvents="none";
+    txt.textContent = (i+1);
+    wheel.appendChild(txt);
+  });
+  // hub
+  var hub = document.createElementNS(SVGNS,"circle");
+  hub.setAttribute("cx",CX); hub.setAttribute("cy",CY); hub.setAttribute("r","24");
+  hub.setAttribute("fill","#ffffff"); hub.setAttribute("stroke","#dfe4ee"); hub.setAttribute("stroke-width","2");
+  wheel.appendChild(hub);
+}
+buildWheel();
+
+/* legend list */
+var qtList = document.getElementById("qtList");
+QTYPES.forEach(function(t,i){
+  var el = document.createElement("button");
+  el.className = "qt-item"; el.setAttribute("data-i", i);
+  el.innerHTML = '<span class="qt-num" style="background:'+COLORS[i]+'">'+(i+1)+'</span>'+t.name;
+  el.addEventListener("click", function(){ selectType(i, true); });
+  qtList.appendChild(el);
+});
+
+var qtResult = document.getElementById("qtResult");
+var currentRot = 0, spinning = false, activeType = null;
+
+function showStems(i){
+  var t = QTYPES[i];
+  qtResult.style.borderLeftColor = COLORS[i];
+  qtResult.innerHTML =
+    '<h3><span class="qt-num" style="background:'+COLORS[i]+'">'+(i+1)+'</span>'+t.name+'</h3>'+
+    '<ul class="stems">'+ t.stems.map(function(s){return "<li>"+s+"</li>";}).join("") +'</ul>';
+  document.querySelectorAll(".qt-item").forEach(function(el){
+    el.classList.toggle("active", parseInt(el.getAttribute("data-i"),10)===i);
+  });
+  activeType = i;
+}
+function rotateTo(i){
+  var seg = 360/QTYPES.length;
+  // wedge i center currently at angle (i*seg + seg/2); bring to top (0) => rotate by -(center)
+  var targetMod = (360 - (i*seg + seg/2)) % 360;
+  var base = currentRot - (currentRot % 360);
+  var newRot = base + targetMod;
+  while(newRot <= currentRot) newRot += 360;
+  newRot += 360*4; // extra full spins for effect
+  currentRot = newRot;
+  wheel.style.transform = "rotate("+newRot+"deg)";
+}
+function selectType(i, animate){
+  if(spinning) return;
+  if(animate){
+    spinning = true;
+    document.getElementById("spinBtn").disabled = true;
+    rotateTo(i);
+    window.setTimeout(function(){
+      spinning = false;
+      document.getElementById("spinBtn").disabled = false;
+      showStems(i);
+    }, 3500);
+  } else { showStems(i); }
+}
+document.getElementById("spinBtn").addEventListener("click", function(){
+  if(spinning) return;
+  var i = Math.floor(Math.random()*QTYPES.length);
+  selectType(i, true);
+});
+
+/* =========================================================
+   SECTION 3 — seminar builder
+   ========================================================= */
+var topicPick = document.getElementById("topicPick");
+var topicDetail = document.getElementById("topicDetail");
+var typeToggles = document.getElementById("typeToggles");
+var sheet = document.getElementById("sheet");
+var genBtn = document.getElementById("genBtn");
+var selTopic = null;
+var selTypes = {};
+
+TOPICS.forEach(function(t,i){
+  var b = document.createElement("button");
+  b.className = "topic-btn"; b.setAttribute("data-i", i);
+  b.innerHTML = t.topic + "<small>"+t.unit+"</small>";
+  b.addEventListener("click", function(){ pickTopic(i); });
+  topicPick.appendChild(b);
+});
+function pickTopic(i){
+  selTopic = i;
+  document.querySelectorAll(".topic-btn").forEach(function(el){
+    el.classList.toggle("active", parseInt(el.getAttribute("data-i"),10)===i);
+  });
+  var t = TOPICS[i];
+  topicDetail.style.display = "block";
+  topicDetail.innerHTML = '<h4>'+t.topic+'</h4><p class="td-unit">'+t.unit+' — '+t.unitFull+'</p>'+
+    '<p class="small" style="margin:0 0 8px;color:var(--ink);font-weight:700">Example discussion questions (Table 2):</p>'+
+    '<ul>'+ t.qs.map(function(q){return "<li>"+q+"</li>";}).join("") +'</ul>';
+  updateGen();
+}
+QTYPES.forEach(function(t,i){
+  var b = document.createElement("button");
+  b.className = "tt"; b.setAttribute("data-i", i);
+  b.innerHTML = '<span class="tdot" style="background:'+COLORS[i]+'"></span>'+t.name;
+  b.addEventListener("click", function(){
+    selTypes[i] = !selTypes[i];
+    b.classList.toggle("on", !!selTypes[i]);
+    updateGen();
+  });
+  typeToggles.appendChild(b);
+});
+function anyType(){ return Object.keys(selTypes).some(function(k){return selTypes[k];}); }
+function updateGen(){ genBtn.disabled = !(selTopic!==null && anyType()); }
+
+genBtn.addEventListener("click", function(){
+  var t = TOPICS[selTopic];
+  var blocks = QTYPES.map(function(qt,i){
+    if(!selTypes[i]) return "";
+    return '<div class="sheet-block"><h5><span class="qt-num" style="background:'+COLORS[i]+';width:20px;height:20px;font-size:11px">'+(i+1)+
+      '</span>'+qt.name+'</h5><ul>'+ qt.stems.map(function(s){return "<li>"+s+"</li>";}).join("") +'</ul></div>';
+  }).join("");
+  sheet.innerHTML =
+    '<div class="sheet-head"><h4>Socratic Seminar · '+t.topic+'</h4>'+
+    '<p>'+t.unit+' — '+t.unitFull+'</p></div>'+
+    '<div class="sheet-body">'+
+      '<div class="sheet-block"><h5>Opening / topic questions</h5><ul>'+
+        t.qs.map(function(q){return "<li>"+q+"</li>";}).join("") +'</ul></div>'+
+      blocks +
+      '<p class="small" style="margin:4px 0 0">Use the stems above as facilitation prompts — fill the blanks (…) with the topic\'s terms as the conversation unfolds.</p>'+
+    '</div>';
+  sheet.classList.add("show");
+  sheet.scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+document.getElementById("genReset").addEventListener("click", function(){
+  selTopic = null; selTypes = {};
+  document.querySelectorAll(".topic-btn").forEach(function(el){el.classList.remove("active");});
+  document.querySelectorAll(".tt").forEach(function(el){el.classList.remove("on");});
+  topicDetail.style.display="none"; sheet.classList.remove("show");
+  updateGen();
+});
+
+/* =========================================================
+   SECTION 4 — discussion rubric (illustrative descriptors)
+   ========================================================= */
+var DIMS = [
+  {name:"Participation", def:"How actively and equitably the student contributes.",
+    lv:["Initiates and sustains contributions; draws quieter peers in.","Contributes regularly and stays on topic.","Contributes occasionally, mostly when prompted.","Rarely contributes; must be called on."]},
+  {name:"Content", def:"Command of the unit's concepts, terms, and topic.",
+    lv:["Accurate, precise use of APHG terms; deep grasp of the topic.","Generally accurate use of key terms and concepts.","Some relevant content, with gaps or imprecision.","Little accurate content; frequent misconceptions."]},
+  {name:"Evidence used to support an argument", def:"Quality and use of supporting evidence.",
+    lv:["Cites specific, credible evidence and ties it to claims.","Uses relevant evidence to back most claims.","Offers limited or loosely connected evidence.","Asserts opinions with no supporting evidence."]},
+  {name:"Critical and analytical thinking", def:"Reasoning, synthesis, and weighing perspectives.",
+    lv:["Analyzes and weighs perspectives; builds on others' ideas.","Shows clear reasoning and considers other views.","Attempts analysis but stays mostly descriptive.","Restates facts without analysis."]},
+  {name:"Discussion skills", def:"Listening, turn-taking, questioning, and civility.",
+    lv:["Listens closely, questions productively, moves dialogue forward.","Listens and responds respectfully to peers.","Sometimes interrupts or drifts off the thread.","Disengaged or disruptive to the flow."]},
+  {name:"Appropriate language use", def:"Academic, respectful, and precise language.",
+    lv:["Precise, academic, and respectful throughout.","Generally clear and appropriate language.","Casual or vague in places.","Unclear or inappropriate language."]}
+];
+var LV_NAMES = ["Exemplary","Proficient","Developing","Beginning"];
+var LV_SCORE = [4,3,2,1];
+var rubricEl = document.getElementById("rubric");
+var picks = {};
+
+DIMS.forEach(function(d,di){
+  var row = document.createElement("div");
+  row.className = "r-dim";
+  var levels = d.lv.map(function(desc,li){
+    return '<div class="r-level" data-di="'+di+'" data-li="'+li+'">'+
+      '<span class="rl-name">'+LV_NAMES[li]+'</span>'+desc+'</div>';
+  }).join("");
+  row.innerHTML = '<div class="rd-top"><h4>'+d.name+'</h4><span class="rd-def">'+d.def+'</span></div>'+
+    '<div class="r-levels">'+levels+'</div>';
+  rubricEl.appendChild(row);
+});
+var totalRow = document.createElement("div");
+totalRow.className = "r-total";
+totalRow.innerHTML = '<span class="rt-band" id="rtBand">—</span><span class="rt-num" id="rtNum">Score each dimension (0 / 24)</span>';
+rubricEl.appendChild(totalRow);
+
+rubricEl.querySelectorAll(".r-level").forEach(function(el){
+  el.addEventListener("click", function(){
+    var di = el.getAttribute("data-di"), li = parseInt(el.getAttribute("data-li"),10);
+    picks[di] = li;
+    rubricEl.querySelectorAll('.r-level[data-di="'+di+'"]').forEach(function(x){x.classList.remove("picked");});
+    el.classList.add("picked");
+    updateTotal();
+  });
+});
+function updateTotal(){
+  var keys = Object.keys(picks);
+  var sum = 0; keys.forEach(function(k){ sum += LV_SCORE[picks[k]]; });
+  var num = document.getElementById("rtNum");
+  var band = document.getElementById("rtBand");
+  if(keys.length < DIMS.length){
+    band.textContent = "—";
+    num.textContent = "Scored "+keys.length+" of "+DIMS.length+" dimensions ("+sum+" / 24)";
+    return;
+  }
+  num.textContent = "Total: "+sum+" / 24";
+  var label = sum>=21 ? "Exemplary seminar" : sum>=15 ? "Proficient" : sum>=9 ? "Developing" : "Beginning";
+  band.textContent = label;
+}
+
+/* init */
+showStems; // no-op ref
+</script>
+</body>
+</html>

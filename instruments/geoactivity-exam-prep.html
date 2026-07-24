@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoActivity Types in APHG: Exam Preparation — Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --gray:#8a94a6;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:34px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:700px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:108px}
+  .chip .n{font-size:24px;font-weight:800;line-height:1;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:780px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* exam structure cards */
+  .exam-cards{display:flex;gap:14px;flex-wrap:wrap}
+  .ecard{flex:1 1 200px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border-top:4px solid var(--blue)}
+  .ecard h4{margin:0 0 6px;font-size:15px}
+  .ecard .big{font-size:26px;font-weight:800;color:var(--blue);line-height:1}
+  .ecard p{margin:8px 0 0;font-size:13px;color:var(--sub)}
+  .two-approach{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+  .app{flex:1 1 300px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;border-left:5px solid var(--green)}
+  .app h4{margin:0 0 6px;font-size:16px}
+  .app .tag{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:8px;display:block}
+  .app p{margin:0;font-size:14px;color:var(--ink)}
+
+  /* PPC mastery */
+  .ppc{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+  .meter-row{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+  .meter-col{flex:1 1 320px}
+  .slider-block{margin-bottom:18px}
+  .slider-block label{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;margin-bottom:8px}
+  .slider-block label .val{font-weight:800}
+  input[type=range]{width:100%;height:8px;-webkit-appearance:none;appearance:none;border-radius:999px;
+    background:linear-gradient(90deg,#8a94a6 0%,#8a94a6 33%,#eda100 33%,#eda100 66%,#008300 66%,#008300 100%);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
+    background:#fff;border:3px solid var(--ink);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:pointer}
+  .band-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-weight:800;font-size:13.5px;color:#fff}
+  .mastery-visual{flex:1 1 260px;background:var(--bg);border:1px solid var(--hair);border-radius:14px;padding:20px;text-align:center}
+  .mv-big{font-size:15px;font-weight:800;margin-bottom:14px}
+  .prog-bar{height:26px;border-radius:999px;background:#eef1f7;overflow:hidden;position:relative;border:1px solid var(--hair)}
+  .prog-fill{height:100%;width:0;transition:width .35s, background .35s;border-radius:999px}
+  .delta{margin-top:14px;font-size:14px;font-weight:700}
+  .delta .up{color:var(--green)}
+
+  .reflect{margin-top:22px;background:var(--bg);border:1px solid var(--hair);border-radius:14px;padding:18px 20px}
+  .reflect .rf-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .reflect h4{margin:0;font-size:15px}
+  .rf-prog{font-size:12.5px;font-weight:800;color:var(--green)}
+  .rf-item{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--hair);font-size:14px}
+  .rf-item:last-child{border-bottom:0}
+  .rf-item input{margin-top:3px;width:17px;height:17px;accent-color:var(--green);cursor:pointer;flex:0 0 auto}
+  .rf-item label{cursor:pointer}
+
+  /* task verbs */
+  .verbs{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:18px}
+  .verb{border:1.5px solid var(--hair);background:#fff;border-radius:999px;padding:9px 18px;font-size:14px;font-weight:800;
+    cursor:pointer;font-family:var(--font);color:var(--ink);transition:.12s;text-transform:capitalize}
+  .verb:hover{border-color:var(--blue)}
+  .verb.active{color:#fff}
+  .verb-detail{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;border-left:5px solid var(--blue);min-height:96px}
+  .verb-detail h3{margin:0 0 6px;font-size:19px;text-transform:capitalize}
+  .verb-detail .vd-def{font-size:14.5px;margin:0 0 12px}
+  .verb-detail .vd-ex{background:var(--bg);border:1px solid var(--hair);border-radius:10px;padding:11px 14px;font-size:14px}
+  .verb-detail .vd-ex b{color:var(--green)}
+  .verb-placeholder{color:var(--sub);font-style:italic}
+  .seven-note{background:#eef7ff;border:1px solid #cfe4fb;border-radius:12px;padding:14px 18px;margin-top:18px;font-size:14px}
+  .seven-note b{color:var(--blue)}
+
+  /* FRQ loop */
+  .role-toggle{display:inline-flex;background:var(--bg);border:1px solid var(--hair);border-radius:999px;padding:4px;margin-bottom:18px}
+  .role-toggle button{border:0;background:transparent;padding:8px 20px;border-radius:999px;font-size:13.5px;font-weight:800;
+    cursor:pointer;font-family:var(--font);color:var(--sub)}
+  .role-toggle button.on{background:var(--ink);color:#fff}
+  .stepper{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .step-btn{flex:1 1 140px;border:1.5px solid var(--hair);background:#fff;border-radius:12px;padding:12px 14px;cursor:pointer;
+    text-align:left;font-family:var(--font);transition:.12s}
+  .step-btn:hover{border-color:var(--blue)}
+  .step-btn.active{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}
+  .step-btn .sn{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;
+    font-weight:800;align-items:center;justify-content:center;margin-bottom:7px}
+  .step-btn .st{display:block;font-size:13.5px;font-weight:800}
+  .step-btn .sr{display:block;font-size:11.5px;color:var(--sub);margin-top:2px}
+  .step-detail{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .role-note{padding:12px 15px;border-radius:11px;margin-bottom:10px;font-size:14px}
+  .role-note.teacher{background:rgba(42,120,214,.07);border:1px solid rgba(42,120,214,.25)}
+  .role-note.student{background:rgba(0,131,0,.06);border:1px solid rgba(0,131,0,.25)}
+  .role-note .rl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px}
+  .role-note.teacher .rl{color:var(--blue)}
+  .role-note.student .rl{color:var(--green)}
+  .role-note.dim{opacity:.4}
+
+  /* timer */
+  .timer{background:var(--bg);border:1px solid var(--hair);border-radius:14px;padding:18px;margin-top:14px;text-align:center}
+  .timer .clock{font-size:44px;font-weight:800;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  .timer .tlabel{font-size:12px;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .timer.warn .clock{color:var(--orange)}
+  .timer-btns{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  .btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:10px 18px;font-size:13.5px;font-weight:800;
+    cursor:pointer;font-family:var(--font);transition:.15s}
+  .btn:hover{background:#2568bd}
+  .btn.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+  .btn.ghost:hover{background:rgba(42,120,214,.08)}
+  .btn.sm{padding:8px 14px;font-size:12.5px}
+  .btn:disabled{opacity:.4;cursor:default}
+
+  /* self-score */
+  .frq-box{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:16px 18px;margin:12px 0}
+  .frq-box .fq{font-size:14px;margin:0 0 6px}
+  .frq-box .fq .vb{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+    color:#fff;background:var(--blue);padding:2px 8px;border-radius:6px;margin-right:6px}
+  .score-list{margin:0;padding:0;list-style:none}
+  .score-item{border:1px solid var(--hair);background:#fff;border-radius:11px;padding:12px 14px;margin-bottom:9px}
+  .score-item .si-top{display:flex;gap:10px;align-items:flex-start}
+  .score-item .si-top input{margin-top:3px;width:17px;height:17px;accent-color:var(--green);cursor:pointer;flex:0 0 auto}
+  .score-item .pt{font-size:13.5px}
+  .score-item .pt .lbl{font-weight:800}
+  .score-item .ans{font-size:13px;color:var(--ink);background:var(--bg);border-radius:8px;padding:8px 11px;margin:8px 0 0}
+  .score-item .ans .ah{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);display:block;margin-bottom:3px}
+  .teacher-verdict{display:none;margin-top:8px;font-size:13px;padding:8px 11px;border-radius:8px}
+  .teacher-verdict.show{display:block}
+  .teacher-verdict.yes{background:rgba(0,131,0,.09);border:1px solid rgba(0,131,0,.3)}
+  .teacher-verdict.no{background:rgba(235,104,52,.09);border:1px solid rgba(235,104,52,.3)}
+  .score-tally{display:flex;justify-content:space-between;align-items:center;margin-top:14px;background:linear-gradient(160deg,#0f2b52,#1d4b8f);
+    color:#fff;border-radius:12px;padding:14px 18px;flex-wrap:wrap;gap:10px}
+  .score-tally .st-you{font-size:20px;font-weight:800}
+  .score-tally .st-t{font-size:14px;color:#cfe0f5}
+  .grade-view{margin-top:12px}
+  .anon-row{display:flex;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--hair);border-radius:10px;padding:10px 13px;margin-bottom:8px;font-size:13.5px}
+  .anon-row .who{font-family:monospace;font-weight:700;color:var(--sub);flex:0 0 92px}
+  .anon-row .resp{flex:1}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  @media(max-width:760px){.hero h1{font-size:27px}}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>GeoActivity Types in APHG: Exam Preparation</h1>
+    <p class="lede">Two tech-based exam-prep workflows for AP Human Geography — AP Classroom's Personal Progress Checks for self-reflection, and a four-step Google Forms loop for building and grading free-response questions. Try the mastery meter, the task verbs, and the FRQ build/grade cycle.</p>
+    <span class="built-tag"><span class="dot"></span>Instrument she built &nbsp;·&nbsp; Hong, Haakenson, Martin, Huh &amp; Jo (2022)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">2</span><span class="l">prep workflows</span></div>
+      <div class="chip"><span class="n">7</span><span class="l">reflection prompts</span></div>
+      <div class="chip"><span class="n">4</span><span class="l">FRQ loop steps</span></div>
+      <div class="chip"><span class="n">7</span><span class="l">points per FRQ</span></div>
+      <div class="chip"><span class="n">5</span><span class="l">task verbs</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = instrument Jo <b>built</b></span>
+    <span><i style="background:var(--gray)"></i> Gray = low</span>
+    <span><i style="background:var(--yellow)"></i> Yellow = middle</span>
+    <span><i style="background:var(--green)"></i> Green = high mastery</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this instrument is</h2></div>
+    <p class="sec-intro">Taking a quiz or test is a "convergent knowledge expression" activity — students demonstrate structured prior knowledge. It's the most direct way to prepare for the APHG exam, where scoring a 3+ (on 1–5) earns college credit. This paper documents two technology-based prep workflows and how each is used to gauge understanding, find gaps, and plan teaching.</p>
+
+    <div class="exam-cards">
+      <div class="ecard"><h4>Two exam sections</h4><span class="big">60 + 3</span><p>60 multiple-choice questions and 3 free-response questions — each section weighted equally.</p></div>
+      <div class="ecard"><h4>MCQ pace</h4><span class="big">1 min</span><p>60 MCQs in 60 minutes — one minute per question. Time pressure is itself a skill to practice.</p></div>
+      <div class="ecard"><h4>To earn credit</h4><span class="big">3+</span><p>A score of 3 or higher on the 1–5 scale earns college credit — the students' main motivation.</p></div>
+    </div>
+
+    <div class="two-approach">
+      <div class="app"><span class="tag">Workflow 1 · MCQ &amp; FRQ</span><h4>AP Classroom — Personal Progress Checks</h4><p>College Board's online platform. Formative MCQs (auto-graded, with answer explanations) and FRQs (with rubrics for self-scoring) for each unit. Used here as pre- and post-tests, followed by a structured self-reflection.</p></div>
+      <div class="app"><span class="tag">Workflow 2 · FRQ</span><h4>Google Forms — FRQ build &amp; grade loop</h4><p>A familiar, low-friction tool for authoring FRQs with hidden per-question feedback and a timer, collecting typed responses, letting students self-score against the rubric, then grading anonymized answers question-by-question.</p></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Personal Progress Check &amp; self-reflection</h2></div>
+    <p class="sec-intro">PPCs report a student's score as a number <em>and</em> on a gray → yellow → green color scheme. Used as pre/post-tests, they let students watch their mastery move from gray toward green. Drag the sliders to set a pre- and post-test score, then work through the self-reflection prompts. (The point is learning, not grading — teachers check completion, not scores.)</p>
+
+    <div class="ppc">
+      <div class="meter-row">
+        <div class="meter-col">
+          <div class="slider-block">
+            <label>Pre-test score <span class="val" id="preVal">40%</span></label>
+            <input type="range" id="preSlider" min="0" max="100" value="40">
+          </div>
+          <div class="slider-block">
+            <label>Post-test score <span class="val" id="postVal">85%</span></label>
+            <input type="range" id="postSlider" min="0" max="100" value="85">
+          </div>
+          <p class="small">Color bands are illustrative cutoffs: gray = low, yellow = middle, green = high. The paper describes the gray→yellow→green scheme but does not publish exact thresholds.</p>
+        </div>
+        <div class="mastery-visual">
+          <div class="mv-big">Mastery on this unit</div>
+          <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+          <div style="margin-top:10px"><span class="band-chip" id="bandChip">—</span></div>
+          <div class="delta" id="delta"></div>
+        </div>
+      </div>
+
+      <div class="reflect">
+        <div class="rf-head">
+          <h4>Post-test self-reflection report</h4>
+          <span class="rf-prog" id="rfProg">0 of 7 reflected</span>
+        </div>
+        <div id="reflectList"></div>
+        <p class="small" style="margin-top:12px">These seven prompts are an <b>illustrative reconstruction</b> of the self-reflection report (Fig. 1), built around the purposes the paper names — the actual Figure 1 wording is an image not reproduced in the article's text.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Anatomy of an FRQ — the five task verbs</h2></div>
+    <p class="sec-intro">Since 2019, every APHG free-response question is worth exactly <strong>seven points</strong>, and its parts are phrased with five standardized task verbs. Click each verb to see what it asks students to do, with an illustrative prompt.</p>
+
+    <div class="verbs" id="verbTabs"></div>
+    <div class="verb-detail" id="verbDetail"><p class="verb-placeholder">Pick a task verb above.</p></div>
+
+    <div class="seven-note">
+      <b>Why the seven-point rule matters here:</b> the 2019 standardization lets teachers update older FRQs (which had varying point totals) into fresh seven-point questions — a practical way to build new, copyright-safe practice items while staying aligned to the exam.
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>The four-step FRQ build &amp; grade loop</h2></div>
+    <p class="sec-intro">Google Forms turns one FRQ into a full cycle. Toggle between the teacher's and the student's side, then click through the four steps. Steps 2–4 include working tools: a 25-minute timer, a self-scoring rubric, and anonymized question-by-question grading.</p>
+
+    <div class="role-toggle" id="roleToggle">
+      <button data-role="teacher" class="on">👩‍🏫 Teacher view</button>
+      <button data-role="student">🎓 Student view</button>
+    </div>
+
+    <div class="stepper" id="stepper"></div>
+    <div class="step-detail" id="stepDetail"></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>Illustrative items, faithful structure</h4>
+      <p>The two figures in the paper are images not reproduced in its text, so two things here are <strong>original illustrations</strong>: the seven self-reflection prompts (Fig. 1) and the sample FRQ, its rubric, and the sample student answers (Fig. 2). They are built to match the workflows the paper describes. Everything structural is faithful: two sections of 60 MCQ + 3 FRQ, the pre/post-test-plus-reflection PPC routine, the gray→yellow→green scheme, the seven-point FRQ standardization, the five task verbs (compare, define, describe, explain, identify), the 25-minute FRQ timing, and the four Google Forms steps.</p>
+    </div>
+    <div class="callout">
+      <h4>A practitioner article, and one caution the authors raise</h4>
+      <p>This is a methods paper with no sample, experiment, or outcome statistics — its evidence is teacher experience. The authors themselves flag that AP Classroom has real technical friction (repeated log-ins, an unintuitive interface) and that these "may not be one-size-fits-all methods." They also stress the PPC routine should <em>not</em> be graded — its purpose is reflection, and removing grade pressure reduces cheating.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Hong, J.&nbsp;E., Haakenson, D., Martin, K., Huh, S., &amp; Jo, I. (2022). GeoActivity Types in APHG: Exam Preparation. <em>The Geography Teacher, 19</em>(2), 71–74.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/19338341.2022.2042834" target="_blank" rel="noopener">10.1080/19338341.2022.2042834</a></p>
+    <p class="small" style="color:#8b98af">Exam structure, task verbs, and seven-point rule per the College Board AP Human Geography Course and Exam Description (2020). Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* =========================================================
+   SECTION 2 — PPC mastery meter + reflection
+   ========================================================= */
+var preSlider = document.getElementById("preSlider");
+var postSlider = document.getElementById("postSlider");
+var preVal = document.getElementById("preVal");
+var postVal = document.getElementById("postVal");
+var progFill = document.getElementById("progFill");
+var bandChip = document.getElementById("bandChip");
+var delta = document.getElementById("delta");
+
+function bandFor(v){
+  if(v < 34) return {name:"Gray · low", color:"#8a94a6"};
+  if(v < 67) return {name:"Yellow · middle", color:"#eda100"};
+  return {name:"Green · high", color:"#008300"};
+}
+function updateMeter(){
+  var pre = parseInt(preSlider.value,10), post = parseInt(postSlider.value,10);
+  preVal.textContent = pre+"%"; postVal.textContent = post+"%";
+  var b = bandFor(post);
+  progFill.style.width = post+"%";
+  progFill.style.background = b.color;
+  bandChip.textContent = b.name;
+  bandChip.style.background = b.color;
+  var d = post - pre;
+  if(d > 0){
+    delta.innerHTML = '<span class="up">▲ +'+d+' points</span> from pre to post — a confidence boost worth showing students.';
+  } else if(d === 0){
+    delta.innerHTML = 'No change from pre to post — a signal to target this unit’s gaps.';
+  } else {
+    delta.innerHTML = '<span style="color:var(--orange)">▼ '+d+' points</span> — worth a one-on-one check-in.';
+  }
+}
+preSlider.addEventListener("input", updateMeter);
+postSlider.addEventListener("input", updateMeter);
+
+var REFLECT_PROMPTS = [
+  "Record your pre-test and post-test scores in the table, and note how much they changed.",
+  "Which specific terms or concepts from this unit do you still need to study more?",
+  "Where did you have the most difficulty while learning this unit?",
+  "Which of your study skills worked well, and which did not?",
+  "For the questions you missed, what was the reason — content, time pressure, or misreading?",
+  "What is one concrete way you will improve your learning for the next unit?",
+  "How confident do you feel about this unit now compared with before the pre-test?"
+];
+var reflectList = document.getElementById("reflectList");
+var rfProg = document.getElementById("rfProg");
+var rfDone = 0;
+REFLECT_PROMPTS.forEach(function(p,i){
+  var row = document.createElement("div");
+  row.className = "rf-item";
+  row.innerHTML = '<input type="checkbox" id="rf'+i+'"><label for="rf'+i+'"><b>'+(i+1)+'.</b> '+p+'</label>';
+  reflectList.appendChild(row);
+  row.querySelector("input").addEventListener("change", function(e){
+    rfDone += e.target.checked ? 1 : -1;
+    rfProg.textContent = rfDone+" of 7 reflected";
+  });
+});
+updateMeter();
+
+/* =========================================================
+   SECTION 3 — task verbs
+   ========================================================= */
+var VERBS = [
+  {v:"compare", color:"#2a78d6", def:"Provide a description or explanation of similarities and/or differences.", ex:"Compare the concentric zone and sector models in how each represents urban growth."},
+  {v:"define", color:"#008300", def:"Provide a specific meaning for a word or concept.", ex:"Define the term “gerrymandering.”"},
+  {v:"describe", color:"#e87ba4", def:"Provide the relevant characteristics of a specified topic.", ex:"Describe one characteristic of a primate city."},
+  {v:"explain", color:"#eda100", def:"Provide information about how or why a relationship, process, pattern, or outcome occurs.", ex:"Explain one effect of gentrification on an urban neighborhood."},
+  {v:"identify", color:"#eb6834", def:"Indicate or provide information about a specified topic, in words or through a visual.", ex:"Identify one push factor that drives rural-to-urban migration."}
+];
+var verbTabs = document.getElementById("verbTabs");
+var verbDetail = document.getElementById("verbDetail");
+VERBS.forEach(function(v,i){
+  var b = document.createElement("button");
+  b.className = "verb"; b.textContent = v.v; b.setAttribute("data-i", i);
+  b.addEventListener("click", function(){
+    document.querySelectorAll(".verb").forEach(function(x){x.classList.remove("active"); x.style.background="#fff"; x.style.borderColor="var(--hair)";});
+    b.classList.add("active"); b.style.background = v.color; b.style.borderColor = v.color;
+    verbDetail.style.borderLeftColor = v.color;
+    verbDetail.innerHTML = '<h3>'+v.v+'</h3><p class="vd-def">'+v.def+'</p>'+
+      '<div class="vd-ex"><b>Illustrative prompt:</b> '+v.ex+'</div>';
+  });
+  verbTabs.appendChild(b);
+});
+
+/* =========================================================
+   SECTION 4 — FRQ build & grade loop
+   ========================================================= */
+var role = "teacher";
+var currentStep = 0;
+
+var STEPS = [
+  {t:"Draft", teacher:"Develop or customize <b>one FRQ and its rubric</b> in Google Forms for the unit — building new or reworking an old question (with fresh images/data) to be copyright-safe and worth seven points. Use the five task verbs correctly, and set a 25-minute time restriction.",
+   student:"Nothing yet — but note the format you'll face: a single seven-point FRQ with parts phrased using the standard task verbs, to be answered by typing within a time limit."},
+  {t:"Assign", teacher:"Assign the FRQ in class (ideal for engagement) or as homework. The form's per-question feedback stays <b>hidden</b> until submission. A 25-minute limit mirrors real exam pacing.",
+   student:"Answer by typing your response within the time limit — practice both the content and the online exam environment. Try the timer below."},
+  {t:"Self-score", teacher:"On submit, the rubric for each question is revealed automatically — before you grade. This front-loads student reflection.",
+   student:"As soon as you submit, compare your answer to the rubric for each part and score yourself — figure out what you got, what you missed, and how to improve <b>before</b> the teacher's score appears. Try it below."},
+  {t:"Grade", teacher:"Responses land in a spreadsheet, organized <b>question-by-question</b> with names hidden. Grade one prompt across all students for objective, faster, pattern-spotting grading. Give feedback and note concepts to reteach.",
+   student:"Receive the teacher's score and feedback — then see how your self-score compared."}
+];
+
+/* sample FRQ (illustrative) — Urban models, 7 points, all five verbs */
+var FRQ_PARTS = [
+  {label:"A", verb:"Define", prompt:"Define the concentric zone model.",
+   earns:"Names the CBD at the center with concentric rings of differing land use.",
+   answer:"A model where a city grows outward in rings from the central business district.",
+   teacher:true, note:"Awarded — CBD center and concentric rings are both present."},
+  {label:"B", verb:"Describe", prompt:"Describe one assumption the concentric zone model makes about the land.",
+   earns:"States a valid assumption (e.g., flat, uniform land in every direction).",
+   answer:"It assumes the land is flat and basically the same in every direction.",
+   teacher:true, note:"Awarded — the uniform-plain assumption is correctly stated."},
+  {label:"C", verb:"Identify", prompt:"Identify one zone the model places between the CBD and the outer suburbs.",
+   earns:"Names a specific valid zone (e.g., zone of transition, working-class housing).",
+   answer:"The middle part of the city, between downtown and the edge.",
+   teacher:false, note:"Not awarded — too vague; no named zone such as the zone of transition."},
+  {label:"D", verb:"Explain", prompt:"Explain one strength of the concentric zone model.",
+   earns:"Gives a reason the model is useful (e.g., simple way to show outward growth over time).",
+   answer:"It's simple and shows how cities grow outward over time as they expand.",
+   teacher:true, note:"Awarded — explains the model's usefulness for showing growth."},
+  {label:"E", verb:"Explain", prompt:"Explain one weakness of the concentric zone model.",
+   earns:"Gives a limitation with reasoning (not just a bare fact).",
+   answer:"It is old and was based on Chicago.",
+   teacher:false, note:"Not awarded — states a fact but does not explain why that is a weakness."},
+  {label:"F", verb:"Compare", prompt:"Compare how the concentric zone and sector models treat the role of transportation in city growth.",
+   earns:"States a similarity or difference regarding transportation.",
+   answer:"In the sector model, growth follows transport routes like rail lines in wedges, while the concentric model grows in even rings regardless of routes.",
+   teacher:true, note:"Awarded — a clear difference in the role of transport is drawn."},
+  {label:"G", verb:"Explain", prompt:"Explain how bid-rent theory relates to the model's ring pattern.",
+   earns:"Connects land value / distance from the CBD to the concentric rings.",
+   answer:"Land near the CBD costs more, so different users locate at different distances, which creates the rings.",
+   teacher:true, note:"Awarded — links bid-rent (land value vs. distance) to the ring pattern."}
+];
+
+var stepper = document.getElementById("stepper");
+var stepDetail = document.getElementById("stepDetail");
+
+function renderStepper(){
+  stepper.innerHTML = "";
+  STEPS.forEach(function(s,i){
+    var b = document.createElement("button");
+    b.className = "step-btn" + (i===currentStep?" active":"");
+    b.innerHTML = '<span class="sn">'+(i+1)+'</span><span class="st">'+s.t+'</span>'+
+      '<span class="sr">'+(s.t==="Draft"?"author":s.t==="Assign"?"25-min timer":s.t==="Self-score"?"try grading":"anonymized")+'</span>';
+    b.addEventListener("click", function(){ currentStep=i; render(); });
+    stepper.appendChild(b);
+  });
+}
+
+function roleNotes(s){
+  var tCls = "role-note teacher" + (role==="student"?" dim":"");
+  var sCls = "role-note student" + (role==="teacher"?" dim":"");
+  return '<div class="'+tCls+'"><span class="rl">Teacher</span>'+s.teacher+'</div>'+
+         '<div class="'+sCls+'"><span class="rl">Student</span>'+s.student+'</div>';
+}
+
+function render(){
+  renderStepper();
+  var s = STEPS[currentStep];
+  var html = roleNotes(s);
+  if(currentStep===1) html += timerHTML();
+  if(currentStep===2) html += selfScoreHTML();
+  if(currentStep===3) html += gradeHTML();
+  stepDetail.innerHTML = html;
+  if(currentStep===1) wireTimer();
+  if(currentStep===2) wireSelfScore();
+}
+
+/* ----- timer ----- */
+var timerId = null, remaining = 25*60, timerMode = 1;
+function fmt(sec){ var m=Math.floor(sec/60), s=sec%60; return (m<10?"0":"")+m+":"+(s<10?"0":"")+s; }
+function timerHTML(){
+  return '<div class="timer" id="timerBox"><div class="tlabel">FRQ time limit</div>'+
+    '<div class="clock" id="clock">'+fmt(remaining)+'</div>'+
+    '<div class="timer-btns">'+
+      '<button class="btn sm" id="tStart">Start</button>'+
+      '<button class="btn sm ghost" id="tDemo">Run demo (fast)</button>'+
+      '<button class="btn sm ghost" id="tReset">Reset</button>'+
+    '</div><p class="small" style="margin:10px 0 0">The paper recommends a 25-minute limit for one FRQ, matching exam pacing.</p></div>';
+}
+function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } }
+function tick(){
+  remaining -= timerMode;
+  if(remaining <= 0){ remaining = 0; stopTimer(); }
+  var c = document.getElementById("clock");
+  var box = document.getElementById("timerBox");
+  if(c) c.textContent = fmt(remaining);
+  if(box) box.classList.toggle("warn", remaining <= 5*60);
+  if(remaining===0 && c){ c.textContent = "00:00"; if(box) box.querySelector(".tlabel").textContent = "Time's up — submit your FRQ"; }
+}
+function wireTimer(){
+  var start = document.getElementById("tStart");
+  var demo = document.getElementById("tDemo");
+  var reset = document.getElementById("tReset");
+  start.addEventListener("click", function(){ stopTimer(); timerMode=1; timerId=setInterval(tick,1000); });
+  demo.addEventListener("click", function(){ stopTimer(); timerMode=60; timerId=setInterval(tick,1000); });
+  reset.addEventListener("click", function(){ stopTimer(); remaining=25*60; timerMode=1;
+    var c=document.getElementById("clock"); if(c)c.textContent=fmt(remaining);
+    var box=document.getElementById("timerBox"); if(box){box.classList.remove("warn"); box.querySelector(".tlabel").textContent="FRQ time limit";} });
+}
+
+/* ----- self-score ----- */
+var userAwards = {};
+function selfScoreHTML(){
+  var items = FRQ_PARTS.map(function(p,i){
+    return '<li class="score-item"><div class="si-top"><input type="checkbox" data-i="'+i+'" id="sc'+i+'">'+
+      '<div class="pt"><span class="lbl">('+p.label+') <span class="vb" style="background:var(--blue)">'+p.verb+'</span></span> '+p.prompt+
+      '<div style="font-size:12px;color:var(--sub);margin-top:4px"><b>Earns the point:</b> '+p.earns+'</div>'+
+      '<div class="ans"><span class="ah">Sample student answer</span>'+p.answer+'</div>'+
+      '<div class="teacher-verdict" id="tv'+i+'"></div>'+
+      '</div></div></li>';
+  }).join("");
+  return '<div class="frq-box"><p class="fq"><b>Sample FRQ (illustrative)</b> — Urban land-use models · 7 points</p>'+
+    '<p class="small" style="margin:0">You are scoring one student’s response. Check each part you think earned its point, then reveal the teacher’s scoring.</p></div>'+
+    '<ul class="score-list">'+items+'</ul>'+
+    '<div class="timer-btns" style="justify-content:flex-start"><button class="btn" id="revealBtn">Reveal teacher’s score</button>'+
+    '<button class="btn ghost" id="scReset">Reset</button></div>'+
+    '<div class="score-tally" id="scoreTally" style="display:none"></div>';
+}
+function wireSelfScore(){
+  userAwards = {};
+  FRQ_PARTS.forEach(function(p,i){
+    var cb = document.getElementById("sc"+i);
+    cb.addEventListener("change", function(e){ userAwards[i] = e.target.checked; });
+  });
+  document.getElementById("revealBtn").addEventListener("click", function(){
+    var teacherTotal = 0, youTotal = 0;
+    FRQ_PARTS.forEach(function(p,i){
+      if(p.teacher) teacherTotal++;
+      if(userAwards[i]) youTotal++;
+      var v = document.getElementById("tv"+i);
+      v.className = "teacher-verdict show " + (p.teacher?"yes":"no");
+      v.innerHTML = "<b>Teacher: "+(p.teacher?"+1 point":"0 points")+".</b> "+p.note;
+    });
+    var tally = document.getElementById("scoreTally");
+    tally.style.display = "flex";
+    var match = (youTotal===teacherTotal);
+    tally.innerHTML = '<span class="st-you">You: '+youTotal+' / 7</span>'+
+      '<span class="st-t">Teacher: '+teacherTotal+' / 7 &nbsp;·&nbsp; '+(match?"same total":"different total — compare the verdicts above")+'</span>';
+    tally.scrollIntoView({behavior:"smooth", block:"nearest"});
+  });
+  document.getElementById("scReset").addEventListener("click", function(){ render(); });
+}
+
+/* ----- grade view ----- */
+function gradeHTML(){
+  var rows = [
+    {who:"Student 4F1", resp:"“A model where the city grows in rings from the CBD…”"},
+    {who:"Student 9K2", resp:"“The middle part of the city between downtown and the edge.”"},
+    {who:"Student 2B7", resp:"“Land near the CBD costs more, so users spread out, making rings.”"}
+  ];
+  return '<div class="grade-view"><p class="small" style="margin:0 0 10px"><b>Anonymized, question-by-question view (illustrative).</b> '+
+    'For part (A), the teacher grades every student’s response to the same prompt before moving on — names hidden, one prompt at a time.</p>'+
+    rows.map(function(r){return '<div class="anon-row"><span class="who">'+r.who+'</span><span class="resp">'+r.resp+'</span></div>';}).join("")+
+    '<p class="small" style="margin:10px 0 0">Grading one prompt across all students is more objective and faster, and it surfaces shared misconceptions to reteach.</p></div>';
+}
+
+/* role toggle */
+document.querySelectorAll("#roleToggle button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#roleToggle button").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on");
+    role = b.getAttribute("data-role");
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>

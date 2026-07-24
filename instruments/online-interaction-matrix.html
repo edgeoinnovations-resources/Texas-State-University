@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Interaction × Active-Learning Goal Matrix — Jo, Huh, Bannert &amp; Grubb (2020) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --content:#2a78d6; --instructor:#008300; --learner:#d24d92;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:31px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:720px;color:#eaf1fb;margin:0 0 26px}
+  .reused-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(42,120,214,.28);border:1px solid rgba(150,200,255,.6);color:#dbeafe;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .reused-tag .dot{width:9px;height:9px;border-radius:50%;background:#6fb0ff;box-shadow:0 0 0 3px rgba(111,176,255,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:23px;font-weight:800;line-height:1.05;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--blue);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:800px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* frameworks */
+  .fw{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .fwcol{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+  .fwcol.moore{border-top:4px solid var(--content)}
+  .fwcol.sulla{border-top:4px solid var(--orange)}
+  .fwcol .fh{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+  .fwcol.moore .fh{color:var(--content)} .fwcol.sulla .fh{color:var(--orange)}
+  .fwcol h4{margin:0 0 10px;font-size:16px}
+  .fwcol ol{margin:0;padding-left:20px;font-size:13.5px}
+  .fwcol li{margin-bottom:6px}
+  .fwcol li b{font-weight:700}
+  @media(max-width:760px){.fw{grid-template-columns:1fr}.hero h1{font-size:25px}}
+
+  /* matrix */
+  .matrix{display:grid;grid-template-columns:150px 1fr 1fr 1fr;gap:8px}
+  .mx-corner{font-size:11px;color:var(--sub);display:flex;align-items:flex-end;padding-bottom:6px}
+  .mx-colh{border-radius:10px;padding:10px 12px;cursor:pointer;background:rgba(235,104,52,.09);border:1.5px solid transparent;transition:.12s}
+  .mx-colh:hover{border-color:var(--orange)}
+  .mx-colh.active{border-color:var(--orange)}
+  .mx-colh .ct{font-size:14px;font-weight:800;color:#b8420f}
+  .mx-colh .cs{font-size:11px;color:var(--sub);margin-top:2px}
+  .mx-rowh{border-radius:10px;padding:10px 12px;cursor:pointer;border:1.5px solid transparent;display:flex;flex-direction:column;justify-content:center;transition:.12s}
+  .mx-rowh.content{background:rgba(42,120,214,.09)} .mx-rowh.content .rt{color:var(--content)}
+  .mx-rowh.instructor{background:rgba(0,131,0,.09)} .mx-rowh.instructor .rt{color:var(--instructor)}
+  .mx-rowh.learner{background:rgba(210,77,146,.1)} .mx-rowh.learner .rt{color:var(--learner)}
+  .mx-rowh:hover{filter:brightness(.97)}
+  .mx-rowh .rt{font-size:13.5px;font-weight:800}
+  .mx-rowh .rs{font-size:10.5px;color:var(--sub);margin-top:2px}
+  .cell{border:1.5px solid var(--hair);background:#fff;border-radius:10px;padding:11px 12px;cursor:pointer;transition:.12s;min-height:74px}
+  .cell:hover{border-color:var(--blue);transform:translateY(-1px)}
+  .cell.active{box-shadow:0 0 0 2px var(--ink) inset;border-color:var(--ink)}
+  .cell .cp{font-size:12px;color:var(--sub);line-height:1.35}
+  .cell .cc{font-size:11px;font-weight:800;margin-bottom:4px}
+
+  .mx-detail{margin-top:16px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;border-left:5px solid var(--blue)}
+  .mx-detail h3{margin:0 0 4px;font-size:18px}
+  .mx-detail .md-sub{font-size:12.5px;color:var(--sub);margin:0 0 14px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .mx-detail h5{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--blue)}
+  .mx-detail .acts{font-size:14px;margin:0 0 14px}
+  .mx-detail .quote{background:var(--bg);border:1px solid var(--hair);border-radius:11px;padding:14px 16px;font-size:14px;font-style:italic;color:var(--ink)}
+  .mx-detail .quote .who{display:block;font-style:normal;font-size:12px;color:var(--sub);margin-top:8px;font-weight:700}
+  .mx-detail .placeholder{color:var(--sub);font-style:italic}
+
+  /* recommendations */
+  .recs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .rec{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px}
+  .rec.stu{border-top:4px solid var(--learner)}
+  .rec.ins{border-top:4px solid var(--instructor)}
+  .rec .rn{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+  .rec.stu .rn{color:var(--learner)} .rec.ins .rn{color:var(--instructor)}
+  .rec h4{margin:4px 0 10px;font-size:16px}
+  .rec ul{margin:0;padding-left:18px;font-size:13.5px}
+  .rec li{margin-bottom:7px}
+  @media(max-width:760px){.recs{grid-template-columns:1fr}.matrix{grid-template-columns:110px 1fr 1fr 1fr}}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>Online Interaction × Active-Learning Goal Matrix</h1>
+    <p class="lede">What makes an online course actively engage students rather than just keep them busy? An instructor and three of her graduate students reflected on one course, crossing the three kinds of online interaction with the three goals of active learning. Click any cell to see the course activities there — and read the students' own words.</p>
+    <span class="reused-tag"><span class="dot"></span>Instrument she reused &nbsp;·&nbsp; Moore (1989) × Sulla (2019), applied in Jo, Huh, Bannert &amp; Grubb (2020)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">3 × 3</span><span class="l">interaction × goal</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">interaction types</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">active-learning goals</span></div>
+      <div class="chip"><span class="n">9</span><span class="l">graduate students</span></div>
+      <div class="chip"><span class="n">5 wk</span><span class="l">online summer course</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--blue)"></i> Blue = instrument Jo <b>reused</b> (Moore &amp; Sulla frameworks)</span>
+    <span><i style="background:var(--content)"></i> Learner–Content</span>
+    <span><i style="background:var(--instructor)"></i> Learner–Instructor</span>
+    <span><i style="background:var(--learner)"></i> Learner–Learner</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this is</h2></div>
+    <p class="sec-intro">A reflective study of one course — <em>Active Learning in Geography</em> (GEO5340), a five-week, fully online summer graduate course at Texas State (Canvas LMS, Summer 2020) in a master's program for educators. Its capstone: each student builds an <strong>Active Learning Unit (ALU)</strong> for their own classroom. To make sense of what worked, the authors cross two established frameworks.</p>
+    <div class="fw">
+      <div class="fwcol moore">
+        <div class="fh">The rows · Moore (1989)</div><h4>Three types of online interaction</h4>
+        <ol>
+          <li><b>Learner–content</b> — readings, videos, quizzes, and the work you produce.</li>
+          <li><b>Learner–instructor</b> — meetings, office hours, and feedback.</li>
+          <li><b>Learner–learner</b> — group meetings, discussion boards, and peer review.</li>
+        </ol>
+      </div>
+      <div class="fwcol sulla">
+        <div class="fh">The columns · Sulla (2019)</div><h4>Three goals of active learning</h4>
+        <ol>
+          <li><b>Engagement</b> — applying knowledge to solve a real problem, not busywork.</li>
+          <li><b>Responsibility</b> — students take charge of their learning, not just comply.</li>
+          <li><b>Academic rigor</b> — authentic tasks that demand deep, rigorous work.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>The 3 × 3 matrix</h2></div>
+    <p class="sec-intro">Rows are Moore's interaction types; columns are Sulla's active-learning goals. Click any of the nine cells to see which GEO5340 activities lived there and a real student testimonial. (Click a row or column header for the framework definition.)</p>
+
+    <div class="matrix" id="matrix"></div>
+    <div class="mx-detail" id="mxDetail"><p class="placeholder">Select a cell, row, or column above.</p></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>What the authors recommend</h2></div>
+    <p class="sec-intro">The paper closes with practical recommendations — for students who want to learn actively online, and for instructors who want to build the environment for it.</p>
+    <div class="recs">
+      <div class="rec stu">
+        <span class="rn">For active online learners</span><h4>Take charge of your learning</h4>
+        <ul>
+          <li>Commit to <b>all</b> course activities, and understand the premises of active learning.</li>
+          <li>Keep <b>regular interactions</b> with the instructor and peers to build rapport and community.</li>
+          <li>Take responsibility beyond attending — stay organized, plan and monitor progress, and actively seek feedback.</li>
+          <li>Learn the institutional resources available (library services, tech support, software licenses).</li>
+        </ul>
+      </div>
+      <div class="rec ins">
+        <span class="rn">For instructors</span><h4>Design for active engagement</h4>
+        <ul>
+          <li>Connect projects and major tasks to students' <b>personal goals</b> — relevance drives immersion.</li>
+          <li>Allow flexibility and choice while keeping the rigor — that evokes a sense of ownership.</li>
+          <li>Maintain <b>instructor presence</b> across private and public channels; use intro videos and low-stakes synchronous small-group tasks.</li>
+          <li>Don't let technology become a barrier — be ready to point students to technical help.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>The 3 × 3 is a faithful synthesis, not a printed table</h4>
+      <p>The paper is <em>organized</em> by Sulla's three goals (its main sections are Engagement, Responsibility, and Academic rigor) and it uses Moore's three interaction types as "consistent language" throughout — but it does not print a 3 × 3 matrix. Crossing them into this grid is a way to organize the paper's own content. Every testimonial in the cells is a <strong>verbatim quote</strong> from the article, attributed to the student who wrote it.</p>
+    </div>
+    <div class="callout">
+      <h4>A reflective account, not an experiment</h4>
+      <p>This is a testimonial paper: nine students took the course, and three co-authored it, reflecting alongside the instructor. The authors are explicit — "these reflections and testimonials are personal, and we have no intention to generalize our findings." It was also a Summer-2020 course, so the online setting was shaped by the pandemic. Both frameworks are borrowed — <strong>Moore's (1989)</strong> interaction types and <strong>Sulla's (2019)</strong> learner-active goals — which is why this page is marked <em>reused</em> (blue). The value is a rich, first-person map of how interactions serve active-learning goals.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Jo, I., Huh, S., Bannert, A., &amp; Grubb, K. (2020). Beginning the Journey to Creating an Active Online Learning Environment: Recommendations from Graduate Students. <em>Journal of Geography, 119</em>(6), 197–205.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/00221341.2020.1821085" target="_blank" rel="noopener">10.1080/00221341.2020.1821085</a></p>
+    <p class="small" style="color:#8b98af">Frameworks: Moore, M. (1989), "Three types of interaction," <em>American Journal of Distance Education</em> 3(2); Sulla, N. (2019), <em>Students Taking Charge in Grades 6–12</em>, Routledge. Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+var ROWS = [
+  {id:"content", name:"Learner ↔ Content", short:"readings · videos · quizzes · your work",
+   def:"Interacting with the materials and the work you produce — readings, recorded mini-lectures, Reading-Check quizzes, the annotated bibliography, and building the ALU (Moore 1989)."},
+  {id:"instructor", name:"Learner ↔ Instructor", short:"1:1 meetings · office hours · feedback",
+   def:"Interacting with the instructor — mandatory weekly one-on-one meetings, office hours, announcements, and timely feedback on work (Moore 1989)."},
+  {id:"learner", name:"Learner ↔ Learner", short:"group meetings · discussions · peer review",
+   def:"Interacting with peers — synchronous group meetings (regularly reshuffled), asynchronous discussion forums, intro videos, project presentations, and peer reviews (Moore 1989)."}
+];
+var COLS = [
+  {id:"engage", name:"Engagement",
+   def:"Sulla's first goal: engagement is more than busywork — it's applying what's known to create a solution to a real problem (Sulla 2019)."},
+  {id:"respons", name:"Responsibility",
+   def:"Sulla's second goal: moving from a 'compliant' environment (following the teacher) to one where students take charge of their own learning (Sulla 2019)."},
+  {id:"rigor", name:"Academic rigor",
+   def:"Sulla's third goal: authentic tasks that not only motivate but demand rigorous, deep work from the student (Sulla 2019)."}
+];
+
+var CELLS = {
+  "content|engage":{
+    acts:"Readings and mini-lecture videos, Reading-Check quizzes, the annotated bibliography, and building your own ALU — content chosen and shaped around your interests.",
+    quote:`I found that I was interested in the task at hand because I was personally interested in choosing and interpreting the content I was researching. I felt engaged in the learning as an individual rather than as a member of a collective class of students.`,
+    who:"April Bannert · AP Human Geography teacher"},
+  "content|respons":{
+    acts:"Owning the annotated bibliography and ALU — students were free to shape both to fit their own classroom and goals.",
+    quote:`The nature of the overall project, creating an ALU for 'my' classroom, gave me a sense of ownership of that project… students were given the freedom and latitude to formulate it in a way that made sense for their specific project and goals.`,
+    who:"Ken Grubb · junior-college History instructor"},
+  "content|rigor":{
+    acts:"Digging deep into the research to design a workable ALU — evaluating strategies, evidence, and the pitfalls others faced.",
+    quote:`The learner-content interaction increased rigor in that… I had to dive deep into the content to fully understand the concept of active learning… instead of simply writing something that sounded like it would work… one must find what actually works.`,
+    who:"Ken Grubb"},
+  "instructor|engage":{
+    acts:"Mandatory weekly one-on-one meetings with the instructor, plus office hours and daily announcements.",
+    quote:`The fact that these meetings were mandatory was of particular importance, because if the meetings had been voluntary, I would have likely not scheduled any… having a forum in which to ask my questions… was of substantial benefit.`,
+    who:"Ken Grubb"},
+  "instructor|respons":{
+    acts:"The instructor as facilitator — guidance and goal-oriented rubrics rather than directives, so students keep ownership of their direction.",
+    quote:`Our interactions lacked some of the traditional teacher-student power differential and became more like a discussion between academics. This made the experience… very beneficial to fostering my own autonomy in the process.`,
+    who:"April Bannert"},
+  "instructor|rigor":{
+    acts:"Feedback on work-in-progress (you could submit early for comments) and one-on-one progress-check meetings.",
+    quote:`Meeting with an instructor one-on-one to discuss your progress means you need to have done your due diligence… there is no place to "hide" when you have not done the work.`,
+    who:"Ken Grubb"},
+  "learner|engage":{
+    acts:"Synchronous group/peer meetings (four across five weeks, with groups reshuffled), discussion forums, intro videos, and project presentations.",
+    quote:`I learned a great deal from other students and felt that those interactions were of a higher quality than I would have seen in a traditional classroom model.`,
+    who:"April Bannert"},
+  "learner|respons":{
+    acts:"Accountability to peers — you had to explain and defend your work in group meetings.",
+    quote:`The learner-learner interactions kept me on track in that they… made me responsible for not only getting my work finished on schedule but also getting it done in such a manner that I could explain and discuss my research and findings with peers with depth and understanding.`,
+    who:"Ken Grubb"},
+  "learner|rigor":{
+    acts:"Peer discussion and peer review that demand more than a cursory grasp of your own material.",
+    quote:`[Peer meetings] forced me to digest and understand my own content in order to share it with the rest of the group… the collaboration gave all of us good ideas and things to consider for our future research and classrooms.`,
+    who:"a mid-course survey respondent"}
+};
+
+var matrix = document.getElementById("matrix");
+var mxDetail = document.getElementById("mxDetail");
+
+function buildMatrix(){
+  var html = '<div class="mx-corner">Interaction ↓ &nbsp; Goal →</div>';
+  COLS.forEach(function(c){
+    html += '<div class="mx-colh" data-col="'+c.id+'"><div class="ct">'+c.name+'</div><div class="cs">Sulla 2019</div></div>';
+  });
+  ROWS.forEach(function(r){
+    html += '<div class="mx-rowh '+r.id+'" data-row="'+r.id+'"><div class="rt">'+r.name+'</div><div class="rs">'+r.short+'</div></div>';
+    COLS.forEach(function(c){
+      var key=r.id+"|"+c.id;
+      html += '<div class="cell" data-key="'+key+'"><div class="cc" style="color:var(--'+r.id+')">'+shortGoal(c.id)+'</div><div class="cp">'+cellPrev(key)+'</div></div>';
+    });
+  });
+  matrix.innerHTML = html;
+  matrix.querySelectorAll(".cell").forEach(function(el){ el.addEventListener("click", function(){ showCell(el.getAttribute("data-key")); }); });
+  matrix.querySelectorAll(".mx-colh").forEach(function(el){ el.addEventListener("click", function(){ showCol(el.getAttribute("data-col")); }); });
+  matrix.querySelectorAll(".mx-rowh").forEach(function(el){ el.addEventListener("click", function(){ showRow(el.getAttribute("data-row")); }); });
+}
+function shortGoal(id){ return id==="engage"?"Engage":id==="respons"?"Responsibility":"Rigor"; }
+function cellPrev(key){
+  var a = CELLS[key].acts;
+  return a.length>62 ? a.slice(0,60).replace(/\s\S*$/,"")+"…" : a;
+}
+function clearActive(){ matrix.querySelectorAll(".cell,.mx-colh,.mx-rowh").forEach(function(e){e.classList.remove("active");}); }
+
+function showCell(key){
+  clearActive();
+  matrix.querySelector('.cell[data-key="'+key+'"]').classList.add("active");
+  var parts=key.split("|"), r=byId(ROWS,parts[0]), c=byId(COLS,parts[1]), cell=CELLS[key];
+  mxDetail.style.borderLeftColor="var(--"+r.id+")";
+  mxDetail.innerHTML='<h3>'+r.name+' &nbsp;×&nbsp; '+c.name+'</h3>'+
+    '<p class="md-sub" style="color:var(--'+r.id+')">'+moore(r.id)+' interaction · '+c.name+' goal</p>'+
+    '<h5>Activities in this cell</h5><p class="acts">'+cell.acts+'</p>'+
+    '<h5>In a student\'s words</h5><div class="quote">“'+cell.quote+'”<span class="who">— '+cell.who+'</span></div>';
+}
+function showCol(id){
+  clearActive();
+  matrix.querySelector('.mx-colh[data-col="'+id+'"]').classList.add("active");
+  var c=byId(COLS,id);
+  mxDetail.style.borderLeftColor="var(--orange)";
+  mxDetail.innerHTML='<h3>'+c.name+'</h3><p class="md-sub" style="color:var(--orange)">Active-learning goal · Sulla 2019</p><p class="acts">'+c.def+'</p>'+
+    '<p class="small">Click any cell in this column to see how a type of interaction served this goal.</p>';
+}
+function showRow(id){
+  clearActive();
+  matrix.querySelector('.mx-rowh[data-row="'+id+'"]').classList.add("active");
+  var r=byId(ROWS,id);
+  mxDetail.style.borderLeftColor="var(--"+r.id+")";
+  mxDetail.innerHTML='<h3>'+r.name+'</h3><p class="md-sub" style="color:var(--'+r.id+')">Online interaction type · Moore 1989</p><p class="acts">'+r.def+'</p>'+
+    '<p class="small">Click any cell in this row to see how this interaction served an active-learning goal.</p>';
+}
+function byId(arr,id){ return arr.filter(function(x){return x.id===id;})[0]; }
+function moore(id){ return id==="content"?"Learner–content":id==="instructor"?"Learner–instructor":"Learner–learner"; }
+
+buildMatrix();
+showCell("content|engage");
+</script>
+</body>
+</html>

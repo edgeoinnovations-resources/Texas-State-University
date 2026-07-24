@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GST Integration-Level Explorer — Jo &amp; Muñiz Solari (2015) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --gps:#2a78d6; --rs:#eda100; --gis:#d24d92;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:32px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:720px;color:#eaf1fb;margin:0 0 26px}
+  .reused-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(42,120,214,.28);border:1px solid rgba(150,200,255,.6);color:#dbeafe;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .reused-tag .dot{width:9px;height:9px;border-radius:50%;background:#6fb0ff;box-shadow:0 0 0 3px rgba(111,176,255,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:23px;font-weight:800;line-height:1.05;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--blue);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:800px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* tech legend */
+  .tech-defs{display:flex;gap:14px;flex-wrap:wrap}
+  .tech{flex:1 1 200px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-top:4px solid var(--hair)}
+  .tech.gps{border-top-color:var(--gps)} .tech.rs{border-top-color:var(--rs)} .tech.gis{border-top-color:var(--gis)}
+  .tech .abbr{font-size:18px;font-weight:800}
+  .tech.gps .abbr{color:var(--gps)} .tech.rs .abbr{color:#a97b00} .tech.gis .abbr{color:var(--gis)}
+  .tech .full{font-size:12.5px;color:var(--sub);font-weight:700;margin:1px 0 6px}
+  .tech p{margin:0;font-size:13px;color:var(--ink)}
+
+  /* explorer */
+  .explorer{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .lvl-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .lvl-tab{flex:1 1 150px;border:1.5px solid var(--hair);background:#fff;border-radius:12px;padding:12px 14px;cursor:pointer;
+    text-align:left;font-family:var(--font);transition:.12s;position:relative}
+  .lvl-tab:hover{border-color:var(--blue)}
+  .lvl-tab.on{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue) inset}
+  .lvl-tab .ln{display:block;font-size:14px;font-weight:800}
+  .lvl-tab .lf{display:block;font-size:11.5px;color:var(--sub);margin-top:2px}
+  .lvl-tab .rec{position:absolute;top:-9px;right:8px;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;
+    background:var(--green);color:#fff;border-radius:5px;padding:2px 7px}
+  .diagram-wrap{margin:18px 0 6px;text-align:center}
+  #diagram{width:100%;max-width:600px;height:auto}
+  .flow-label{font-size:13px;font-weight:800;color:var(--blue);text-align:center;margin:2px 0 16px}
+
+  .lvl-detail{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:18px 20px}
+  .lvl-detail h3{margin:0 0 8px;font-size:18px}
+  .lvl-detail p{margin:0 0 12px;font-size:14.5px}
+  .lvl-detail .ex{background:#fff;border:1px solid var(--hair);border-radius:10px;padding:13px 15px;font-size:13.5px}
+  .lvl-detail .ex .exh{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);display:block;margin-bottom:4px}
+  .lvl-detail .lvnote{font-size:12.5px;color:var(--sub);margin-top:10px;font-style:italic}
+  .illus{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;background:#fff4e6;color:#a35a12;border:1px solid #f0d3a6;border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+
+  /* agenda */
+  .pillars{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .pillar{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;border-top:4px solid var(--blue)}
+  .pillar .pn{font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.04em}
+  .pillar h4{margin:4px 0 8px;font-size:16px}
+  .pillar ul{margin:0;padding-left:18px;font-size:13.5px}
+  .pillar li{margin-bottom:6px}
+  .pillar li b{font-weight:700}
+  .agenda-note{background:#eef7ff;border:1px solid #cfe4fb;border-radius:12px;padding:14px 18px;margin-top:18px;font-size:14px}
+  .agenda-note b{color:var(--blue)}
+  @media(max-width:760px){.pillars{grid-template-columns:1fr}.hero h1{font-size:25px}}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>GST Integration-Level Explorer</h1>
+    <p class="lede">Using GPS, remote sensing, and GIS together isn't all-or-nothing — technologies can be woven in at four increasing depths. This model, at the heart of Jo &amp; Muñiz Solari's agenda for geospatial education, maps those four levels. Flip between them and watch how data flows differently at each.</p>
+    <span class="reused-tag"><span class="dot"></span>Instrument she reused &nbsp;·&nbsp; Gao's (2002) model, in Jo &amp; Muñiz Solari (2015)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">4</span><span class="l">integration levels</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">technologies (GPS · RS · GIS)</span></div>
+      <div class="chip"><span class="n">Level 2</span><span class="l">recommended for schools</span></div>
+      <div class="chip"><span class="n">2</span><span class="l">agenda pillars</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--blue)"></i> Blue = instrument Jo <b>reused</b> (Gao's 2002 integration model)</span>
+    <span><i style="background:var(--gps)"></i> GPS</span>
+    <span><i style="background:var(--rs)"></i> RS</span>
+    <span><i style="background:var(--gis)"></i> GIS</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>The three technologies</h2></div>
+    <p class="sec-intro">Geospatial technologies (GST) are "an integrated body of technologies." Three do the heavy lifting — and how tightly they're woven together defines the depth of geospatial practice. The chapter adopts Gao's (2002) idea that there are four possible <em>levels</em> of integrating them.</p>
+    <div class="tech-defs">
+      <div class="tech gps"><span class="abbr">GPS</span><div class="full">Global Positioning System</div><p>Locates and records precise positions in the field.</p></div>
+      <div class="tech rs"><span class="abbr">RS</span><div class="full">Remote Sensing</div><p>Satellite/aerial imagery, analyzed by segmentation and classification.</p></div>
+      <div class="tech gis"><span class="abbr">GIS</span><div class="full">Geographic Information System</div><p>Stores, layers, analyzes, and visualizes spatial data.</p></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Four levels of integration</h2></div>
+    <p class="sec-intro">Pick a level to see how data moves between GPS, RS, and GIS — from a one-way chain that ends at GIS, to full many-directional exchange. Each level comes with a classroom example.</p>
+
+    <div class="explorer">
+      <div class="lvl-tabs" id="lvlTabs"></div>
+      <div class="diagram-wrap">
+        <svg id="diagram" viewBox="0 0 600 288" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="GPS, RS, GIS data-flow diagram"></svg>
+      </div>
+      <div class="flow-label" id="flowLabel"></div>
+      <div class="lvl-detail" id="lvlDetail"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Where the model sits — the agenda's two pillars</h2></div>
+    <p class="sec-intro">The integration levels are one piece of a bigger picture. Jo &amp; Muñiz Solari propose a curricular model for "integral geography education with GST" resting on two pillars — and the four-level model lives inside the second.</p>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pn">Pillar A</span><h4>Spatial abilities</h4>
+        <ul>
+          <li><b>Spatial literacy</b> — understanding spatial concepts, from basic (location, direction, distance) to advanced (nodes, network, diffusion).</li>
+          <li><b>Spatial thinking</b> across three orders — practicing <em>in</em> space (personal), <em>about</em> space (physical), and <em>with</em> space (abstract).</li>
+          <li>Built on three components: concepts of space, tools of representation, and processes of reasoning.</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <span class="pn">Pillar B</span><h4>Geospatial integrative skills</h4>
+        <ul>
+          <li><b>Data handling</b> — processing, integration, preservation, and accessibility across the geospatial data life cycle.</li>
+          <li><b>Data sharing</b> — open sharing, metadata, and the laws governing data use.</li>
+          <li><b>Technology integration</b> — weaving GPS, RS, and GIS together — <em>this is where the four-level model applies.</em></li>
+        </ul>
+      </div>
+    </div>
+    <div class="agenda-note">
+      <b>The design principles:</b> instruction and assessment should be built around <em>spatial thinking</em> and <em>geographic inquiry</em>. GST is powerful but not a panacea — it helps most when lessons stress <em>understanding</em> concepts and applying them, not just acquiring facts. This two-pillar agenda is Jo &amp; Muñiz Solari's own contribution; the four-level integration model within it is Gao's.
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>Levels 1–2 are detailed; levels 3–4 are named</h4>
+      <p>The chapter describes the <strong>Linear</strong> and <strong>Interactive</strong> levels in detail, including the exact data-flow logic and the classroom examples reproduced here (minimal GIS; the GPS → georeference → RS → GIS → modeling loop). It <em>names</em> <strong>Hierarchical</strong> and <strong>Complex</strong> as Gao's higher levels — "common when students in higher education develop GP" — but doesn't elaborate them. So those two descriptions and their examples (marked <span class="illus">illustrative</span>) reconstruct Gao's model logic rather than quote the chapter.</p>
+    </div>
+    <div class="callout">
+      <h4>A reused model inside an original agenda</h4>
+      <p>The four-level integration model is <strong>Gao's (2002)</strong> — Fig. 17.2 is "adapted from Gao 2002" — which is why this page is marked <em>reused</em> (blue). The surrounding curricular agenda (the two pillars, the design principles) is Jo &amp; Muñiz Solari's own framework. The data-flow diagram is a schematic of the <em>logic</em> of each level, not a literal redraw of the book figure. The authors' recommendation is explicit: aim for the <strong>Interactive</strong> level in school curricula as a "reasonable integration."</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Jo, I., &amp; Muñiz Solari, O. (2015). An Agenda of GST in Geography Education for the Future. In O. Muñiz Solari, A. Demirci, &amp; J. van der Schee (Eds.), <em>Geospatial Technologies and Geography Education in a Changing World</em> (ch. 17, pp. 205–221). Springer.</p>
+    <p>DOI: <a href="https://doi.org/10.1007/978-4-431-55519-3_17" target="_blank" rel="noopener">10.1007/978-4-431-55519-3_17</a></p>
+    <p class="small" style="color:#8b98af">Integration model: Gao, J. (2002). Integration of GPS with remote sensing and GIS: Reality and prospect. <em>Photogrammetric Engineering &amp; Remote Sensing, 68</em>(5), 447–453 (Fig. 17.2, adapted). Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+var SVGNS="http://www.w3.org/2000/svg", XLINK="http://www.w3.org/1999/xlink";
+
+/* node coordinates */
+var NODES = {
+  gps:{x:100,y:210,c:"#2a78d6",abbr:"GPS",full:"Global Positioning"},
+  rs:{x:300,y:58,c:"#eda100",abbr:"RS",full:"Remote Sensing"},
+  gis:{x:500,y:210,c:"#d24d92",abbr:"GIS",full:"Geographic Info Sys."}
+};
+var R=42;
+
+var LEVELS = [
+  {key:"linear", name:"1 · Linear", flow:"GPS → RS → GIS · one-way",
+   edges:{gps_rs:"fwd", rs_gis:"fwd", gps_gis:"off"}, emphasis:"gis-endpoint",
+   desc:"The three technologies aren't equal partners. Data flows one way and <b>GIS is the final destination</b> — often disconnected from RS and GPS because the data is simply given, not produced by students.",
+   ex:"“Minimal GIS”: students open a ready-made web-GIS map and dataset to practice spatial thinking. No field GPS collection and no RS processing — GIS is a passive endpoint.",
+   note:"The most common approach in secondary education.", illus:false},
+  {key:"interactive", name:"2 · Interactive", rec:true, flow:"GPS ↔ RS ↔ GIS · equal, two-way",
+   edges:{gps_rs:"both", rs_gis:"both", gps_gis:"off"}, emphasis:"equal",
+   desc:"Data flows <b>mutually and in equal amount</b> among GPS, RS, and GIS. RS is no longer a mere feeder to GIS — the GIS database feeds back to enable environmental modeling and to guide image segmentation and classification.",
+   ex:"A student team records field points with GPS → georeferences them → runs RS analysis → builds a GIS database → and that GIS database then drives the environmental modeling that refines the RS classification.",
+   note:"Recommended by the authors as the best fit for school curricula — “a reasonable integration.”", illus:false},
+  {key:"hierarchical", name:"3 · Hierarchical", flow:"Ranked, nested integration",
+   edges:{gps_rs:"both", rs_gis:"both", gps_gis:"fwd"}, emphasis:"gis-hub",
+   desc:"Integration becomes <b>tiered</b>: the technologies combine in a ranked, nested structure rather than as equal peers, with one system organizing the others. Common once students reach higher education.",
+   ex:"A multi-stage watershed study in which a GIS orchestrates structured layers of GPS field surveys and successive RS products in a defined order.",
+   note:"Named in the chapter (from Gao 2002) as a higher-education level; only levels 1–2 are detailed in the text.", illus:true},
+  {key:"complex", name:"4 · Complex", flow:"All-way exchange (+ external data & models)",
+   edges:{gps_rs:"both", rs_gis:"both", gps_gis:"both"}, emphasis:"equal",
+   desc:"<b>Full many-to-many integration</b>: all three technologies exchange data in every direction, typically alongside external data streams, models, and cloud services. The most sophisticated level.",
+   ex:"A real-time environmental monitoring project where live GPS tracks, streaming RS imagery, and a cloud GIS continuously update one another and feed predictive models.",
+   note:"Named in the chapter (from Gao 2002); most common in higher-education geospatial practice.", illus:true}
+];
+
+function shorten(a,b){
+  var dx=b.x-a.x, dy=b.y-a.y, len=Math.sqrt(dx*dx+dy*dy), ux=dx/len, uy=dy/len;
+  return {x1:a.x+ux*R, y1:a.y+uy*R, x2:b.x-ux*R, y2:b.y-uy*R};
+}
+var EDGE_NODES = {gps_rs:["gps","rs"], rs_gis:["rs","gis"], gps_gis:["gps","gis"]};
+
+function buildDiagram(lvl){
+  var svg=document.getElementById("diagram");
+  var defs='<defs>'+
+    '<marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.2" orient="auto"><path d="M0,0 L8,4.2 L0,8.4 z" fill="#54607a"/></marker>'+
+    '</defs>';
+  var edgesSvg="", dotsSvg="", n=0;
+  Object.keys(lvl.edges).forEach(function(ek){
+    var mode=lvl.edges[ek];
+    if(mode==="off") return;
+    var pair=EDGE_NODES[ek], a=NODES[pair[0]], b=NODES[pair[1]];
+    var s=shorten(a,b);
+    var id="path_"+ek;
+    var startMarker = mode==="both" ? ' marker-start="url(#ah)"' : '';
+    edgesSvg+='<path id="'+id+'" d="M'+s.x1.toFixed(1)+','+s.y1.toFixed(1)+' L'+s.x2.toFixed(1)+','+s.y2.toFixed(1)+
+      '" fill="none" stroke="#b7c0d4" stroke-width="3" marker-end="url(#ah)"'+startMarker+'/>';
+    // flowing dots
+    var mk=function(rev,delay){
+      var kp = rev?'1;0':'0;1';
+      return '<circle r="5.5" fill="#1a2230"><animateMotion dur="1.9s" begin="'+delay+'s" repeatCount="indefinite" keyPoints="'+kp+'" keyTimes="0;1" calcMode="linear"><mpath xlink:href="#'+id+'"/></animateMotion></circle>';
+    };
+    dotsSvg+=mk(false,0)+mk(false,-0.95);
+    if(mode==="both"){ dotsSvg+=mk(true,-0.45)+mk(true,-1.4); }
+    n++;
+  });
+  // nodes
+  var nodesSvg=["gps","rs","gis"].map(function(k){
+    var nd=NODES[k];
+    var ring = (lvl.emphasis==="gis-endpoint"&&k==="gis") ? '<circle cx="'+nd.x+'" cy="'+nd.y+'" r="'+(R+7)+'" fill="none" stroke="'+nd.c+'" stroke-width="2" stroke-dasharray="4 4"/>' : '';
+    var badge = (lvl.emphasis==="gis-endpoint"&&k==="gis") ? '<text x="'+nd.x+'" y="'+(nd.y+R+22)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#d24d92" font-family="sans-serif">endpoint</text>'
+      : (lvl.emphasis==="gis-hub"&&k==="gis") ? '<text x="'+nd.x+'" y="'+(nd.y+R+22)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#d24d92" font-family="sans-serif">organizing hub</text>' : '';
+    return ring+
+      '<circle cx="'+nd.x+'" cy="'+nd.y+'" r="'+R+'" fill="'+nd.c+'"/>'+
+      '<text x="'+nd.x+'" y="'+(nd.y-3)+'" text-anchor="middle" font-size="19" font-weight="800" fill="#fff" font-family="sans-serif">'+nd.abbr+'</text>'+
+      '<text x="'+nd.x+'" y="'+(nd.y+14)+'" text-anchor="middle" font-size="8.5" fill="#fff" font-family="sans-serif" opacity="0.9">'+nd.full+'</text>'+
+      badge;
+  }).join("");
+  svg.innerHTML = defs + edgesSvg + dotsSvg + nodesSvg;
+}
+
+/* tabs */
+var lvlTabs=document.getElementById("lvlTabs");
+lvlTabs.innerHTML = LEVELS.map(function(l,i){
+  return '<button class="lvl-tab'+(i===0?' on':'')+'" data-i="'+i+'">'+(l.rec?'<span class="rec">Recommended</span>':'')+
+    '<span class="ln">'+l.name+'</span><span class="lf">'+l.flow+'</span></button>';
+}).join("");
+lvlTabs.querySelectorAll(".lvl-tab").forEach(function(b){
+  b.addEventListener("click", function(){
+    lvlTabs.querySelectorAll(".lvl-tab").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on"); showLevel(parseInt(b.getAttribute("data-i"),10));
+  });
+});
+function showLevel(i){
+  var l=LEVELS[i];
+  buildDiagram(l);
+  document.getElementById("flowLabel").textContent = l.flow;
+  document.getElementById("lvlDetail").innerHTML =
+    '<h3>'+l.name.replace(" · "," · ")+(l.illus?'<span class="illus">reconstructed</span>':'')+'</h3>'+
+    '<p>'+l.desc+'</p>'+
+    '<div class="ex"><span class="exh">Classroom example'+(l.illus?' · illustrative':'')+'</span>'+l.ex+'</div>'+
+    '<p class="lvnote">'+l.note+'</p>';
+}
+showLevel(0);
+</script>
+</body>
+</html>

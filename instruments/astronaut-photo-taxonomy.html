@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astronaut-Photo Taxonomy Variant — Ghaffari, Jo &amp; Currit (2018) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --prim:#2a78d6; --simp:#eda100; --cplx:#d24d92;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:32px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:720px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:23px;font-weight:800;line-height:1.05;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:800px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* photo grid */
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .pcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;cursor:pointer;border:2px solid transparent;transition:.14s}
+  .pcard:hover{transform:translateY(-2px)}
+  .pcard.active{border-color:var(--green)}
+  .pcard svg{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--hair)}
+  .pcard .pn{font-size:11px;font-weight:800;color:var(--sub);margin-top:8px}
+  .pcard h4{margin:1px 0 2px;font-size:14px}
+  .pcard .concept{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--green);border-radius:6px;padding:2px 8px}
+  @media(max-width:760px){.photo-grid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:25px}}
+
+  .pdetail{margin-top:16px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;border-left:5px solid var(--green)}
+  .pd-top{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+  .pd-vis{flex:0 0 200px}
+  .pd-vis svg{width:200px;height:auto;border-radius:10px;border:1px solid var(--hair)}
+  .pd-vis .cap{font-size:11px;color:var(--sub);font-style:italic;margin-top:6px;text-align:center}
+  .pd-body{flex:1 1 320px}
+  .pd-body h3{margin:0 0 3px;font-size:20px}
+  .pd-body .loc{font-size:13px;color:var(--sub);margin:0 0 10px}
+  .pd-attrs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .pd-attr{background:var(--bg);border:1px solid var(--hair);border-radius:9px;padding:7px 11px;font-size:12px}
+  .pd-attr .k{color:var(--sub);text-transform:uppercase;font-size:10px;letter-spacing:.04em;display:block}
+  .pd-attr .v{font-weight:700}
+  .pd-body p{margin:0 0 12px;font-size:14px}
+  .verdict{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;padding:7px 13px;border-radius:999px}
+  .verdict.yes{background:rgba(0,131,0,.11);color:var(--green)}
+  .verdict.no{background:#eef1f7;color:var(--sub)}
+
+  .bars{margin-top:16px}
+  .bars h5{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--sub)}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .bar-lab{flex:0 0 92px;font-size:12px;font-weight:700}
+  .bar-lab small{display:block;color:var(--sub);font-weight:600}
+  .bar-track{flex:1;display:flex;height:22px;border-radius:6px;overflow:hidden;border:1px solid var(--hair)}
+  .seg{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;color:#fff}
+  .seg.p{background:var(--prim)} .seg.s{background:var(--simp)} .seg.c{background:var(--cplx)}
+  .bars-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:12px}
+  .bars-legend span{display:inline-flex;align-items:center;gap:6px}
+  .bars-legend i{width:12px;height:12px;border-radius:3px}
+
+  /* taxonomy */
+  .tax{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .taxcol{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-top:4px solid var(--prim)}
+  .taxcol.s{border-top-color:var(--simp)} .taxcol.c{border-top-color:var(--cplx)}
+  .taxcol h4{margin:0 0 3px;font-size:15px}
+  .taxcol .td{font-size:12px;color:var(--sub);margin:0 0 10px}
+  .taxcol .tags{display:flex;flex-wrap:wrap;gap:5px}
+  .tag{font-size:11.5px;font-weight:600;background:var(--bg);border:1px solid var(--hair);border-radius:6px;padding:3px 8px}
+  .tag.added{background:rgba(0,131,0,.1);border-color:rgba(0,131,0,.35);color:#036e03;font-weight:800}
+  @media(max-width:760px){.tax{grid-template-columns:1fr}}
+
+  .quiz{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-top:20px}
+  .quiz h4{margin:0 0 4px;font-size:15px}
+  .qrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--hair)}
+  .qrow:last-child{border-bottom:0}
+  .qconcept{flex:0 0 150px;font-weight:800;font-size:14px}
+  .qopts{display:flex;gap:6px;flex-wrap:wrap}
+  .qbtn{border:1.5px solid var(--hair);background:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--font);color:var(--ink);transition:.12s}
+  .qbtn:hover{border-color:var(--blue)}
+  .qbtn.right{background:rgba(0,131,0,.12);border-color:var(--green);color:var(--green)}
+  .qbtn.wrong{background:rgba(235,104,52,.12);border-color:var(--orange);color:var(--orange)}
+  .qmark{font-size:13px;font-weight:800;margin-left:2px}
+
+  /* findings */
+  .finds{display:flex;gap:14px;flex-wrap:wrap}
+  .find{flex:1 1 220px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-left:4px solid var(--green)}
+  .find .fn{font-size:20px;font-weight:800;color:var(--green);line-height:1.1}
+  .find p{margin:7px 0 0;font-size:13px;color:var(--sub)}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>Astronaut-Photo Taxonomy Variant</h1>
+    <p class="lede">Can photos taken by astronauts on the Space Station teach students to think spatially? This study handed undergraduates six real ISS photographs to geolocate — coding the spatial concepts they used against Jo's taxonomy, extended for remote sensing. Explore each photo, its target concept, and whether it actually moved the needle.</p>
+    <span class="built-tag"><span class="dot"></span>Variant of the 2009 Taxonomy (built) &nbsp;·&nbsp; Ghaffari, Jo &amp; Currit (2018)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">6</span><span class="l">ISS photographs</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">concept levels</span></div>
+      <div class="chip"><span class="n">32</span><span class="l">students</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">assignments (χ² tested)</span></div>
+      <div class="chip"><span class="n">4</span><span class="l">added primitives</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = built on Jo &amp; Bednarz's 2009 Taxonomy of Spatial Thinking</span>
+    <span><i style="background:var(--prim)"></i> Primitives</span>
+    <span><i style="background:var(--simp)"></i> Simple-spatial</span>
+    <span><i style="background:var(--cplx)"></i> Complex-spatial</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this is</h2></div>
+    <p class="sec-intro">Over 1.5 million astronaut photographs of Earth are free to the public through NASA's Gateway to Astronaut Photography of Earth. In a "Principles of Remote Sensing" lab, 32 undergraduates were given six <em>uncataloged</em> ISS photos and asked to geolocate each one in Google Earth — starting from only the ISS <strong>nadir point</strong> (the lat/long directly below the station when the shot was taken) and their own reading of the landscape. Their written interpretations were coded against the <strong>2009 Taxonomy of Spatial Thinking</strong> (Jo &amp; Bednarz), extended with remote-sensing primitives. Repeating the task three times across the semester let the authors chi-square-test whether spatial thinking improved.</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>The six photographs</h2></div>
+    <p class="sec-intro">Each photo was chosen to elicit one target spatial concept, and arranged easy → hard to interpret. Click any photo to see its details, what concepts students actually used across three assignments, and the chi-square verdict on whether their spatial thinking improved. (The images below are <em>schematic illustrations</em> — the real photos are linked in the sources.)</p>
+
+    <div class="photo-grid" id="photoGrid"></div>
+    <div class="pdetail" id="pdetail"></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>The taxonomy — and what got added</h2></div>
+    <p class="sec-intro">Jo &amp; Bednarz (2009) sort spatial concepts into three levels of increasing sophistication. This study adopted them as-is and <strong>added four primitives</strong> (highlighted) that matter for reading satellite imagery.</p>
+    <div class="tax" id="taxCols"></div>
+
+    <div class="quiz">
+      <h4>Quick check — which level is each concept?</h4>
+      <p class="small" style="margin:0 0 8px">Based on the concepts the study discusses. Pick a level for each.</p>
+      <div id="quizRows"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>What the data showed</h2></div>
+    <p class="sec-intro">Across all 18 photo-assignments, the chi-square tests told a consistent story — and a useful one for teaching.</p>
+    <div class="finds">
+      <div class="find"><span class="fn">Primitives win</span><p>In every one of the 18 assignments, students used significantly more primitive concepts than simple or complex ones — so all six photos are reliable for teaching basic spatial concepts.</p></div>
+      <div class="find"><span class="fn">3 of 6</span><p>Photos 2, 4, and 5 produced a statistically significant shift toward higher-level concepts from assignment 1 to 2 — real improvement. Photos 1, 3, and 6 didn't move.</p></div>
+      <div class="find"><span class="fn">Stop at 2</span><p>The third assignment never differed significantly from the second — so the authors recommend just two assignments per semester (the third-round drop-off is likely final-exam fatigue).</p></div>
+    </div>
+    <p class="small" style="margin-top:16px">The bigger takeaway: <b>match the photo to the concept.</b> A photo's spatial richness determines what it can teach — the distinct lake color for “Color,” the Richat rings for “Pattern/Shape,” Bermuda's blue tones for “Gradient,” Misrata's streets for “Network.”</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>Schematic images, real data</h4>
+      <p>The six visuals are <strong>original schematic illustrations</strong>, not the NASA photographs — the real images (public-domain, courtesy NASA JSC's Earth Science &amp; Remote Sensing Unit) are linked in the sources by their ISS photo IDs. Every concept percentage and chi-square verdict is reproduced from the paper's Table 2 and Appendices. One source quirk: the paper's photo-ID footnote lists <em>ISS044-E-8687</em> for both photo 2 and photo 6, which is almost certainly a typo for photo 6.</p>
+    </div>
+    <div class="callout">
+      <h4>A modest, honest study</h4>
+      <p>This is a single course of 32 students (of 54 enrolled; 22 were dropped for copying prior answers into the third round). It's the taxonomy applied in a new setting rather than a controlled experiment, and the authors are candid that improvement showed in only half the photos and that gains were small. The value is practical: a worked method — and a starter data set — for choosing astronaut photos to teach specific spatial concepts. The taxonomy's three levels are Jo &amp; Bednarz's (2009); this study's contribution is the remote-sensing adaptation and the photo-to-concept guide.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Ghaffari, Z., Jo, I., &amp; Currit, N.&nbsp;A. (2018). NASA Astronaut Photography of Earth: A Resource to Facilitate Students' Learning and Using Geospatial Concepts. <em>International Journal of Geospatial and Environmental Research, 5</em>(3), Article 6.</p>
+    <p>Taxonomy: Jo, I., &amp; Bednarz, S.&nbsp;W. (2009), <em>Journal of Geography</em> 108, 4–13 — the built instrument this page extends. Real photographs (public domain, courtesy NASA JSC Earth Science &amp; Remote Sensing Unit) via the <a href="https://eol.jsc.nasa.gov/" target="_blank" rel="noopener">Gateway to Astronaut Photography of Earth</a> — search the IDs shown on each photo (e.g., ISS042-E-2265).</p>
+    <p class="small" style="color:#8b98af">Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* schematic SVG illustrations (not the real photos) */
+function schematic(t){
+  var W=160,H=110, s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
+  if(t==="lake"){
+    s+='<rect width="160" height="110" fill="#3f8a3f"/>'+
+       '<path d="M55,35 q30,-12 55,8 q18,20 -5,40 q-35,20 -60,-2 q-15,-28 10,-46 z" fill="#e2732a"/>';
+  } else if(t==="rings"){
+    s+='<rect width="160" height="110" fill="#cbb489"/>'+
+       '<g fill="none" stroke="#7a6236" stroke-width="4">'+
+       '<circle cx="80" cy="55" r="42"/><circle cx="80" cy="55" r="31"/><circle cx="80" cy="55" r="20"/><circle cx="80" cy="55" r="9"/></g>';
+  } else if(t==="gradient"){
+    s+='<rect width="160" height="110" fill="#0b3d66"/>'+
+       '<ellipse cx="80" cy="55" rx="60" ry="42" fill="#1560a0"/>'+
+       '<ellipse cx="80" cy="55" rx="42" ry="30" fill="#2f8ad0"/>'+
+       '<ellipse cx="80" cy="55" rx="24" ry="17" fill="#7cc0f0"/>'+
+       '<path d="M74,50 q8,-6 14,0 q4,8 -4,12 q-12,4 -14,-6 z" fill="#3f8a3f"/>';
+  } else if(t==="island"){
+    s+='<rect width="160" height="110" fill="#12568c"/>'+
+       '<path d="M70,45 q16,-6 22,4 q6,14 -6,20 q-18,6 -22,-8 q-4,-12 6,-16 z" fill="#4f9a4f"/>';
+  } else if(t==="reservoir"){
+    s+='<rect width="160" height="110" fill="#b79b6e"/>'+
+       '<ellipse cx="52" cy="52" rx="30" ry="20" fill="#1f74bd"/>'+
+       '<ellipse cx="108" cy="62" rx="26" ry="16" fill="#1f74bd"/>'+
+       '<rect x="76" y="50" width="10" height="16" fill="#1f74bd"/>'+
+       '<line x1="81" y1="44" x2="81" y2="72" stroke="#6b5636" stroke-width="3"/>';
+  } else if(t==="grid"){
+    s+='<rect width="160" height="110" fill="#d8c8a6"/>'+
+       '<g stroke="#8a7a54" stroke-width="2">'+
+       '<line x1="30" y1="12" x2="30" y2="98"/><line x1="60" y1="12" x2="60" y2="98"/><line x1="90" y1="12" x2="90" y2="98"/><line x1="120" y1="12" x2="120" y2="98"/>'+
+       '<line x1="16" y1="34" x2="144" y2="34"/><line x1="16" y1="58" x2="144" y2="58"/><line x1="16" y1="82" x2="144" y2="82"/></g>';
+  }
+  s+='</svg>'; return s;
+}
+
+var PHOTOS = [
+  {n:1, name:"Gribben Lake", place:"Michigan, USA", id:"ISS042-E-2265", concept:"Color", svg:"lake",
+   desc:"A lake with a strikingly distinct color set against surrounding forest.",
+   used:"Students leaned on “Color” (30 / 25 / 26% across the three rounds) and “Enclosure” (the lake ringed by forest: 18 / 22 / 17%); “Pattern” and “Density” led the complex concepts. Many wrote logical hypotheses for the lake's orange hue.",
+   bars:[[58.87,29.79,11.35],[59.32,27.97,12.71],[58.02,29.01,12.98]],
+   improved:false, verdict:"No significant change — best used as a Color / Enclosure teaching photo."},
+  {n:2, name:"Richat Structure", place:"Mauritania", id:"ISS044-E-8687", concept:"Shape", svg:"rings",
+   desc:"The “Eye of the Sahara” — a huge circular geological formation.",
+   used:"“Shape” dominated the simple concepts (that circular structure); complex use of “Pattern” more than doubled from round 1 to 3. Primitives “Color,” “Name,” and “Geographic feature” each topped 10%.",
+   bars:[[60.98,27.64,11.38],[53.46,28.30,18.24],[55.00,20.83,24.17]],
+   improved:true, verdict:"Spatial thinking improved (round 1→2 significant) — great for teaching Pattern."},
+  {n:3, name:"Bermuda Island", place:"Atlantic Ocean", id:"ISS044-E-8672", concept:"Gradient", svg:"gradient",
+   desc:"An island ringed by ocean in shifting shades of blue.",
+   used:"The complex concept “Gradient” rose steadily (10 / 11 / 12%) as students linked blue tones to ocean depth; “Geographic feature” climbed among the primitives (16 / 18 / 22%).",
+   bars:[[52.30,29.31,18.39],[49.72,29.61,20.67],[52.33,26.74,20.93]],
+   improved:false, verdict:"No significant change — still a strong Gradient teaching photo."},
+  {n:4, name:"Malden Island", place:"Republic of Kiribati", id:"ISS044-E-19203", concept:"Magnitude", svg:"island",
+   desc:"A small, isolated island in the vast Pacific — few nearby features to anchor on.",
+   used:"“Geographic feature” led (the island itself); “Magnitude” started high (15%) then fell to 5–7%. Complex “Gradient” (3 / 5 / 7%) and “Relief” (2 / 4 / 5%) grew as students read blue tones as subsurface elevation.",
+   bars:[[64.00,23.43,12.57],[54.89,28.26,16.85],[55.88,27.65,16.47]],
+   improved:true, verdict:"Spatial thinking improved (round 1→2 significant)."},
+  {n:5, name:"Embalse los Barreales", place:"Argentina", id:"ISS044-E-22796", concept:"Condition", svg:"reservoir",
+   desc:"A reservoir formed of two connected lakes.",
+   used:"“Geographic feature” dominated the primitives and “Direction” the simple concepts; complex “Gradient” inched up (2 / 4 / 6%, though not significant). A good photo for the “Connection” of two lakes.",
+   bars:[[63.38,28.17,8.45],[57.89,29.39,12.72],[60.48,27.62,11.90]],
+   improved:true, verdict:"Spatial thinking improved (round 1→2 significant)."},
+  {n:6, name:"Misrata City", place:"Libya", id:"ISS044-E-8687*", concept:"Network", svg:"grid",
+   desc:"A city whose street grid stands out against arid terrain.",
+   used:"The only photo to elicit the “Network” concept (the road network) — students used “Pattern” and “Network” interchangeably. “Name” led the primitives; “Direction” / “Distance” the simple. Uniquely, complex concepts outnumbered simple ones here.",
+   bars:[[57.69,18.46,23.85],[55.56,16.99,27.45],[55.74,13.11,31.15]],
+   improved:false, verdict:"No significant change — but the only photo that surfaces Network."}
+];
+
+var photoGrid=document.getElementById("photoGrid");
+var pdetail=document.getElementById("pdetail");
+photoGrid.innerHTML = PHOTOS.map(function(p,i){
+  return '<div class="pcard'+(i===0?' active':'')+'" data-i="'+i+'">'+schematic(p.svg)+
+    '<div class="pn">Photo '+p.n+' · '+p.id+'</div><h4>'+p.name+'</h4>'+
+    '<span class="concept">'+p.concept+'</span></div>';
+}).join("");
+photoGrid.querySelectorAll(".pcard").forEach(function(c){
+  c.addEventListener("click", function(){ showPhoto(parseInt(c.getAttribute("data-i"),10)); });
+});
+function barRow(lab,arr){
+  var names=["p","s","c"];
+  var segs = arr.map(function(v,i){ return '<div class="seg '+names[i]+'" style="width:'+v+'%">'+(v>=12?v.toFixed(0)+'%':'')+'</div>'; }).join("");
+  return '<div class="bar-row"><div class="bar-lab">'+lab+'</div><div class="bar-track">'+segs+'</div></div>';
+}
+function showPhoto(i){
+  var p=PHOTOS[i];
+  photoGrid.querySelectorAll(".pcard").forEach(function(c,j){c.classList.toggle("active",j===i);});
+  pdetail.innerHTML =
+    '<div class="pd-top"><div class="pd-vis">'+schematic(p.svg)+'<div class="cap">Schematic — not the real photo</div></div>'+
+    '<div class="pd-body"><h3>'+p.name+'</h3><p class="loc">Photo '+p.n+' · '+p.place+'</p>'+
+      '<div class="pd-attrs">'+
+        '<div class="pd-attr"><span class="k">Target concept</span><span class="v">'+p.concept+'</span></div>'+
+        '<div class="pd-attr"><span class="k">ISS photo ID</span><span class="v">'+p.id+'</span></div>'+
+        '<div class="pd-attr"><span class="k">Located via</span><span class="v">ISS nadir point + Google Earth</span></div>'+
+      '</div>'+
+      '<p>'+p.desc+'</p><p>'+p.used+'</p>'+
+      '<span class="verdict '+(p.improved?'yes':'no')+'">'+(p.improved?'✓ ':'— ')+p.verdict+'</span>'+
+    '</div></div>'+
+    '<div class="bars"><h5>Concept levels used, by assignment (% of coded concepts)</h5>'+
+      barRow('Round 1', p.bars[0])+barRow('Round 2', p.bars[1])+barRow('Round 3', p.bars[2])+
+      '<div class="bars-legend"><span><i style="background:var(--prim)"></i>Primitive</span>'+
+      '<span><i style="background:var(--simp)"></i>Simple</span><span><i style="background:var(--cplx)"></i>Complex</span></div></div>';
+  pdetail.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+showPhoto(0);
+
+/* Section 3: taxonomy */
+var TAX = {
+  p:{name:"Spatial primitives", def:"The fundamental building blocks of space.",
+     items:["Magnitude","Place identity","Location","Condition","Color","Names","Geographic features"],
+     added:["Condition","Color","Names","Geographic features"]},
+  s:{name:"Simple-spatial", def:"Built from sets of primitives.",
+     items:["Distance","Direction","Shape","Enclosure","Boundary","Connection","Reference frame","Arrangement","Adjacency","Region","Movement","Transition"], added:[]},
+  c:{name:"Complex-spatial", def:"Assembled from simple concepts and primitives.",
+     items:["Gradient","Relief","Profile","Scale","Density","Pattern","Distribution","Dispersion / Clustering","Dominance","Diffusion","Hierarchy / Network","Spatial association","Overlay","Map projection","Buffer","Layer"], added:[]}
+};
+document.getElementById("taxCols").innerHTML = ["p","s","c"].map(function(k){
+  var t=TAX[k];
+  var tags=t.items.map(function(it){ return '<span class="tag'+(t.added.indexOf(it)>=0?' added':'')+'">'+it+(t.added.indexOf(it)>=0?' +':'')+'</span>'; }).join("");
+  return '<div class="taxcol '+k+'"><h4>'+t.name+'</h4><p class="td">'+t.def+'</p><div class="tags">'+tags+'</div></div>';
+}).join("");
+
+/* Section 3: quiz */
+var QUIZ = [
+  {c:"Color", a:"p", why:"a primitive added by this study for remote sensing"},
+  {c:"Distance", a:"s", why:"the paper calls it “an example of a simple spatial concept”"},
+  {c:"Shape", a:"s", why:"used as a simple concept for the Richat rings"},
+  {c:"Gradient", a:"c", why:"a complex concept — blue tones as ocean depth"},
+  {c:"Magnitude", a:"p", why:"a basic building-block primitive"},
+  {c:"Network", a:"c", why:"complex (Hierarchy / Network) — Misrata's roads"}
+];
+var LVL={p:"Primitive",s:"Simple",c:"Complex"};
+document.getElementById("quizRows").innerHTML = QUIZ.map(function(q,i){
+  var opts=["p","s","c"].map(function(k){ return '<button class="qbtn" data-i="'+i+'" data-k="'+k+'">'+LVL[k]+'</button>'; }).join("");
+  return '<div class="qrow"><div class="qconcept">'+q.c+'</div><div class="qopts">'+opts+'</div><span class="qmark" id="qm'+i+'"></span></div>';
+}).join("");
+document.querySelectorAll("#quizRows .qbtn").forEach(function(b){
+  b.addEventListener("click", function(){
+    var i=parseInt(b.getAttribute("data-i"),10), k=b.getAttribute("data-k"), q=QUIZ[i];
+    var row=b.parentNode;
+    row.querySelectorAll(".qbtn").forEach(function(x){x.disabled=false;x.classList.remove("right","wrong");});
+    if(k===q.a){ b.classList.add("right"); document.getElementById("qm"+i).innerHTML='<span style="color:var(--green)">✓ '+q.why+'</span>'; }
+    else { b.classList.add("wrong"); row.querySelector('.qbtn[data-k="'+q.a+'"]').classList.add("right"); document.getElementById("qm"+i).innerHTML='<span style="color:var(--orange)">→ '+LVL[q.a]+': '+q.why+'</span>'; }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoActivity Types in APHG: End-of-Year Culminating Project — Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:33px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:710px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:24px;font-weight:800;line-height:1;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:790px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* components + deliverables */
+  .comp-grid{display:flex;gap:14px;flex-wrap:wrap}
+  .comp{flex:1 1 200px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border-top:4px solid var(--green)}
+  .comp .cn{font-size:13px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.04em}
+  .comp h4{margin:6px 0 5px;font-size:15px}
+  .comp p{margin:0;font-size:13.5px;color:var(--sub)}
+  .deliver{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+  .dpill{flex:1 1 200px;background:#eef7ff;border:1px solid #cfe4fb;border-radius:12px;padding:13px 16px;font-size:13.5px}
+  .dpill b{display:block;color:var(--blue);margin-bottom:2px}
+
+  /* timeline */
+  .tl-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-tab{border:1.5px solid var(--hair);background:#fff;border-radius:11px;padding:10px 14px;cursor:pointer;font-family:var(--font);
+    text-align:left;transition:.12s;flex:1 1 130px}
+  .tl-tab:hover{border-color:var(--blue)}
+  .tl-tab.active{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}
+  .tl-tab .d{display:block;font-size:13px;font-weight:800}
+  .tl-tab .t{display:block;font-size:11.5px;color:var(--sub);margin-top:2px}
+  .tl-detail{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;border-left:5px solid var(--green)}
+  .tl-detail h3{margin:0 0 4px;font-size:19px}
+  .tl-detail .phase{font-size:12.5px;color:var(--sub);margin:0 0 12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .tl-detail p{margin:0 0 12px;font-size:14.5px}
+  .tl-detail h5{margin:14px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--green)}
+  .tl-detail ul{margin:6px 0 12px;padding-left:20px;font-size:14px}
+  .tl-detail li{margin-bottom:5px}
+  .unit-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .utag{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;color:#fff}
+
+  /* simulator */
+  .sim-wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+  .sim-col{flex:1 1 520px;min-width:300px}
+  .track-col{flex:1 1 250px;position:sticky;top:16px}
+  .sim-topbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+  .btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:11px 20px;font-size:14px;font-weight:800;
+    cursor:pointer;font-family:var(--font);transition:.15s}
+  .btn:hover{background:#2568bd}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+  .btn.ghost:hover{background:rgba(42,120,214,.08)}
+  .btn.big{background:var(--green)}
+  .btn.big:hover{background:#036e03}
+
+  .dcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:14px}
+  .dcard .dphase{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px}
+  .dcard h4{margin:0 0 4px;font-size:16px}
+  .dcard .dnote{font-size:12.5px;color:var(--sub);margin:0 0 12px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .opt{border:1.5px solid var(--hair);background:#fff;border-radius:10px;padding:9px 14px;cursor:pointer;font-family:var(--font);
+    font-size:13.5px;font-weight:700;color:var(--ink);transition:.12s}
+  .opt:hover{border-color:var(--blue)}
+  .opt.sel{border-color:var(--green);background:rgba(0,131,0,.08);box-shadow:0 0 0 1px var(--green) inset}
+  .opt-detail{display:none;margin-top:11px;font-size:13.5px;background:var(--bg);border:1px solid var(--hair);border-radius:10px;padding:11px 14px}
+  .opt-detail.show{display:block}
+  .opt-detail .odh{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);display:block;margin-bottom:3px}
+
+  .tracker{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 18px 14px}
+  .tracker h4{margin:0 0 4px;font-size:15px}
+  .tracker .tsub{font-size:12px;color:var(--sub);margin:0 0 14px}
+  .tracker-prog{height:8px;border-radius:999px;background:#eef1f7;overflow:hidden;margin-bottom:14px}
+  .tracker-prog span{display:block;height:100%;width:0;background:var(--green);transition:width .3s}
+  .uitem{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:13px;opacity:.42;transition:.25s}
+  .uitem.lit{opacity:1}
+  .uitem .udot{width:13px;height:13px;border-radius:50%;background:var(--hair);flex:0 0 auto;transition:.25s}
+  .uitem.lit .udot{box-shadow:0 0 0 3px rgba(0,0,0,.04)}
+  .uitem .uname{font-weight:600}
+  .uitem .ucheck{margin-left:auto;font-weight:800;color:var(--green);opacity:0}
+  .uitem.lit .ucheck{opacity:1}
+
+  .briefing{display:none;margin-top:8px;background:linear-gradient(160deg,#0f2b52,#1d4b8f);color:#fff;border-radius:var(--radius);padding:22px 24px}
+  .briefing.show{display:block}
+  .briefing h3{margin:0 0 14px;font-size:18px}
+  .brow{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:14px}
+  .brow:last-of-type{border-bottom:0}
+  .brow .bk{flex:0 0 168px;color:#bcd2ef;font-weight:700}
+  .brow .bv{font-weight:600}
+  .bmsg{margin-top:14px;background:rgba(84,217,84,.16);border:1px solid rgba(84,217,84,.4);border-radius:10px;padding:12px 15px;font-size:14px}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  @media(max-width:760px){.hero h1{font-size:26px}.track-col{position:static}}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>APHG Culminating Project: “Using Geography to Survive a Zombie Apocalypse”</h1>
+    <p class="lede">A post-exam, project-based finale where student groups synthesize the whole APHG year: research a region, map a survival route, and build a 3-D model of a sustainable shelter. Click through the day-by-day protocol, then run a group's branching choices and watch every decision land on an APHG unit.</p>
+    <span class="built-tag"><span class="dot"></span>Instrument she built &nbsp;·&nbsp; Jo, Bannert, Huh &amp; Hong (2022)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">9–12</span><span class="l">days</span></div>
+      <div class="chip"><span class="n">2–3</span><span class="l">per group</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">disaster types</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">deliverables</span></div>
+      <div class="chip"><span class="n">7</span><span class="l">APHG units synthesized</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = instrument Jo <b>built</b></span>
+    <span>Unit colors are used consistently in the timeline and the synthesis tracker below.</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this instrument is</h2></div>
+    <p class="sec-intro">APHG is a content-heavy course — seven units across roughly 130 class periods — leaving little room for projects mid-year. But once the exam ends in early May, engagement is hard to hold. This project-based-learning (PBL) capstone, refined by a group of teachers over seven years, fills those final weeks by asking groups to <em>apply</em> everything they learned. Students know zombies aren't real; the pop-culture frame is just the hook for authentic geographic problem-solving.</p>
+
+    <div class="comp-grid">
+      <div class="comp"><span class="cn">Component 1</span><h4>Research</h4><p>Investigate the physical environment, population, agriculture, economy, and resources of places around the world.</p></div>
+      <div class="comp"><span class="cn">Component 2</span><h4>Route &amp; migration</h4><p>Determine and map the best migration route to survive a hypothetical outbreak and reach an infection-free zone.</p></div>
+      <div class="comp"><span class="cn">Component 3</span><h4>Shelter model</h4><p>Build a 3-D model of a sustainable, long-term settlement at the route's final destination.</p></div>
+    </div>
+
+    <div class="deliver">
+      <div class="dpill"><b>Deliverable · Daily journals</b>Daily journal entries documenting each day's research and decisions.</div>
+      <div class="dpill"><b>Deliverable · Trifold display</b>A trifold display presenting the group's research findings.</div>
+      <div class="dpill"><b>Deliverable · 3-D shelter</b>A 3-D representation of the final, long-term settlement.</div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>The day-by-day protocol</h2></div>
+    <p class="sec-intro">Two to three weeks, phase by phase. Click a phase to see its tasks, the exact guiding questions students answer, deliverables, and which APHG units it draws on.</p>
+
+    <div class="tl-tabs" id="tlTabs"></div>
+    <div class="tl-detail" id="tlDetail"></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Run a group's survival plan</h2></div>
+    <p class="sec-intro">Make the branching choices a real group makes — the disaster, the route stops, the government, the economy, the culture, the way they'll live sustainably. Each decision lights up the APHG unit it exercises in the synthesis tracker. Make all eight, then generate the mission briefing.</p>
+
+    <div class="sim-topbar">
+      <button class="btn" id="drawBtn">🎲 Random Day-1 draw</button>
+      <button class="btn ghost" id="simReset">Reset all choices</button>
+    </div>
+
+    <div class="sim-wrap">
+      <div class="sim-col" id="simCol"></div>
+      <div class="track-col">
+        <div class="tracker">
+          <h4>APHG synthesis tracker</h4>
+          <p class="tsub">Units light up as your choices apply them.</p>
+          <div class="tracker-prog"><span id="trackProg"></span></div>
+          <div id="trackList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px">
+      <button class="btn big" id="briefBtn" disabled>Generate mission briefing</button>
+    </div>
+    <div class="briefing" id="briefing"></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>Faithful protocol, illustrative options</h4>
+      <p>The day structure, tasks, guiding questions, three disaster types, deliverables, group size, five-minute presentations, and the unit mappings are reproduced faithfully from the article. The <strong>starting regions and the biome resource details</strong> in the simulator are original illustrations — the paper's regional maps (Fig. 1) and example project photos (Figs. 2–5) are images not reproduced in its text. The government, economic, cultural, and sustainability <em>options</em> are illustrative choices that fit the categories the paper names (e.g., economic systems: traditional, market, socialist, communist).</p>
+    </div>
+    <div class="callout">
+      <h4>Keep the geography, not the zombies</h4>
+      <p>The authors are emphatic: students' research focus should <em>not</em> be on zombies. Although the frame is hypothetical, students should use reliable information and stay realistic wherever applicable. This is a practitioner article — refined over seven years and rich in classroom tips — but it reports teacher experience, not an experiment or outcome statistics. Full student instructions, maps, and the grading rubric live at the authors' project link.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Jo, I., Bannert, A., Huh, S., &amp; Hong, J.&nbsp;E. (2022). GeoActivity Types in APHG: End-of-Year Culminating Project. <em>The Geography Teacher, 19</em>(2), 75–79.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/19338341.2022.2042838" target="_blank" rel="noopener">10.1080/19338341.2022.2042838</a></p>
+    <p>Project materials (instructions, maps, grading rubric): <a href="https://tinyurl.com/BanZombiePjt" target="_blank" rel="noopener">tinyurl.com/BanZombiePjt</a></p>
+    <p class="small" style="color:#8b98af">APHG seven-unit structure and ~130-period figure per the College Board AP Human Geography course (2019). Verified against the full text held in the project Zotero library. This is the sixth and final page of the 2022 <em>Geography Teacher</em> GeoActivity symposium in the Dr. Injeong Jo Instrument Lab.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------- Units ---------- */
+var UNITS = [
+  {id:"U1", name:"Unit 1 · Thinking Geographically", color:"#2a78d6"},
+  {id:"U2", name:"Unit 2 · Population & Migration", color:"#008300"},
+  {id:"U3", name:"Unit 3 · Cultural Patterns", color:"#e87ba4"},
+  {id:"U4", name:"Unit 4 · Political Patterns", color:"#eda100"},
+  {id:"U5", name:"Unit 5 · Agriculture & Rural Land-Use", color:"#eb6834"},
+  {id:"U6", name:"Unit 6 · Cities & Urban Land-Use", color:"#1d4b8f"},
+  {id:"U7", name:"Unit 7 · Industrial & Economic Dev.", color:"#006d00"},
+  {id:"PHYS", name:"Physical geography (supporting)", color:"#c76694"}
+];
+var UMAP = {};
+UNITS.forEach(function(u){ UMAP[u.id]=u; });
+function uColor(id){ return UMAP[id].color; }
+function uShort(id){ return id==="PHYS" ? "Physical geo." : id.replace("U","Unit "); }
+
+/* ---------- Section 2: timeline ---------- */
+var TIMELINE = [
+  {days:"Day 1", title:"The draw & population",
+   tasks:"A randomized drawing sets each group's <b>starting region</b> and the <b>disaster</b> that triggered the apocalypse (nuclear explosion, climate-borne virus, or blood-borne virus). Groups then build the most recent <b>population pyramid</b> for their area.",
+   qs:["What causes the outbreak — nuclear explosion, climate-borne virus, or blood-borne virus?","How did the virus spread (types of diffusion)?"],
+   units:["U1","U2","U3"]},
+  {days:"Days 2–3", title:"Survival route & rest stops",
+   tasks:"Using the regional map, choose the best route to an infection-free zone. Pick <b>two stops</b>; find distance and direction; describe each stop's <b>biosphere, hydrosphere, and atmosphere</b>; and design a temporary 30-day shelter from local resources.",
+   qs:["What animals and/or plants are observed and can be consumed?","What source of freshwater is available to you?","What climatic conditions (temperature/precipitation) will you encounter?","What type of shelter do you create there?"],
+   deliver:"Per stop: visuals of plants/animals, a climograph, and a shelter sketch. Groups are also encouraged to consider trading resources with other survivor groups.",
+   units:["U1","U5","U7","PHYS"]},
+  {days:"Day 4", title:"Destination & government",
+   tasks:"Describe the final destination and plan the permanent 3-D shelter. Build a <b>population pyramid</b> for the location, then decide potential <b>government types</b> and identify new laws to implement.",
+   qs:["What environmental challenges or natural disasters could make a permanent settlement difficult, and how would you adapt to them?"],
+   units:["U2","U4","PHYS"]},
+  {days:"Days 5–6", title:"Build the shelter — economy, culture, sustainability",
+   tasks:"Build the 3-D model of the final shelter while deciding the new community's economy, culture, and sustainability. Cultural characteristics should relate to the old or existing communities.",
+   qs:["What new economic system has developed (traditional, market, socialist, communist, etc.) and why?","What cultural characteristics — language and religion — does the new community offer?","What housing, energy resources, and agriculture/land-use patterns make it sustainable?"],
+   units:["U3","U5","U6","U7"]},
+  {days:"Days 7–8", title:"Finalize research & display",
+   tasks:"Finalize the research about the places along the survival route and assemble a <b>trifold display</b> of the findings. Refine the 3-D shelter model.",
+   deliver:"Trifold display of research findings + a refined 3-D shelter model.",
+   units:["U1"]},
+  {days:"Days 9–12", title:"Presentations",
+   tasks:"Each group gives a <b>five-minute presentation</b> of its research and visual representations; classmates ask questions and provide comments.",
+   units:[]}
+];
+var tlTabs = document.getElementById("tlTabs");
+var tlDetail = document.getElementById("tlDetail");
+TIMELINE.forEach(function(ph,i){
+  var b = document.createElement("button");
+  b.className = "tl-tab" + (i===0?" active":"");
+  b.innerHTML = '<span class="d">'+ph.days+'</span><span class="t">'+ph.title+'</span>';
+  b.addEventListener("click", function(){
+    document.querySelectorAll(".tl-tab").forEach(function(x){x.classList.remove("active");});
+    b.classList.add("active"); showPhase(i);
+  });
+  tlTabs.appendChild(b);
+});
+function showPhase(i){
+  var ph = TIMELINE[i];
+  var qs = ph.qs ? '<h5>Guiding questions</h5><ul>'+ph.qs.map(function(q){return "<li>"+q+"</li>";}).join("")+'</ul>' : "";
+  var dv = ph.deliver ? '<h5>Deliverable</h5><p>'+ph.deliver+'</p>' : "";
+  var tags = ph.units.length ? '<h5>APHG units applied</h5><div class="unit-tags">'+
+    ph.units.map(function(u){return '<span class="utag" style="background:'+uColor(u)+'">'+UMAP[u].name+'</span>';}).join("")+'</div>'
+    : '<h5>APHG units applied</h5><p class="small" style="margin:0">Synthesis &amp; communication — presenting the whole project.</p>';
+  tlDetail.innerHTML = '<p class="phase">'+ph.days+'</p><h3>'+ph.title+'</h3><p>'+ph.tasks+'</p>'+qs+dv+tags;
+}
+showPhase(0);
+
+/* ---------- Section 3: simulator ---------- */
+var BIOMES = [
+  {label:"Tropical rainforest", detail:"Consumables: cassava, plantains, fish, capybara. Freshwater: rivers and heavy year-round rainfall. Climate: hot and very wet — a tall, flat climograph."},
+  {label:"Desert", detail:"Consumables: cactus fruit, dates, lizards, hardy goats. Freshwater: scarce — oases and deep wells. Climate: hot days, cold nights, minimal precipitation."},
+  {label:"Temperate forest", detail:"Consumables: deer, berries, nuts, stream fish. Freshwater: streams and springs. Climate: four seasons with moderate precipitation."},
+  {label:"Grassland / savanna", detail:"Consumables: grazing animals, grains, tubers. Freshwater: seasonal rivers and waterholes. Climate: distinct wet and dry seasons."},
+  {label:"Tundra / boreal", detail:"Consumables: caribou, fish, hardy berries. Freshwater: snowmelt and lakes. Climate: long cold winters, short cool summers."}
+];
+var DECISIONS = [
+  {id:"disaster", phase:"Day 1 · The draw", q:"What disaster triggered the outbreak — and how did it spread?",
+   note:"Drawn randomly in class. The spread pattern is a type of diffusion.", units:["U3","U1"],
+   options:[
+     {label:"Nuclear explosion", detail:"Contamination radiates outward from the blast — model it as expansion diffusion across the map."},
+     {label:"Climate-borne virus", detail:"Spread tracks climate zones and air movement — expansion diffusion along environmental gradients."},
+     {label:"Blood-borne virus", detail:"Spread follows human contact and movement networks — contagious and hierarchical diffusion through populated places."}
+   ]},
+  {id:"region", phase:"Day 1 · Starting region", q:"Which region did your group draw as a starting point?",
+   note:"Regions here are illustrative examples (the paper's Fig. 1 maps aren't reproduced). Then build the area's population pyramid.", units:["U2","U1"],
+   options:[
+     {label:"Andes & Amazon basin", detail:"High-relief mountains meeting dense tropical lowland — steep gradients in climate and population density to read on the map."},
+     {label:"Sahel & Sahara margin", detail:"A transition from arid desert to semi-arid grassland — water access drives every routing decision."},
+     {label:"Himalayan foothills", detail:"Vertical zonation from valley farmland to alpine slopes — altitude shapes population and agriculture."},
+     {label:"Scandinavian coast", detail:"Fjords, boreal forest, and cold seas — dispersed settlement and marine resources."}
+   ]},
+  {id:"stop1", phase:"Days 2–3 · Route stop 1", q:"Pick the biome for your first 30-day rest stop.",
+   note:"For each stop: biosphere, hydrosphere, atmosphere; consumable plants/animals; a climograph; and a temporary shelter.", units:["PHYS","U5"],
+   options:BIOMES},
+  {id:"stop2", phase:"Days 2–3 · Route stop 2", q:"Pick the biome for your second stop — then note distance and direction from stop 1.",
+   note:"Distance and direction along the route are core spatial-thinking skills.", units:["PHYS","U5","U1"],
+   options:BIOMES},
+  {id:"gov", phase:"Day 4 · Government", q:"What government will your permanent settlement adopt?",
+   note:"Also identify the new laws you'd implement.", units:["U4"],
+   options:[
+     {label:"Representative democracy", detail:"Elected councils make law — legitimacy through voting, with checks on power."},
+     {label:"Direct democracy / council", detail:"The whole community decides together — workable at small settlement scale."},
+     {label:"Constitutional monarchy", detail:"A symbolic head with a governing charter — continuity plus rule of law."},
+     {label:"Military / authoritarian", detail:"Centralized command — fast decisions in crisis, at the cost of participation."}
+   ]},
+  {id:"econ", phase:"Days 5–6 · Economic system", q:"What economic system develops, and why?",
+   note:"The paper names traditional, market, socialist, and communist as options.", units:["U7"],
+   options:[
+     {label:"Traditional", detail:"Customs and subsistence decide production — resilient when resources are scarce and stable."},
+     {label:"Market", detail:"Supply, demand, and trade with other survivor groups allocate goods."},
+     {label:"Socialist", detail:"Community ownership of key resources with planned distribution for equity."},
+     {label:"Communist", detail:"Collective ownership and central planning — shared output, no private property."}
+   ]},
+  {id:"culture", phase:"Days 5–6 · Culture", q:"What cultural characteristics carry over from existing communities?",
+   note:"Language and religion, related to the old communities.", units:["U3"],
+   options:[
+     {label:"Shared lingua franca + syncretic faith", detail:"A common trade language and blended beliefs ease cooperation among mixed survivors."},
+     {label:"Preserved heritage language + folk religion", detail:"Guarding an ancestral language and local traditions to hold identity together."},
+     {label:"Multilingual + secular civic culture", detail:"Several languages coexist under shared civic values rather than one religion."}
+   ]},
+  {id:"sustain", phase:"Days 5–6 · Sustainability", q:"How will the settlement power and house itself?",
+   note:"Housing, energy, and land use — the sustainability core.", units:["U6","U5"],
+   options:[
+     {label:"Solar microgrid + timber housing", detail:"Rooftop solar and managed woodlots — renewable power with local building material."},
+     {label:"Micro-hydro + earthen/stone homes", detail:"A small dammed stream powers homes built from earth and stone for thermal mass."},
+     {label:"Wind + elevated tree houses", detail:"Turbines on ridgelines and raised dwellings — safe from floods and ground threats."}
+   ]}
+];
+
+var choices = {};
+var litUnits = {};
+var simCol = document.getElementById("simCol");
+var trackList = document.getElementById("trackList");
+var trackProg = document.getElementById("trackProg");
+var briefBtn = document.getElementById("briefBtn");
+var briefing = document.getElementById("briefing");
+
+/* render decision cards */
+function renderSim(){
+  simCol.innerHTML = "";
+  DECISIONS.forEach(function(d){
+    var card = document.createElement("div");
+    card.className = "dcard";
+    var opts = d.options.map(function(o,oi){
+      var sel = (choices[d.id]===oi);
+      return '<button class="opt'+(sel?' sel':'')+'" data-d="'+d.id+'" data-o="'+oi+'">'+o.label+'</button>';
+    }).join("");
+    var tagRow = d.units.map(function(u){return '<span class="utag" style="background:'+uColor(u)+';font-size:10.5px">'+uShort(u)+'</span>';}).join(" ");
+    var det = "";
+    if(choices[d.id]!==undefined){
+      det = '<div class="opt-detail show"><span class="odh">'+d.options[choices[d.id]].label+'</span>'+d.options[choices[d.id]].detail+'</div>';
+    }
+    card.innerHTML = '<div class="dphase">'+d.phase+'</div><h4>'+d.q+'</h4>'+
+      '<p class="dnote">'+d.note+'</p><div class="opts">'+opts+'</div>'+det+
+      '<div class="unit-tags" style="margin-top:11px">'+tagRow+'</div>';
+    simCol.appendChild(card);
+  });
+  simCol.querySelectorAll(".opt").forEach(function(b){
+    b.addEventListener("click", function(){
+      pickOption(b.getAttribute("data-d"), parseInt(b.getAttribute("data-o"),10));
+    });
+  });
+}
+function pickOption(did, oi){
+  choices[did] = oi;
+  recomputeUnits();
+  renderSim();
+  renderTracker();
+  updateBriefBtn();
+}
+function recomputeUnits(){
+  litUnits = {};
+  DECISIONS.forEach(function(d){
+    if(choices[d.id]!==undefined){ d.units.forEach(function(u){ litUnits[u]=true; }); }
+  });
+}
+function renderTracker(){
+  trackList.innerHTML = UNITS.map(function(u){
+    var lit = !!litUnits[u.id];
+    return '<div class="uitem'+(lit?' lit':'')+'">'+
+      '<span class="udot" style="'+(lit?'background:'+u.color:'')+'"></span>'+
+      '<span class="uname">'+u.name+'</span><span class="ucheck">✓</span></div>';
+  }).join("");
+  var litCount = Object.keys(litUnits).length;
+  trackProg.style.width = Math.round(litCount/UNITS.length*100)+"%";
+}
+function madeAll(){ return DECISIONS.every(function(d){ return choices[d.id]!==undefined; }); }
+function updateBriefBtn(){ briefBtn.disabled = !madeAll(); }
+
+document.getElementById("drawBtn").addEventListener("click", function(){
+  choices["disaster"] = Math.floor(Math.random()*DECISIONS[0].options.length);
+  choices["region"] = Math.floor(Math.random()*DECISIONS[1].options.length);
+  recomputeUnits(); renderSim(); renderTracker(); updateBriefBtn();
+  simCol.scrollIntoView({behavior:"smooth", block:"start"});
+});
+document.getElementById("simReset").addEventListener("click", function(){
+  choices = {}; litUnits = {};
+  renderSim(); renderTracker(); updateBriefBtn();
+  briefing.classList.remove("show");
+});
+briefBtn.addEventListener("click", function(){
+  var pick = function(id){ return DECISIONS.filter(function(d){return d.id===id;})[0].options[choices[id]].label; };
+  var rows = [
+    ["Disaster (spread)", pick("disaster")],
+    ["Starting region", pick("region")],
+    ["Route stop 1", pick("stop1")],
+    ["Route stop 2", pick("stop2")],
+    ["Government", pick("gov")],
+    ["Economic system", pick("econ")],
+    ["Culture", pick("culture")],
+    ["Sustainability", pick("sustain")]
+  ];
+  var allLit = Object.keys(litUnits).length === UNITS.length;
+  briefing.innerHTML = '<h3>🧭 Mission briefing — your group\'s survival plan</h3>'+
+    rows.map(function(r){return '<div class="brow"><span class="bk">'+r[0]+'</span><span class="bv">'+r[1]+'</span></div>';}).join("")+
+    '<div class="bmsg">'+(allLit
+      ? '<b>Full synthesis achieved.</b> Your eight choices applied all seven APHG units plus supporting physical geography — exactly what this capstone is designed to pull together.'
+      : 'Some units aren\'t lit yet — revisit the decisions above to exercise every APHG unit.')+'</div>';
+  briefing.classList.add("show");
+  briefing.scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+
+renderSim();
+renderTracker();
+</script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spatial-Question Authoring Tool — Jo, Bednarz &amp; Metoyer (2010) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:32px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:720px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:23px;font-weight:800;line-height:1.05;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:800px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* tool */
+  .tool{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+  @media(max-width:820px){.tool{grid-template-columns:1fr}}
+  .tool-left{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .examples{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .exbtn{border:1.5px solid var(--hair);background:#fff;border-radius:999px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);color:var(--ink)}
+  .exbtn:hover{border-color:var(--blue)}
+  .qbox{width:100%;border:1.5px solid var(--hair);border-radius:11px;padding:12px 14px;font-size:15px;font-family:var(--font);
+    color:var(--ink);resize:vertical;min-height:62px;margin-bottom:18px}
+  .qbox:focus{outline:none;border-color:var(--blue)}
+  .dim{margin-bottom:16px}
+  .dim > label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);display:block;margin-bottom:7px}
+  .opts{display:flex;gap:7px;flex-wrap:wrap}
+  .opt{border:1.5px solid var(--hair);background:#fff;border-radius:9px;padding:8px 13px;font-size:13px;font-weight:700;cursor:pointer;
+    font-family:var(--font);color:var(--ink);transition:.12s;text-align:left}
+  .opt:hover{border-color:var(--blue)}
+  .opt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .opt small{display:block;font-weight:600;font-size:10.5px;opacity:.75;margin-top:1px}
+
+  /* result panel */
+  .result{background:linear-gradient(160deg,#0f2b52,#1d4b8f);color:#fff;border-radius:var(--radius);padding:22px;position:sticky;top:16px}
+  .cellbig{text-align:center;margin-bottom:14px}
+  .cellbig .cn{font-size:13px;color:#bcd2ef;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  .cellbig .cv{font-size:46px;font-weight:800;line-height:1}
+  .verdict{text-align:center;font-size:14px;font-weight:800;padding:8px 12px;border-radius:10px;margin-bottom:16px}
+  .verdict.full{background:rgba(84,217,84,.2);color:#d9ffd9;border:1px solid rgba(84,217,84,.5)}
+  .verdict.part{background:rgba(237,161,0,.22);color:#ffe6ac;border:1px solid rgba(237,161,0,.5)}
+  .verdict.min{background:rgba(235,104,52,.22);color:#ffd6c4;border:1px solid rgba(235,104,52,.5)}
+  .comp{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+  .comp-row{display:flex;align-items:center;gap:10px;font-size:13.5px;background:rgba(255,255,255,.08);border-radius:9px;padding:9px 12px}
+  .comp-row .mk{font-weight:800;font-size:15px}
+  .comp-row.on .mk{color:#54d954} .comp-row.off .mk{color:#ff9d7a}
+  .comp-row.off{opacity:.72}
+  .tips{font-size:13px;background:rgba(255,255,255,.09);border-radius:10px;padding:12px 14px}
+  .tips b{display:block;margin-bottom:5px;color:#cfe0f5}
+  .tips ul{margin:0;padding-left:18px}
+  .tips li{margin-bottom:5px}
+  .tips .allgood{color:#d9ffd9;font-weight:700}
+
+  /* 24-cell grid */
+  .cells{overflow-x:auto}
+  .cells table{border-collapse:separate;border-spacing:5px;min-width:560px;width:100%}
+  .cells th{font-size:11px;color:var(--sub);font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:4px;text-align:center;vertical-align:bottom}
+  .cells .rh{font-size:12px;font-weight:800;text-align:right;padding-right:8px;white-space:nowrap;color:var(--ink)}
+  .cells td.cell{width:70px;height:46px;text-align:center;border-radius:9px;background:#eef1f7;border:1.5px solid var(--hair);
+    font-weight:800;font-size:15px;color:var(--sub);position:relative}
+  .cells td.cell.complete{background:rgba(0,131,0,.12);border-color:rgba(0,131,0,.4);color:var(--green)}
+  .cells td.cell.current{outline:3px solid var(--ink);outline-offset:1px;color:var(--ink)}
+  .cells td.cell.complete.current{color:var(--green)}
+  .grid-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12.5px}
+  .grid-legend span{display:inline-flex;align-items:center;gap:6px}
+  .grid-legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+
+  /* design panel */
+  .design{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px}
+  .design .cluster{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .clbox{border:1.5px solid rgba(0,131,0,.4);background:rgba(0,131,0,.07);border-radius:11px;padding:12px 16px;flex:1 1 150px}
+  .clbox .cnum{font-size:22px;font-weight:800;color:var(--green)}
+  .clbox p{margin:4px 0 0;font-size:12.5px;color:var(--sub)}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>Spatial-Question Authoring Tool</h1>
+    <p class="lede">Not every question makes students think spatially. This tool applies Jo's taxonomy to any question — scoring it on the three components of spatial thinking, placing it in one of 24 cells, and showing exactly how to make it more spatial. Draft a question, code it, and improve it.</p>
+    <span class="built-tag"><span class="dot"></span>Instrument she built &nbsp;·&nbsp; Jo, Bednarz &amp; Metoyer (2010), using the 2009 Taxonomy</span>
+    <div class="chips">
+      <div class="chip"><span class="n">24</span><span class="l">taxonomy cells</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">spatial-thinking components</span></div>
+      <div class="chip"><span class="n">4</span><span class="l">concept levels</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">cognitive levels</span></div>
+      <div class="chip"><span class="n">6</span><span class="l">fully-spatial cells</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = tool &amp; taxonomy Jo <b>built</b></span>
+    <span>Three components: concepts of space · tools of representation · processes of reasoning</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>Why not just Bloom's Taxonomy?</h2></div>
+    <p class="sec-intro">Questions are a teacher's most everyday tool — but not all questions make students <em>think</em>, and fewer make them think <em>spatially</em>. Bloom's Taxonomy helps push questions toward higher-order thinking, but it's blind to two of the three pillars of spatial thinking: <strong>knowing spatial concepts</strong> and <strong>using tools of representation</strong>. The 2009 Taxonomy of Spatial Thinking fixes that by scoring a question on all three components at once, and it's the engine behind the tool below.</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Score a question</h2></div>
+    <p class="sec-intro">Type a question (or load an example), then code it on the three dimensions. The tool computes its cell (1–24), checks which spatial-thinking components it engages, and suggests how to strengthen it.</p>
+
+    <div class="tool">
+      <div class="tool-left">
+        <div class="examples" id="examples"></div>
+        <textarea class="qbox" id="qbox" placeholder="Type or paste a question…">Define natural vegetation.</textarea>
+
+        <div class="dim"><label>1 · Concept of space</label><div class="opts" id="optConcept"></div></div>
+        <div class="dim"><label>2 · Tools of representation</label><div class="opts" id="optRep"></div></div>
+        <div class="dim"><label>3 · Cognitive process (Costa)</label><div class="opts" id="optCog"></div></div>
+      </div>
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>The 24 cells</h2></div>
+    <p class="sec-intro">Every question lands in one of 24 cells — 4 concept levels × 2 representation options × 3 cognitive levels. The <strong>six green cells</strong> engage all three components of spatial thinking (a spatial concept + a representation + reasoning-level cognition). Your current question is outlined.</p>
+    <div class="cells"><table id="cellTable"></table></div>
+    <div class="grid-legend">
+      <span><i style="background:rgba(0,131,0,.2);border:1.5px solid rgba(0,131,0,.4)"></i> Fully-integrated spatial-thinking cell</span>
+      <span><i style="background:#eef1f7;border:1.5px solid var(--hair)"></i> Incomplete (one or two components)</span>
+      <span><i style="background:#fff;border:3px solid var(--ink)"></i> Your current question</span>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Also a design tool — matched pre/post questions</h2></div>
+    <p class="sec-intro">Beyond scoring existing questions, the taxonomy helps <em>design</em> new ones of equal difficulty. In one author's pre-test/post-test study on <em>central place theory</em> — comparing dynamic GIS maps against paper maps — questions were deliberately clustered in the hardest cells so that matched pre- and post-questions shared a cell number without simply repeating, and to avoid ceiling effects (perfect pre-test scores that could only fall).</p>
+    <div class="design">
+      <p style="margin:0;font-size:14px">Questions were clustered among these high-difficulty cells (complex-spatial concept + a map):</p>
+      <div class="cluster">
+        <div class="clbox"><span class="cnum">Cell 22</span><p>Complex-spatial · uses a map · input-level</p></div>
+        <div class="clbox"><span class="cnum">Cell 23</span><p>Complex-spatial · uses a map · processing-level</p></div>
+        <div class="clbox"><span class="cnum">Cell 24</span><p>Complex-spatial · uses a map · output-level</p></div>
+      </div>
+      <p style="margin:0;font-size:13px;color:var(--sub)">Same cell number → comparable content, representation, and difficulty, without asking the identical question twice.</p>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>The cell numbers are exact; a couple of examples are paraphrased</h4>
+      <p>The 24-cell numbering here is reconstructed from the paper's own four worked examples (Cell 1, 19, 10, 24) and reproduces them exactly. The example questions "Define natural vegetation" and "Define population density" are the paper's; the map-based examples paraphrase the Figure&nbsp;1 items the text <em>describes</em> (location on a map → Cell 10; distribution on a map → Cell 24), since the figure's exact wording isn't in the article text. The "fully-integrated" (green) set follows the paper's stated principle — a spatial concept + a representation + reasoning-level (processing/output) cognition — as Figure&nbsp;2's exact coloring isn't reproduced here.</p>
+    </div>
+    <div class="callout">
+      <h4>A tool, honestly scoped</h4>
+      <p>Coding a real question still takes judgment — a question can touch more than one concept, and "which cognitive level" depends on what students have already been taught (recalling a definition is input; deriving it fresh is higher). The taxonomy is a lens for deliberate design, not an automatic grader. And gray cells aren't "bad" — recall and single-component questions are necessary scaffolding; the point is to make sure students also meet fully-integrated spatial questions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Jo, I., Bednarz, S., &amp; Metoyer, S. (2010). Selecting and Designing Questions to Facilitate Spatial Thinking. <em>The Geography Teacher, 7</em>(2), 49–55.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/19338341.2010.510779" target="_blank" rel="noopener">10.1080/19338341.2010.510779</a></p>
+    <p class="small" style="color:#8b98af">Taxonomy: Jo, I., &amp; Bednarz, S.&nbsp;W. (2009), <em>Journal of Geography</em> 108, 4–13. Cognitive-process levels after Costa (2001); concept categories after Golledge (1995, 2002). Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+var CONCEPTS = [
+  {id:"nonspatial", name:"Non-spatial", ex:"GNP, population, hazards", idx:0, spatial:false},
+  {id:"primitive", name:"Spatial primitive", ex:"location, identity, magnitude", idx:1, spatial:true},
+  {id:"simple", name:"Simple-spatial", ex:"distance, direction", idx:2, spatial:true},
+  {id:"complex", name:"Complex-spatial", ex:"network, hierarchy, distribution, density", idx:3, spatial:true}
+];
+var REPS = [
+  {id:"nonuse", name:"Non-use", ex:"no map/graph needed", idx:0, uses:false},
+  {id:"use", name:"Use", ex:"map, graph, diagram", idx:1, uses:true}
+];
+var COGS = [
+  {id:"input", name:"Input", ex:"recall, define, identify, list", idx:0, reasons:false},
+  {id:"processing", name:"Processing", ex:"analyze, classify, explain, compare", idx:1, reasons:true},
+  {id:"output", name:"Output", ex:"evaluate, generalize, create", idx:2, reasons:true}
+];
+
+var EXAMPLES = [
+  {label:"“Define natural vegetation.”", q:"Define natural vegetation.", concept:"nonspatial", rep:"nonuse", cog:"input", real:true},
+  {label:"“Define population density.”", q:"Define population density.", concept:"complex", rep:"nonuse", cog:"input", real:true},
+  {label:"Locate on a map (paraphrase)", q:"Using the map, identify the location of the capital city.", concept:"primitive", rep:"use", cog:"input", real:false},
+  {label:"Distribution on a map (paraphrase)", q:"Using the map, generalize the distribution pattern of population and suggest why it occurs.", concept:"complex", rep:"use", cog:"output", real:false}
+];
+
+var sel = {concept:"nonspatial", rep:"nonuse", cog:"input"};
+
+function byId(arr,id){ return arr.filter(function(x){return x.id===id;})[0]; }
+function cellNumber(){
+  return byId(CONCEPTS,sel.concept).idx*6 + byId(REPS,sel.rep).idx*3 + byId(COGS,sel.cog).idx + 1;
+}
+function completeSet(){
+  // spatial concept + use + (processing|output)
+  var s=[];
+  CONCEPTS.forEach(function(c){ if(!c.spatial) return;
+    REPS.forEach(function(r){ if(!r.uses) return;
+      COGS.forEach(function(g){ if(!g.reasons) return;
+        s.push(c.idx*6 + r.idx*3 + g.idx + 1);
+      });
+    });
+  });
+  return s;
+}
+var COMPLETE = completeSet();
+
+function renderOpts(){
+  document.getElementById("optConcept").innerHTML = CONCEPTS.map(function(c){
+    return '<button class="opt'+(sel.concept===c.id?' on':'')+'" data-d="concept" data-id="'+c.id+'">'+c.name+'<small>'+c.ex+'</small></button>';
+  }).join("");
+  document.getElementById("optRep").innerHTML = REPS.map(function(r){
+    return '<button class="opt'+(sel.rep===r.id?' on':'')+'" data-d="rep" data-id="'+r.id+'">'+r.name+'<small>'+r.ex+'</small></button>';
+  }).join("");
+  document.getElementById("optCog").innerHTML = COGS.map(function(g){
+    return '<button class="opt'+(sel.cog===g.id?' on':'')+'" data-d="cog" data-id="'+g.id+'">'+g.name+'<small>'+g.ex+'</small></button>';
+  }).join("");
+  document.querySelectorAll(".opt").forEach(function(b){
+    b.addEventListener("click", function(){ sel[b.getAttribute("data-d")]=b.getAttribute("data-id"); update(); });
+  });
+}
+
+function update(){
+  renderOpts();
+  var n=cellNumber();
+  var cConcept=byId(CONCEPTS,sel.concept), cRep=byId(REPS,sel.rep), cCog=byId(COGS,sel.cog);
+  var e1=cConcept.spatial, e2=cRep.uses, e3=cCog.reasons;
+  var count=(e1?1:0)+(e2?1:0)+(e3?1:0);
+  var vClass = count===3?"full":count>=2?"part":"min";
+  var vText = count===3?"Fully-integrated spatial question":count===2?"Partially spatial (2 of 3)":count===1?"Minimally spatial (1 of 3)":"Not a spatial-thinking question";
+  var tips=[];
+  if(!e1) tips.push("Swap the non-spatial concept for a spatial one (location, distance, region, distribution…) so students reason about space.");
+  if(!e2) tips.push("Add a <b>map, graph, or diagram</b> the student must read or create.");
+  if(!e3) tips.push("Raise the cognitive demand from recall to <b>processing</b> (compare, explain) or <b>output</b> (evaluate, generalize, design).");
+  var tipsHtml = tips.length ? '<ul>'+tips.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul>' : '<span class="allgood">✓ This question engages all three components — a model spatial-thinking question.</span>';
+
+  document.getElementById("result").innerHTML =
+    '<div class="cellbig"><span class="cn">Taxonomy cell</span><span class="cv">'+n+'</span><span class="cn">of 24</span></div>'+
+    '<div class="verdict '+vClass+'">'+vText+'</div>'+
+    '<div class="comp">'+
+      compRow("Concept of space", e1, cConcept.name)+
+      compRow("Tools of representation", e2, cRep.name)+
+      compRow("Processes of reasoning", e3, cCog.name)+
+    '</div>'+
+    '<div class="tips"><b>How to strengthen it</b>'+tipsHtml+'</div>';
+  renderCells(n);
+}
+function compRow(label, on, val){
+  return '<div class="comp-row '+(on?'on':'off')+'"><span class="mk">'+(on?'✓':'✗')+'</span><span>'+label+' <span style="opacity:.7">· '+val+'</span></span></div>';
+}
+
+/* 24-cell grid */
+function renderCells(current){
+  var cols = [
+    {r:"nonuse",g:"input",lab:"No rep · Input"},{r:"nonuse",g:"processing",lab:"No rep · Proc."},{r:"nonuse",g:"output",lab:"No rep · Output"},
+    {r:"use",g:"input",lab:"Use · Input"},{r:"use",g:"processing",lab:"Use · Proc."},{r:"use",g:"output",lab:"Use · Output"}
+  ];
+  var head='<tr><th></th>'+cols.map(function(c){return '<th>'+c.lab+'</th>';}).join("")+'</tr>';
+  var rows=CONCEPTS.map(function(cn){
+    var tds=cols.map(function(c){
+      var num=cn.idx*6 + byId(REPS,c.r).idx*3 + byId(COGS,c.g).idx + 1;
+      var cls="cell"+(COMPLETE.indexOf(num)>=0?" complete":"")+(num===current?" current":"");
+      return '<td class="'+cls+'">'+num+'</td>';
+    }).join("");
+    return '<tr><td class="rh">'+cn.name+'</td>'+tds+'</tr>';
+  }).join("");
+  document.getElementById("cellTable").innerHTML = head+rows;
+}
+
+/* examples */
+document.getElementById("examples").innerHTML = EXAMPLES.map(function(e,i){
+  return '<button class="exbtn" data-i="'+i+'">'+e.label+'</button>';
+}).join("");
+document.querySelectorAll("#examples .exbtn").forEach(function(b){
+  b.addEventListener("click", function(){
+    var e=EXAMPLES[parseInt(b.getAttribute("data-i"),10)];
+    document.getElementById("qbox").value=e.q;
+    sel={concept:e.concept, rep:e.rep, cog:e.cog};
+    update();
+  });
+});
+
+renderOpts();
+update();
+</script>
+</body>
+</html>

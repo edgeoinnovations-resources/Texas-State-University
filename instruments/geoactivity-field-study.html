@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoActivity Types in APHG: Field Study — Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+  /* HERO */
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .hero .wrap{position:relative}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:34px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:680px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:118px}
+  .chip .n{font-size:24px;font-weight:800;line-height:1;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  /* SECTIONS */
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:760px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+
+  /* APPROACH PROGRESSION */
+  .prog{display:flex;gap:10px;margin:6px 0 30px;flex-wrap:wrap}
+  .prog-step{flex:1 1 200px;border-radius:12px;padding:14px 16px;background:var(--card);box-shadow:var(--shadow);
+    border-top:4px solid var(--hair);position:relative}
+  .prog-step h4{margin:0 0 4px;font-size:15px}
+  .prog-step p{margin:0;font-size:13px;color:var(--sub)}
+  .prog-step .arrow{position:absolute;right:-13px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--sub);z-index:2}
+  .prog-step:last-child .arrow{display:none}
+
+  /* COMPARATOR */
+  .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px}
+  .filters .fl-label{font-size:12.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-right:2px}
+  .fbtn{border:1px solid var(--hair);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;
+    font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:.15s}
+  .fbtn:hover{border-color:var(--blue)}
+  .fbtn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .fs-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 18px 16px;
+    cursor:pointer;border:2px solid transparent;transition:.15s;position:relative;overflow:hidden}
+  .fs-card:hover{transform:translateY(-2px)}
+  .fs-card.sel{border-color:var(--green)}
+  .fs-card .type-pill{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;color:#fff;margin-bottom:9px}
+  .fs-card h3{margin:0 0 7px;font-size:16.5px;line-height:1.25}
+  .fs-card .meta{font-size:12.5px;color:var(--sub);display:flex;flex-wrap:wrap;gap:4px 14px}
+  .fs-card .meta b{color:var(--ink);font-weight:600}
+  .fs-card.hidden{display:none}
+
+  /* DETAIL PANEL */
+  .detail{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-top:16px;
+    border-left:5px solid var(--green);padding:22px 24px;min-height:120px}
+  .detail .d-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .detail h3{margin:0 0 3px;font-size:19px}
+  .detail .d-sub{font-size:13px;color:var(--sub);margin:0}
+  .detail .d-attrs{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 16px}
+  .d-attr{background:var(--bg);border:1px solid var(--hair);border-radius:10px;padding:8px 12px;font-size:12.5px}
+  .d-attr .k{display:block;color:var(--sub);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+  .d-attr .v{font-weight:700}
+  .detail h5{margin:16px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--green)}
+  .detail p{margin:0 0 10px;font-size:14.5px}
+  .detail ul{margin:6px 0 10px;padding-left:20px;font-size:14px}
+  .detail li{margin-bottom:5px}
+  .placeholder{color:var(--sub);font-style:italic;padding:20px 0}
+
+  /* MATCH CHALLENGE */
+  .match-box{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+  .scenario{font-size:16px;font-weight:600;background:var(--bg);border-radius:10px;padding:16px 18px;margin-bottom:16px;border-left:4px solid var(--yellow)}
+  .scenario .stag{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--yellow);display:block;margin-bottom:6px}
+  .opts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .opt{border:1.5px solid var(--hair);background:#fff;border-radius:11px;padding:13px 15px;text-align:left;cursor:pointer;
+    font-family:var(--font);font-size:14px;font-weight:600;color:var(--ink);transition:.12s}
+  .opt:hover:not(:disabled){border-color:var(--blue)}
+  .opt:disabled{cursor:default}
+  .opt.correct{border-color:var(--green);background:rgba(0,131,0,.08)}
+  .opt.wrong{border-color:var(--orange);background:rgba(235,104,52,.08)}
+  .fb{margin-top:15px;font-size:14.5px;padding:14px 16px;border-radius:10px;display:none}
+  .fb.show{display:block}
+  .fb.ok{background:rgba(0,131,0,.09);border:1px solid rgba(0,131,0,.3)}
+  .fb.no{background:rgba(235,104,52,.09);border:1px solid rgba(235,104,52,.3)}
+  .match-nav{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+  .qcount{font-size:13px;color:var(--sub);font-weight:600}
+  .btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:700;
+    cursor:pointer;font-family:var(--font);transition:.15s}
+  .btn:hover{background:#2568bd}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+  .btn.ghost:hover{background:rgba(42,120,214,.08)}
+
+  /* RUBRIC GRADER */
+  .grader{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+  .essay-pick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .essay-tab{border:1.5px solid var(--hair);background:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700;
+    cursor:pointer;font-family:var(--font);color:var(--ink)}
+  .essay-tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+  .essay-body{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:18px 20px;margin-bottom:8px}
+  .essay-body .etag{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin-bottom:8px;display:block}
+  .essay-body h4{margin:0 0 8px;font-size:15px}
+  .essay-body p{margin:0 0 9px;font-size:14px;line-height:1.6}
+  .essay-body p:last-child{margin-bottom:0}
+  .illus-note{font-size:12px;color:var(--sub);font-style:italic;margin:8px 0 22px}
+
+  .crit-block{margin-bottom:22px}
+  .crit-block > h4{margin:0 0 3px;font-size:16px}
+  .crit-block > .cdesc{margin:0 0 12px;font-size:13px;color:var(--sub)}
+  .levels{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .level{border:1.5px solid var(--hair);border-radius:11px;padding:11px 11px 12px;cursor:pointer;background:#fff;transition:.12s;font-size:12px}
+  .level:hover{border-color:var(--blue)}
+  .level.picked{border-color:var(--green);background:rgba(0,131,0,.06);box-shadow:0 0 0 1px var(--green) inset}
+  .level.model{outline:2px dashed var(--yellow);outline-offset:2px}
+  .level .lv-name{font-weight:800;font-size:12.5px;display:block;margin-bottom:6px}
+  .level ul{margin:0;padding-left:15px}
+  .level li{margin-bottom:5px;line-height:1.4}
+  @media(max-width:760px){.levels{grid-template-columns:1fr 1fr}.grid,.opts{grid-template-columns:1fr}.hero h1{font-size:27px}}
+
+  .result-panel{margin-top:8px;background:linear-gradient(160deg,#0f2b52,#1d4b8f);color:#fff;border-radius:var(--radius);padding:22px 24px;display:none}
+  .result-panel.show{display:block}
+  .result-panel h4{margin:0 0 14px;font-size:16px}
+  .res-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.15);font-size:14.5px}
+  .res-row:last-of-type{border-bottom:0}
+  .res-row .yours{font-weight:800}
+  .res-row .model{color:#cfe0f5;font-size:13px}
+  .res-tally{margin-top:14px;font-size:13.5px;color:#dbe8fa;background:rgba(255,255,255,.09);border-radius:10px;padding:11px 14px}
+  .match-badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;margin-left:8px}
+  .match-badge.same{background:#54d954;color:#083b08}
+  .match-badge.diff{background:var(--yellow);color:#4a3200}
+
+  /* CALLOUTS */
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  /* SOURCES */
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 20px;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .small{font-size:12.5px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>GeoActivity Types in APHG: Field Study</h1>
+    <p class="lede">Four local field studies for ninth-grade AP Human Geography — plus the two-criteria reflection rubric used to grade them. Click through the designs, match a scenario to the right approach, and grade sample essays against the real rubric.</p>
+    <span class="built-tag"><span class="dot"></span>Instrument she built &nbsp;·&nbsp; Huh, Crane, Loux, Hong &amp; Jo (2022)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">4</span><span class="l">field-study designs</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">approach types</span></div>
+      <div class="chip"><span class="n">2</span><span class="l">rubric criteria</span></div>
+      <div class="chip"><span class="n">5</span><span class="l">rating levels</span></div>
+      <div class="chip"><span class="n">6</span><span class="l">APHG units touched</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend" style="margin-top:22px">
+    <span><i style="background:var(--green)"></i> Green = instrument Jo <b>built</b></span>
+    <span><i style="background:var(--blue)"></i> Blue = Observation</span>
+    <span><i style="background:var(--yellow)"></i> Yellow = Investigation</span>
+    <span><i style="background:var(--orange)"></i> Orange = Inquiry</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this instrument is</h2></div>
+    <p class="sec-intro">This is the third of six papers in the 2022 <em>Geography Teacher</em> symposium on "GeoActivity Types in APHG." It documents four real field studies designed and run by two APHG teachers for ninth-graders, organized around Rice &amp; Bulman's (2001) idea that fieldwork moves through three progressive approaches. The paper's contribution is a design comparator (Table 1) and a reflection-essay rubric (Table 2) — both reproduced faithfully below.</p>
+
+    <div class="prog">
+      <div class="prog-step" style="border-top-color:var(--blue)">
+        <span class="arrow">→</span>
+        <h4 style="color:var(--blue)">Observation</h4>
+        <p>Teacher-led. Looking, seeing, and listening through guided tours or field demonstrations.</p>
+      </div>
+      <div class="prog-step" style="border-top-color:var(--yellow)">
+        <span class="arrow">→</span>
+        <h4 style="color:#b57c00">Investigation</h4>
+        <p>More student-directed. Examination and measurement of a chosen site.</p>
+      </div>
+      <div class="prog-step" style="border-top-color:var(--orange)">
+        <h4 style="color:var(--orange)">Inquiry</h4>
+        <p>Most student-directed. Open-ended questions, hypothesis testing, a culminating product.</p>
+      </div>
+    </div>
+    <p class="small">Rice &amp; Bulman (2001), after Bland et&nbsp;al. (1996). The four designs below deliberately span this progression — two Observation, one Investigation, one Inquiry.</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Field-study design comparator</h2></div>
+    <p class="sec-intro">Click any design to open its full plan — the APHG unit, time, geographic field, approach type, and how it actually runs from prep to product. Filter by approach type to see the progression.</p>
+
+    <div class="filters">
+      <span class="fl-label">Approach:</span>
+      <button class="fbtn active" data-filter="all">All four</button>
+      <button class="fbtn" data-filter="Observation">Observation</button>
+      <button class="fbtn" data-filter="Investigation">Investigation</button>
+      <button class="fbtn" data-filter="Inquiry">Inquiry</button>
+    </div>
+
+    <div class="grid" id="fsGrid"></div>
+    <div class="detail" id="fsDetail">
+      <p class="placeholder">Select a field study above to see its full design.</p>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Match the scenario to the design</h2></div>
+    <p class="sec-intro">A teacher describes what they want students to do. Which of the four field studies fits? Each scenario is drawn from the paper's own descriptions of unit, scale, and approach.</p>
+    <div class="match-box" id="matchBox"></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Reflection-essay rubric grader</h2></div>
+    <p class="sec-intro">After the <em>Visiting Religious Communities</em> field study, students write a 350–500-word reflection essay, graded on Table&nbsp;2's rubric: two criteria — <b>Reaction/Response</b> and <b>Completion</b> — each rated on five levels. Pick a sample essay, choose the level you'd award for each criterion, then reveal how the rubric's indicators point to a grade.</p>
+
+    <div class="grader">
+      <div class="essay-pick" id="essayPick"></div>
+      <div class="essay-body" id="essayBody"></div>
+      <p class="illus-note" id="illusNote"></p>
+
+      <div class="crit-block">
+        <h4>Criterion A · Reaction / Response</h4>
+        <p class="cdesc">Depth of thinking, organization, use of reasoning moves (compare/contrast, analogy, counterfactual, counterargument, cause/effect, connections), and use of evidence from readings, lecture, discussion, and the field study.</p>
+        <div class="levels" id="levelsA"></div>
+      </div>
+
+      <div class="crit-block">
+        <h4>Criterion B · Completion</h4>
+        <p class="cdesc">Whether the student included field-study photos and clearly covered every part of the assignment.</p>
+        <div class="levels" id="levelsB"></div>
+      </div>
+
+      <div class="match-nav">
+        <button class="btn" id="gradeBtn" disabled>Reveal the grade</button>
+        <button class="btn ghost" id="resetBtn">Reset choices</button>
+      </div>
+
+      <div class="result-panel" id="resultPanel"></div>
+    </div>
+
+    <div class="callout" style="margin-top:20px">
+      <h4>An honest note on scoring</h4>
+      <p>Table&nbsp;2 is a <strong>qualitative</strong> rubric — the five levels (Full marks → Not yet) carry descriptive indicators but the paper assigns them <strong>no point values</strong>. The optional 1–5 tally shown after you grade is added here only as a rough gauge; it is not part of the published instrument.</p>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>What's faithful, and what's illustrative</h2></div>
+    <div class="callout">
+      <h4>Sample essays are original illustrations</h4>
+      <p>The paper does not publish the students' actual reflection essays, and Figures&nbsp;1–2 (a student observation note and a store-layout sketch) are student work that isn't reproduced here. The three essays in the grader are <strong>original samples written for this page</strong> to exercise the rubric — they are not from the study. The rubric criteria, levels, and indicator wording, and all four Table&nbsp;1 design attributes, are reproduced faithfully from the article.</p>
+    </div>
+    <div class="callout">
+      <h4>Scope of the evidence</h4>
+      <p>These are four field studies from <strong>two</strong> APHG teachers, offered as transferable examples rather than an evaluated intervention. The authors themselves note field study "might not directly help students prepare for the content on the APHG exam," locating its value instead in first-hand experience, geographic memory, and skills. No effect sizes or student-outcome statistics are reported in this paper.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Huh, S., Crane, M., Loux, T., Hong, J.&nbsp;E., &amp; Jo, I. (2022). GeoActivity Types in APHG: Field Study. <em>The Geography Teacher, 19</em>(2), 65–70.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/19338341.2022.2042836" target="_blank" rel="noopener">10.1080/19338341.2022.2042836</a></p>
+    <p class="small" style="color:#8b98af">Foundational framework: Rice, G., &amp; Bulman, T. (2001), <em>Fieldwork in the Geography Curriculum</em>, after Bland et&nbsp;al. (1996). Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------- DATA: Table 1 field studies (verbatim attributes) ---------- */
+var TYPE_COLOR = {Observation:"#2a78d6", Investigation:"#eda100", Inquiry:"#eb6834"};
+var STUDIES = [
+  {
+    id:"walk",
+    name:"The Geography of Our School: An Observational School Walk",
+    type:"Observation",
+    unit:"Unit 1 — Thinking Geographically",
+    time:"One class period (90 min)",
+    field:"Around the school campus",
+    scale:"Neighborhood / campus scale",
+    summary:"An entry-level walk that trains students to read a familiar landscape with a geographic eye, and teaches how to record field observations before harder studies.",
+    how:[
+      "Implement in the first or second week of Unit 1.",
+      "Students get an outline map of the campus and are led on a walk, stopping at set locations to record observations and landscapes on their maps.",
+      "Back in class, several students share and compare what they saw at each location — surfacing how different people read the same place differently.",
+      "Teacher directs discussion by grouping observed features under the Five Themes of Geography."
+    ],
+    detailHead:"Five Themes worked example (from the paper)",
+    examples:[
+      "<b>Movement</b> — cars in the parking lot; phones and power lines.",
+      "<b>Human–environment interaction</b> — landscaping.",
+      "<b>Place</b> — school-spirit items.",
+      "<b>Location</b> — the school's address.",
+      "<b>Region</b> — dividing campus into athletics, academics, and administration areas, then analyzing how space changes with each use."
+    ]
+  },
+  {
+    id:"religion",
+    name:"Visiting Religious Communities",
+    type:"Observation",
+    unit:"Unit 3 — Cultural Patterns & Processes (Topics 3.3, 3.7)",
+    time:"One class period (55 min) + one full-day trip",
+    field:"Places of worship in the local community",
+    scale:"Local community scale",
+    summary:"Students study cultural and historical connections between the local community and religious communities through guided visits, then write a graded reflection essay (this is the essay scored in Section 4).",
+    how:[
+      "Foundation lesson: universalizing vs. ethnic religions, hearths of major world religions, and each religion's impact on the cultural landscape.",
+      "In groups of four, students do online research on the sites and prepare interview questions for the religious leaders.",
+      "One-day trip to three sacred sites: a Catholic church, a mosque, and a temple of one of the schools of Hindu philosophy — listening, asking questions, writing notes, and taking photos.",
+      "Homework: a 350–500-word reflection essay connecting the visit to unit content, graded on the Table 2 rubric."
+    ],
+    detailHead:"Sample interview questions students generated",
+    examples:[
+      "What is the relationship between your place of worship and the religion?",
+      "What are common misconceptions people have about your religion?",
+      "How does your religion affect your daily life?",
+      "Do you ever work with other religious leaders?"
+    ]
+  },
+  {
+    id:"mosaic",
+    name:"Cultural Mosaic: Our Diverse Neighbors",
+    type:"Investigation",
+    unit:"Units 2, 3 & 6",
+    time:"One class period each for prep and field study, plus homework",
+    field:"Local ethnic markets",
+    scale:"Community / market scale",
+    summary:"Students investigate an ethnic market as a cultural landscape — analyzing the role it plays in its ethnic community and the wider community — in a setting that is 'familiar and foreign at the same time.'",
+    how:[
+      "Best as an independent or small-group (2–3) activity; the teacher supplies a vetted list of markets whose owners have been contacted in advance.",
+      "Students research the surrounding neighborhood — demographics and socio-economic status — using census data, and reason about why the market is located where it is.",
+      "In the field: complete an observation note (Fig. 1) and sketch the store layout (Fig. 2); note products, packaging, taste preferences, religious/cultural items, and signage (remittance services, calling cards, festival postings).",
+      "After: write an analysis of the market as an ethnic landscape."
+    ],
+    detailHead:"Adapt it when no ethnic market is nearby",
+    examples:[
+      "Visit an ethnic restaurant instead.",
+      "Attend a nearby ethnic festival as a field trip.",
+      "Do it virtually — analyze markets, restaurants, or festivals through their websites."
+    ]
+  },
+  {
+    id:"downtown",
+    name:"Self-Guided Tour of Downtown and the Farmers' Market",
+    type:"Inquiry",
+    unit:"Units 5 & 6",
+    time:"Two- to three-hour trip, plus homework",
+    field:"Downtown and the farmers' market",
+    scale:"Town / urban scale",
+    summary:"A highly student-directed, inquiry-based culminating project for the end of the year — students investigate their town's urban development and local agriculture and build a final media product.",
+    how:[
+      "Groups of 2–3 research the history and development of their downtown, then compare it to the Concentric Zone, Hoyt Sector, and Multiple Nuclei city models to identify the pattern their town followed.",
+      "Use Sanborn fire-insurance maps and current aerial/satellite imagery (Google Maps) to trace how downtown's function and layout changed over time.",
+      "Tour the farmers' market; interview proprietors and the market manager about location, methods, and the market's social, economic, and environmental impact — and wrestle with what 'local' means.",
+      "Final product: a video or an ArcGIS StoryMap explaining the town's urban and agricultural features."
+    ],
+    detailHead:"When there's no farmers' market",
+    examples:[
+      "Substitute another downtown-draw project — an art walk, holiday fair, or summer festival — identified via the chamber of commerce or city government."
+    ]
+  }
+];
+
+/* ---------- Build comparator cards ---------- */
+var fsGrid = document.getElementById("fsGrid");
+var fsDetail = document.getElementById("fsDetail");
+var selectedId = null;
+
+function typePill(type){
+  return '<span class="type-pill" style="background:'+TYPE_COLOR[type]+'">'+type+'</span>';
+}
+
+function renderCards(filter){
+  fsGrid.innerHTML = "";
+  STUDIES.forEach(function(s){
+    var show = (filter==="all" || s.type===filter);
+    var card = document.createElement("div");
+    card.className = "fs-card" + (s.id===selectedId?" sel":"") + (show?"":" hidden");
+    card.innerHTML =
+      typePill(s.type) +
+      '<h3>'+s.name+'</h3>' +
+      '<div class="meta"><span><b>'+s.unit.split(" — ")[0]+'</b></span>'+
+      '<span>'+s.time+'</span></div>';
+    card.addEventListener("click", function(){ selectStudy(s.id); });
+    fsGrid.appendChild(card);
+  });
+}
+
+function selectStudy(id){
+  selectedId = id;
+  var s = STUDIES.filter(function(x){return x.id===id;})[0];
+  document.querySelectorAll(".fs-card").forEach(function(c){c.classList.remove("sel");});
+  renderCards(currentFilter);
+  var attrs =
+    attr("APHG unit", s.unit) +
+    attr("Required time", s.time) +
+    attr("Geographic field", s.field) +
+    attr("Approach type", s.type) +
+    attr("Scale", s.scale);
+  var how = s.how.map(function(h){return "<li>"+h+"</li>";}).join("");
+  var ex = s.examples.map(function(e){return "<li>"+e+"</li>";}).join("");
+  fsDetail.style.borderLeftColor = TYPE_COLOR[s.type];
+  fsDetail.innerHTML =
+    '<div class="d-top"><div><h3>'+s.name+'</h3>'+
+    '<p class="d-sub">'+typePill(s.type)+'</p></div></div>'+
+    '<div class="d-attrs">'+attrs+'</div>'+
+    '<p>'+s.summary+'</p>'+
+    '<h5>How it runs</h5><ul>'+how+'</ul>'+
+    '<h5>'+s.detailHead+'</h5><ul>'+ex+'</ul>';
+  fsDetail.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+function attr(k,v){return '<div class="d-attr"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>';}
+
+var currentFilter = "all";
+document.querySelectorAll(".fbtn").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll(".fbtn").forEach(function(x){x.classList.remove("active");});
+    b.classList.add("active");
+    currentFilter = b.getAttribute("data-filter");
+    renderCards(currentFilter);
+  });
+});
+renderCards("all");
+
+/* ---------- SECTION 3: Match challenge ---------- */
+var SCENARIOS = [
+  {
+    text:"“It's the second week of school. I want my ninth-graders to practice recording observations on a map and to see how the same place can be read differently — without leaving campus.”",
+    answer:"walk",
+    why:"Unit 1, one class period, campus scale, teacher-led observation — the School Walk is the on-ramp designed to teach how to do field study."
+  },
+  {
+    text:"“We're in the culture unit. I want students, in groups, to prepare interview questions, visit three places of worship in one day, and turn in a graded reflection essay.”",
+    answer:"religion",
+    why:"Unit 3, a 55-minute prep period plus a full-day trip to places of worship, ending in the rubric-graded reflection essay — Visiting Religious Communities."
+  },
+  {
+    text:"“I want pairs of students to pick a small local market, use census data on the surrounding neighborhood, sketch the store layout, and analyze it as a cultural landscape.”",
+    answer:"mosaic",
+    why:"Units 2/3/6, a student-directed investigation of local ethnic markets with an observation note and layout sketch — the Cultural Mosaic study."
+  },
+  {
+    text:"“End-of-year capstone: groups compare our town to the Concentric Zone and Hoyt models, interview the farmers' market manager, and build an ArcGIS StoryMap.”",
+    answer:"downtown",
+    why:"Units 5/6, a 2–3 hour inquiry culminating in a video or StoryMap, using city models and farmers'-market interviews — the Downtown self-guided tour."
+  }
+];
+var mIdx = 0, mAnswered = false, mScore = 0;
+var matchBox = document.getElementById("matchBox");
+
+function renderScenario(){
+  var sc = SCENARIOS[mIdx];
+  mAnswered = false;
+  var optsHtml = STUDIES.map(function(s){
+    return '<button class="opt" data-id="'+s.id+'">'+s.name+'</button>';
+  }).join("");
+  matchBox.innerHTML =
+    '<div class="scenario"><span class="stag">Scenario '+(mIdx+1)+' of '+SCENARIOS.length+'</span>'+sc.text+'</div>'+
+    '<div class="opts">'+optsHtml+'</div>'+
+    '<div class="fb" id="mfb"></div>'+
+    '<div class="match-nav"><span class="qcount">Score: '+mScore+' / '+SCENARIOS.length+'</span>'+
+    '<button class="btn" id="mNext" disabled>Next scenario →</button></div>';
+  matchBox.querySelectorAll(".opt").forEach(function(o){
+    o.addEventListener("click", function(){ answerScenario(o); });
+  });
+  document.getElementById("mNext").addEventListener("click", nextScenario);
+  if(mIdx===SCENARIOS.length-1){
+    document.getElementById("mNext").textContent = "See final score";
+  }
+}
+function answerScenario(btn){
+  if(mAnswered) return;
+  mAnswered = true;
+  var sc = SCENARIOS[mIdx];
+  var chosen = btn.getAttribute("data-id");
+  var correctName = STUDIES.filter(function(x){return x.id===sc.answer;})[0].name;
+  matchBox.querySelectorAll(".opt").forEach(function(o){
+    o.disabled = true;
+    var id = o.getAttribute("data-id");
+    if(id===sc.answer) o.classList.add("correct");
+    else if(id===chosen) o.classList.add("wrong");
+  });
+  var fb = document.getElementById("mfb");
+  if(chosen===sc.answer){
+    mScore++;
+    fb.className = "fb ok show";
+    fb.innerHTML = "<b>Correct.</b> "+sc.why;
+  } else {
+    fb.className = "fb no show";
+    fb.innerHTML = "<b>Not quite — this is "+correctName+".</b> "+sc.why;
+  }
+  matchBox.querySelector(".qcount").textContent = "Score: "+mScore+" / "+SCENARIOS.length;
+  document.getElementById("mNext").disabled = false;
+}
+function nextScenario(){
+  if(mIdx < SCENARIOS.length-1){
+    mIdx++;
+    renderScenario();
+  } else {
+    matchBox.innerHTML =
+      '<div class="scenario" style="border-left-color:var(--green)"><span class="stag" style="color:var(--green)">Complete</span>'+
+      'You matched <b>'+mScore+' of '+SCENARIOS.length+'</b> scenarios to the right field-study design.</div>'+
+      '<div class="match-nav"><span class="qcount">The four designs deliberately span Observation → Investigation → Inquiry.</span>'+
+      '<button class="btn" id="mRestart">Try again</button></div>';
+    document.getElementById("mRestart").addEventListener("click", function(){
+      mIdx=0; mScore=0; renderScenario();
+    });
+  }
+}
+renderScenario();
+
+/* ---------- SECTION 4: Rubric grader ---------- */
+/* Table 2 indicator text, reproduced faithfully */
+var RUBRIC = {
+  A:{
+    name:"Reaction / Response",
+    levels:[
+      {lv:"Full marks", ind:[
+        "Multi-paragraph response demonstrating in-depth thinking; organized and focused.",
+        "Addresses the task well and uses reasoning moves (compare/contrast, analogy, counterfactual, counterargument, cause/effect, connections).",
+        "Uses evidence from readings, lecture, discussion, and field study; may include minor extra research after the trip.",
+        "Mostly free from errors."
+      ]},
+      {lv:"Proficient", ind:[
+        "Multi-paragraph response demonstrating thinking; organized and mostly focused.",
+        "Addresses the task and mostly develops the thinking, with some reasoning moves.",
+        "Mostly uses evidence from readings, lecture, discussion, and field study.",
+        "Mostly free from errors."
+      ]},
+      {lv:"Average", ind:[
+        "Multi-paragraph response; attempts to demonstrate thinking and reasoning.",
+        "Somewhat organized and focused, with room to develop thinking further.",
+        "Uses some evidence from readings, lecture, discussion, and/or field study.",
+        "Errors may make understanding a little difficult in places."
+      ]},
+      {lv:"Developing", ind:[
+        "Attempts reasoning (analogy, counterfactual, compare/contrast, counterargument).",
+        "Likely not enough here to judge reasoning, or too unorganized to fully understand.",
+        "Not enough effort to incorporate the unit's terms and concepts."
+      ]},
+      {lv:"Not yet", ind:[
+        "Almost no original thinking or reasoning.",
+        "May be too little written to fully assess these criteria."
+      ]}
+    ]
+  },
+  B:{
+    name:"Completion",
+    levels:[
+      {lv:"Full marks", ind:[
+        "Includes photos from the field study.",
+        "Photos and writing make clear the student put maximum effort into all parts of the assignment."
+      ]},
+      {lv:"Proficient", ind:[
+        "Includes photos from the field study.",
+        "Mostly clear the student covered all parts of the assignment."
+      ]},
+      {lv:"Average", ind:[
+        "Includes some photos.",
+        "Somewhat clear the student covered all parts of the assignment."
+      ]},
+      {lv:"Developing", ind:[
+        "Photos might be missing.",
+        "Hard to tell all parts were covered (readings, researching questions, etc.)."
+      ]},
+      {lv:"Not yet", ind:[
+        "Clear that major parts of the assignment were not addressed."
+      ]}
+    ]
+  }
+};
+var LEVEL_ORDER = ["Full marks","Proficient","Average","Developing","Not yet"];
+var LEVEL_SCORE = {"Full marks":5,"Proficient":4,"Average":3,"Developing":2,"Not yet":1};
+
+/* Original illustrative essays (NOT from the study) with intended model grading + rationale */
+var ESSAYS = [
+  {
+    label:"Essay 1 — Strong",
+    title:"Reflection: Visiting Three Places of Worship",
+    modelA:"Full marks", modelB:"Full marks",
+    body:[
+      "Before the trip I assumed a mosque, a Catholic church, and a Hindu temple would feel completely separate, but standing in all three in one day made me see them as answers to the same human question asked in different cultural landscapes. That connects directly to Topic 3.7 on how religion shapes place.",
+      "The clearest contrast was universalizing versus ethnic religion. The imam described active outreach, while the temple's priest talked about traditions carried by a specific community — exactly the distinction from our readings. If the temple served a universalizing religion instead, I'd expect its cultural landscape to look far less tied to one ethnic group, which is a hypothesis I'd like to test at another site.",
+      "One misconception I had — that religious landscapes are fixed — broke down when the church leader explained how the building's use changed with the neighborhood. I took photos of each site's signage to document that. I still wonder how migration patterns from Unit 2 reshaped which of these communities grew fastest."
+    ],
+    rationale:"In-depth, organized, uses compare/contrast, counterfactual, and cause/effect; explicitly cites unit topics and readings; includes photos and covers every part of the task."
+  },
+  {
+    label:"Essay 2 — Middle",
+    title:"Reflection: The Field Trip",
+    modelA:"Average", modelB:"Proficient",
+    body:[
+      "The field trip was interesting and I learned some new things about religions in our area. We went to a church, a mosque, and a temple. Each place looked different and the leaders were friendly and answered our questions.",
+      "I think the most interesting part was learning that some religions try to spread to everyone and some stay within one group. That is like what we talked about in class. The mosque and the church felt more open to new people, and I think the temple was more for one community, but I am not totally sure.",
+      "I added a couple of photos I took. Overall it was a good experience and I would go again. It made me think about how religion is part of the landscape even though I usually do not notice it."
+    ],
+    rationale:"A multi-paragraph response that attempts the universalizing/ethnic distinction but stays surface-level and hedged ('not totally sure'), with only light use of unit terms — Average on Reaction. Photos are included and most parts are covered, though effort is uneven — Proficient on Completion."
+  },
+  {
+    label:"Essay 3 — Weak",
+    title:"Trip Reflection",
+    modelA:"Not yet", modelB:"Developing",
+    body:[
+      "We went on a trip to some religious places. It was fun. The bus ride was long. I liked the temple the most because it was colorful.",
+      "The people were nice. I do not really remember the names of everything but it was cool to see."
+    ],
+    rationale:"Almost no original thinking or reasoning and too little written to assess the criteria — Not yet on Reaction. No photos are mentioned and it's hard to tell the assignment's parts were covered — Developing on Completion."
+  }
+];
+
+var essayIdx = 0;
+var pickA = null, pickB = null;
+var essayPick = document.getElementById("essayPick");
+var essayBody = document.getElementById("essayBody");
+var illusNote = document.getElementById("illusNote");
+var levelsA = document.getElementById("levelsA");
+var levelsB = document.getElementById("levelsB");
+var gradeBtn = document.getElementById("gradeBtn");
+var resetBtn = document.getElementById("resetBtn");
+var resultPanel = document.getElementById("resultPanel");
+
+function renderEssayTabs(){
+  essayPick.innerHTML = ESSAYS.map(function(e,i){
+    return '<button class="essay-tab'+(i===essayIdx?' active':'')+'" data-i="'+i+'">'+e.label+'</button>';
+  }).join("");
+  essayPick.querySelectorAll(".essay-tab").forEach(function(t){
+    t.addEventListener("click", function(){
+      essayIdx = parseInt(t.getAttribute("data-i"),10);
+      pickA = pickB = null;
+      renderAll();
+    });
+  });
+}
+function renderEssayBody(){
+  var e = ESSAYS[essayIdx];
+  essayBody.innerHTML = '<span class="etag">Sample essay · illustration only</span><h4>'+e.title+'</h4>'+
+    e.body.map(function(p){return "<p>"+p+"</p>";}).join("");
+  illusNote.textContent = "This essay was written for this page to exercise the rubric — it is not a student essay from the study.";
+}
+function renderLevels(crit, container, picked){
+  var data = RUBRIC[crit];
+  container.innerHTML = data.levels.map(function(l){
+    var isPicked = (picked===l.lv);
+    return '<div class="level'+(isPicked?' picked':'')+'" data-crit="'+crit+'" data-lv="'+l.lv+'">'+
+      '<span class="lv-name">'+l.lv+'</span><ul>'+
+      l.ind.map(function(x){return "<li>"+x+"</li>";}).join("")+
+      '</ul></div>';
+  }).join("");
+  container.querySelectorAll(".level").forEach(function(el){
+    el.addEventListener("click", function(){
+      var lv = el.getAttribute("data-lv");
+      if(crit==="A") pickA = lv; else pickB = lv;
+      renderLevels("A", levelsA, pickA);
+      renderLevels("B", levelsB, pickB);
+      gradeBtn.disabled = !(pickA && pickB);
+    });
+  });
+}
+function renderAll(){
+  renderEssayTabs();
+  renderEssayBody();
+  renderLevels("A", levelsA, pickA);
+  renderLevels("B", levelsB, pickB);
+  gradeBtn.disabled = !(pickA && pickB);
+  resultPanel.classList.remove("show");
+}
+gradeBtn.addEventListener("click", function(){
+  var e = ESSAYS[essayIdx];
+  var sameA = (pickA===e.modelA), sameB = (pickB===e.modelB);
+  var yourTally = LEVEL_SCORE[pickA] + LEVEL_SCORE[pickB];
+  var modelTally = LEVEL_SCORE[e.modelA] + LEVEL_SCORE[e.modelB];
+  resultPanel.innerHTML =
+    '<h4>How this essay grades out</h4>'+
+    '<div class="res-row"><span>Reaction / Response</span>'+
+      '<span class="yours">You: '+pickA+' <span class="match-badge '+(sameA?'same':'diff')+'">'+(sameA?'matches':'differs')+'</span></span></div>'+
+    '<div class="res-row"><span class="model">Rubric-suggested level</span><span class="model">'+e.modelA+'</span></div>'+
+    '<div class="res-row"><span>Completion</span>'+
+      '<span class="yours">You: '+pickB+' <span class="match-badge '+(sameB?'same':'diff')+'">'+(sameB?'matches':'differs')+'</span></span></div>'+
+    '<div class="res-row"><span class="model">Rubric-suggested level</span><span class="model">'+e.modelB+'</span></div>'+
+    '<div class="res-tally"><b>Why:</b> '+e.rationale+'</div>'+
+    '<div class="res-tally">Optional 1–5 tally (added here, not in the paper): your grading = <b>'+yourTally+'/10</b>, rubric-suggested = <b>'+modelTally+'/10</b>.</div>';
+  resultPanel.classList.add("show");
+  resultPanel.scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+resetBtn.addEventListener("click", function(){
+  pickA = pickB = null;
+  renderAll();
+});
+renderAll();
+</script>
+</body>
+</html>

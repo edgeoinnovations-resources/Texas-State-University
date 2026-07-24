@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Profile Quadrant Sorter — Jo (2018) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:32px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:720px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:22px;font-weight:800;line-height:1.05;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:800px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* inquiry strip */
+  .arc{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .arc-step{flex:1 1 150px;background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:13px 15px;border-top:4px solid var(--green);position:relative}
+  .arc-step .an{font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.04em}
+  .arc-step h4{margin:3px 0 4px;font-size:14px}
+  .arc-step p{margin:0;font-size:12px;color:var(--sub)}
+
+  /* sorter */
+  .sorter{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .tray-lab{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin-bottom:8px}
+  .tray{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;padding:10px;background:var(--bg);border:1px dashed var(--hair);border-radius:12px;margin-bottom:18px}
+  .cchip{border:1.5px solid var(--hair);background:#fff;border-radius:9px;padding:7px 12px;font-size:13px;font-weight:700;
+    cursor:pointer;font-family:var(--font);color:var(--ink);transition:.12s;display:inline-flex;align-items:center;gap:6px}
+  .cchip:hover{border-color:var(--blue)}
+  .cchip.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .cchip.correct{border-color:var(--green);background:rgba(0,131,0,.1)}
+  .cchip.wrong{border-color:var(--orange);background:rgba(235,104,52,.1)}
+  .cchip .mk{font-size:12px}
+
+  .qgrid-wrap{display:grid;grid-template-columns:34px 1fr 1fr;grid-template-rows:26px 1fr 1fr;gap:8px}
+  .axis-top{grid-column:2 / 4;grid-row:1;display:flex;justify-content:space-around;align-items:center;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub)}
+  .axis-top span{flex:1;text-align:center}
+  .axis-left{grid-column:1;grid-row:2 / 4;writing-mode:vertical-rl;transform:rotate(180deg);display:flex;justify-content:space-around;align-items:center;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub)}
+  .axis-left span{flex:1;text-align:center}
+  .quad{border-radius:12px;padding:12px;min-height:120px;border:2px solid var(--hair);cursor:pointer;transition:.12s;background:#fff}
+  .quad:hover{border-color:var(--blue)}
+  .quad.armed{border-color:var(--ink);box-shadow:0 0 0 2px rgba(26,34,48,.15)}
+  .quad .qh{font-size:12px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .quad.hh{background:rgba(235,104,52,.05);grid-column:2;grid-row:2} .quad.hh .qh{color:var(--orange)}
+  .quad.lh{background:rgba(237,161,0,.06);grid-column:3;grid-row:2} .quad.lh .qh{color:#a97b00}
+  .quad.hl{background:rgba(42,120,214,.05);grid-column:2;grid-row:3} .quad.hl .qh{color:var(--blue)}
+  .quad.ll{background:rgba(0,131,0,.05);grid-column:3;grid-row:3} .quad.ll .qh{color:var(--green)}
+  .quad .drop{display:flex;flex-wrap:wrap;gap:6px}
+  .quad .policy{display:none;margin-top:10px;font-size:12.5px;background:#fff;border:1px solid var(--hair);border-radius:9px;padding:9px 11px}
+  .quad .policy.show{display:block}
+  .quad .policy b{display:block;margin-bottom:3px}
+
+  .sorter-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .btn{background:var(--green);color:#fff;border:0;border-radius:10px;padding:11px 20px;font-size:14px;font-weight:800;
+    cursor:pointer;font-family:var(--font);transition:.15s}
+  .btn:hover{background:#036e03}
+  .btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green)}
+  .btn.ghost:hover{background:rgba(0,131,0,.08)}
+  .btn:disabled{opacity:.4;cursor:default}
+  .sorter-score{display:none;margin-top:16px;background:linear-gradient(160deg,#0f2b52,#1d4b8f);color:#fff;border-radius:12px;padding:16px 20px}
+  .sorter-score.show{display:block}
+  .sorter-score .ss-big{font-size:19px;font-weight:800}
+  .sorter-score p{margin:8px 0 0;font-size:13.5px;color:#cfe0f5}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px}
+
+  /* producers vs consumers */
+  .pc-controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .pcbtn{border:1.5px solid var(--hair);background:#fff;border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;
+    cursor:pointer;font-family:var(--font);color:var(--ink);transition:.12s}
+  .pcbtn:hover{border-color:var(--blue)}
+  .pcbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .pc-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .pc-col h4{margin:0 0 10px;font-size:15px}
+  .pc-list{display:flex;flex-direction:column;gap:5px}
+  .pc-item{display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--hair);transition:.15s}
+  .pc-item .rk{font-weight:800;color:var(--sub);flex:0 0 22px}
+  .pc-item.dim{opacity:.28}
+  .pc-item.hl-both{background:rgba(147,51,234,.1);border-color:#c9a2f0}
+  .pc-item.hl-prod{background:rgba(42,120,214,.12);border-color:#a9cbf2}
+  .pc-item.hl-cons{background:rgba(235,104,52,.12);border-color:#f2c2ab}
+  .pc-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12.5px}
+  .pc-legend span{display:inline-flex;align-items:center;gap:6px}
+  .pc-legend i{width:12px;height:12px;border-radius:3px}
+  .facts{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+  .fact{flex:1 1 220px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-left:4px solid var(--yellow)}
+  .fact .fn{font-size:22px;font-weight:800;color:#a97b00;line-height:1}
+  .fact p{margin:7px 0 0;font-size:13px;color:var(--sub)}
+  @media(max-width:760px){.pc-cols{grid-template-columns:1fr}.hero h1{font-size:25px}}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>Energy Profile Quadrant Sorter</h1>
+    <p class="lede">Why is energy a different problem for Saudi Arabia than for Japan, or for Nigeria than for Germany? This inquiry lesson has students map real energy data, then sort countries by how much energy they <em>use</em> and how much they <em>import</em> — revealing why each group faces a different energy-policy priority.</p>
+    <span class="built-tag"><span class="dot"></span>Instrument she built &nbsp;·&nbsp; Jo (2018), inquiry lesson &amp; framework</span>
+    <div class="chips">
+      <div class="chip"><span class="n">2 × 2</span><span class="l">use × import matrix</span></div>
+      <div class="chip"><span class="n">15</span><span class="l">top oil producers</span></div>
+      <div class="chip"><span class="n">15</span><span class="l">top oil consumers</span></div>
+      <div class="chip"><span class="n">~2 B</span><span class="l">without reliable power</span></div>
+      <div class="chip"><span class="n">45 min</span><span class="l">ArcGIS Online lesson</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = lesson &amp; framework Jo <b>built</b></span>
+    <span>An inquiry lesson: map real data, then reason about energy policy.</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this is</h2></div>
+    <p class="sec-intro">A 45-minute high-school lesson (world geography or AP Human Geography) built around two issues: <strong>fossil-fuel dependency</strong> and <strong>growing energy demand</strong>. Students use ArcGIS Online web maps to examine where energy is produced, consumed, imported, and accessed — aligned to C3 Framework geography standards. It follows the classic geographic-inquiry arc, and the reasoning payoff is the use × import matrix you'll try below.</p>
+    <div class="arc">
+      <div class="arc-step"><span class="an">Ask</span><h4>Frame the questions</h4><p>Does the world have enough energy? What are the major energy issues?</p></div>
+      <div class="arc-step"><span class="an">Acquire</span><h4>Map the data</h4><p>Import per-capita energy-use CSVs; add import, production &amp; access layers.</p></div>
+      <div class="arc-step"><span class="an">Explore</span><h4>Read the patterns</h4><p>Fossil-fuel reliance, oil producers vs. consumers, electricity access.</p></div>
+      <div class="arc-step"><span class="an">Analyze</span><h4>Predict trends</h4><p>Will demand grow? Does it differ by region?</p></div>
+      <div class="arc-step"><span class="an">Answer</span><h4>Weigh policy</h4><p>Implications of demand growth, fossil fuels, and CO₂.</p></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Sort countries by energy use × import</h2></div>
+    <p class="sec-intro">Handout 1 asks: where would you put Saudi Arabia? Norway, Canada, Russia? The US, Germany, France? Click a country, then click the quadrant you'd place it in — <strong>energy use per capita</strong> across the top, <strong>net energy import</strong> down the side. Then reveal each quadrant's real energy-policy priority. (A <em>negative</em> import means a country is a net <em>exporter</em>.)</p>
+
+    <div class="sorter">
+      <div class="tray-lab">Countries — click one to pick it up</div>
+      <div class="tray" id="tray"></div>
+
+      <div class="qgrid-wrap">
+        <div class="axis-top"><span>High energy use</span><span>Low energy use</span></div>
+        <div class="axis-left"><span>High import</span><span>Low import (exporter)</span></div>
+        <div class="quad hh" data-q="high_high"><div class="qh">⚡ High use · High import</div><div class="drop" id="d_high_high"></div><div class="policy" id="p_high_high"></div></div>
+        <div class="quad lh" data-q="low_high"><div class="qh">🔌 Low use · High import</div><div class="drop" id="d_low_high"></div><div class="policy" id="p_low_high"></div></div>
+        <div class="quad hl" data-q="high_low"><div class="qh">🛢️ High use · Low import</div><div class="drop" id="d_high_low"></div><div class="policy" id="p_high_low"></div></div>
+        <div class="quad ll" data-q="low_low"><div class="qh">⛽ Low use · Low import</div><div class="drop" id="d_low_low"></div><div class="policy" id="p_low_low"></div></div>
+      </div>
+
+      <div class="sorter-actions">
+        <button class="btn" id="revealBtn">Reveal categories &amp; policy priorities</button>
+        <button class="btn ghost" id="sortReset">Reset</button>
+      </div>
+      <p class="hint" id="hint">Tip: click a placed country to send it back to the tray.</p>
+      <div class="sorter-score" id="sorterScore"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Producers aren't consumers — the data behind it</h2></div>
+    <p class="sec-intro">A key lesson question: does the list of top oil <em>producers</em> match the top <em>consumers</em>? Toggle the highlights to see who appears on <strong>both</strong> lists, who only <strong>produces</strong> (the exporters), and who only <strong>consumes</strong> (the importers).</p>
+
+    <div class="pc-controls">
+      <button class="pcbtn on" data-h="none">Show all</button>
+      <button class="pcbtn" data-h="both">On both lists</button>
+      <button class="pcbtn" data-h="prod">Producers only</button>
+      <button class="pcbtn" data-h="cons">Consumers only</button>
+    </div>
+
+    <div class="pc-cols">
+      <div class="pc-col"><h4>Top 15 oil producers</h4><div class="pc-list" id="prodList"></div></div>
+      <div class="pc-col"><h4>Top 15 oil consumers</h4><div class="pc-list" id="consList"></div></div>
+    </div>
+    <div class="pc-legend">
+      <span><i style="background:#b98be6"></i> On both lists — large economies that produce <em>and</em> consume heavily</span>
+      <span><i style="background:#77aef0"></i> Producers only — export-oriented petrostates</span>
+      <span><i style="background:#f0a081"></i> Consumers only — import-dependent</span>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><span class="fn">~2 billion</span><p>people worldwide have intermittent or non-existent electricity supply.</p></div>
+      <div class="fact"><span class="fn">~30%</span><p>of people in Sub-Saharan Africa have regular access to electricity.</p></div>
+      <div class="fact"><span class="fn">&lt;15%</span><p>access in poorer countries like Malawi and DR Congo — even Nigeria, an oil exporter, has poor domestic supply.</p></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>The 2 × 2 is the lesson's; the answer key is derived</h4>
+      <p>The use × import matrix, the countries named for it, the producer/consumer lists, and the access figures are all straight from the lesson. But the lesson has students <em>derive</em> each country's quadrant from the maps — it doesn't print a fixed answer key. The placements checked here reflect real energy data and the lesson's own framing (exporters like Saudi Arabia and Norway have negative net imports; the US, Germany, and France are high-use importers; Nigeria is the headline "exports oil yet lacks power" case). The exact High-30 / Low-30 per-capita lists live in the lesson's downloadable World Bank CSVs, not the article text.</p>
+    </div>
+    <div class="callout">
+      <h4>A snapshot on ~2013 data</h4>
+      <p>The lesson's figures reflect roughly 2013 World Bank / energy data (with 2003 and 2008 also in the files), so specific rankings will have shifted since — the US has swung from big importer toward net exporter, for example. Treat this as a teaching model of the <em>logic</em> of energy geography, not a current scoreboard. The lesson's own arc ends by weighing continued fossil-fuel reliance and CO₂ growth against a shift to renewables.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Jo, I. (2018). World Energy Issues: An Inquiry-Based Lesson Using ArcGIS Online. <em>The Geography Teacher, 15</em>(1), 43–46.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/19338341.2017.1395753" target="_blank" rel="noopener">10.1080/19338341.2017.1395753</a></p>
+    <p class="small" style="color:#8b98af">Data sources in the lesson: World Bank (energy use per capita), oil production/consumption and electricity-access layers via ArcGIS Online. Lesson development supported by the National Geographic Society &amp; Texas Higher Education Coordinating Board. Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------- Section 2: quadrant sorter ---------- */
+var COUNTRIES = [
+  {n:"Saudi Arabia", q:"high_low", why:"World's #1 oil producer and a major exporter, with high per-capita use as a wealthy petrostate."},
+  {n:"Norway", q:"high_low", why:"Oil &amp; gas exporter (negative net import) with very high per-capita energy use."},
+  {n:"Canada", q:"high_low", why:"Energy-rich net exporter; high per-capita use from a cold climate and resource industries."},
+  {n:"Russia", q:"high_low", why:"Major oil &amp; gas exporter; high per-capita use."},
+  {n:"United States", q:"high_high", why:"Top oil consumer with very high per-capita use — and, on the lesson's data, a net importer."},
+  {n:"Germany", q:"high_high", why:"Developed economy, high per-capita use, heavily reliant on energy imports."},
+  {n:"France", q:"high_high", why:"Developed net importer with high per-capita use."},
+  {n:"Japan", q:"high_high", why:"One of the largest oil consumers; resource-poor and imports nearly all its energy."},
+  {n:"India", q:"low_high", why:"Huge total demand but low per-capita use, and a major net importer — access &amp; affordability drive policy."},
+  {n:"Malawi", q:"low_high", why:"Very low per-capita use with under 15% electricity access; import-dependent."},
+  {n:"Nigeria", q:"low_low", why:"An oil exporter, yet low per-capita use — weak infrastructure keeps power from its citizens."},
+  {n:"Iraq", q:"low_low", why:"Major oil producer/exporter, but low per-capita use amid damaged infrastructure."}
+];
+var POLICY = {
+  high_high:{t:"Energy security first", d:"High demand met by imports leaves these countries exposed to price spikes and supply cut-offs — they are the most sensitive to <em>higher</em> oil prices. Policy leans on diversified suppliers, strategic reserves, efficiency, and building out domestic renewables."},
+  high_low:{t:"Managing an export economy", d:"Energy is a revenue engine and a source of geopolitical leverage. These exporters benefit from high prices but are exposed to price <em>crashes</em>, and face the long-run question of diversifying beyond fossil fuels."},
+  low_high:{t:"Access &amp; affordability", d:"Demand will grow fastest here as living standards rise, but import dependence and cost put basic access first — an opening to leapfrog straight to renewable energy."},
+  low_low:{t:"The exporter's paradox", d:"Resource-rich but energy-poor: weak generation and distribution keep domestic power scarce even where fuel is exported (Nigeria is the classic case). Priority: build infrastructure and govern resource revenue."}
+};
+var QLABEL = {high_high:"High use · High import", high_low:"High use · Low import", low_high:"Low use · High import", low_low:"Low use · Low import"};
+
+var placed = {}; // country -> quadrant
+var selected = null;
+var tray = document.getElementById("tray");
+
+function render(){
+  // tray = unplaced
+  tray.innerHTML = COUNTRIES.filter(function(c){return !placed[c.n];}).map(function(c){
+    return '<button class="cchip'+(selected===c.n?' sel':'')+'" data-c="'+c.n+'">'+c.n+'</button>';
+  }).join("") || '<span class="small" style="align-self:center">All countries placed — reveal below.</span>';
+  // quadrants
+  ["high_high","high_low","low_high","low_low"].forEach(function(q){
+    var drop = document.getElementById("d_"+q);
+    drop.innerHTML = COUNTRIES.filter(function(c){return placed[c.n]===q;}).map(function(c){
+      return '<button class="cchip" data-c="'+c.n+'" data-placed="1">'+c.n+'</button>';
+    }).join("");
+  });
+  wire();
+  document.querySelectorAll(".quad").forEach(function(qd){ qd.classList.toggle("armed", selected!==null); });
+}
+function wire(){
+  tray.querySelectorAll(".cchip").forEach(function(b){
+    b.addEventListener("click", function(){
+      selected = (selected===b.getAttribute("data-c")) ? null : b.getAttribute("data-c");
+      render();
+    });
+  });
+  document.querySelectorAll(".quad .cchip[data-placed]").forEach(function(b){
+    b.addEventListener("click", function(e){
+      e.stopPropagation();
+      delete placed[b.getAttribute("data-c")];
+      selected=null; clearReveal(); render();
+    });
+  });
+}
+document.querySelectorAll(".quad").forEach(function(qd){
+  qd.addEventListener("click", function(){
+    if(!selected) return;
+    placed[selected] = qd.getAttribute("data-q");
+    selected = null; clearReveal(); render();
+  });
+});
+function clearReveal(){
+  document.querySelectorAll(".policy").forEach(function(p){p.classList.remove("show");});
+  document.querySelectorAll(".cchip").forEach(function(c){c.classList.remove("correct","wrong");});
+  document.getElementById("sorterScore").classList.remove("show");
+}
+
+document.getElementById("revealBtn").addEventListener("click", function(){
+  var correct=0, total=COUNTRIES.length, placedCount=0;
+  COUNTRIES.forEach(function(c){
+    if(placed[c.n]) placedCount++;
+    if(placed[c.n]===c.q) correct++;
+  });
+  // mark chips
+  document.querySelectorAll(".quad .cchip[data-placed]").forEach(function(b){
+    var name=b.getAttribute("data-c");
+    var exp = COUNTRIES.filter(function(x){return x.n===name;})[0].q;
+    var ok = placed[name]===exp;
+    b.classList.add(ok?"correct":"wrong");
+    b.innerHTML = ok ? name+' <span class="mk">✓</span>' : name+' <span class="mk">→ '+QLABEL[exp]+'</span>';
+  });
+  // show policies
+  ["high_high","high_low","low_high","low_low"].forEach(function(q){
+    var p=document.getElementById("p_"+q);
+    p.className="policy show";
+    p.innerHTML='<b>'+POLICY[q].t+'</b>'+POLICY[q].d;
+  });
+  var ss=document.getElementById("sorterScore");
+  ss.className="sorter-score show";
+  ss.innerHTML='<span class="ss-big">'+correct+' of '+total+' placed in the expected quadrant.</span>'+
+    '<p>The lesson\'s point isn\'t the label — it\'s that <b>use</b> and <b>import</b> together explain why energy policy differs: importers fear high prices, exporters fear low ones, low-access countries fight for basic supply, and some exporters still can\'t power their own people.</p>';
+  ss.scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+document.getElementById("sortReset").addEventListener("click", function(){
+  placed={}; selected=null; clearReveal(); render();
+});
+render();
+
+/* ---------- Section 3: producers vs consumers ---------- */
+var PRODUCERS = ["Saudi Arabia","Russia","United States","Iran","China","Mexico","Canada","UAE","Venezuela","Kuwait","Norway","Nigeria","Brazil","Algeria","Iraq"];
+var CONSUMERS = ["United States","China","Japan","Russia","India","Germany","Brazil","Canada","Saudi Arabia","South Korea","Mexico","France","UK","Italy","Iran"];
+var pset=new Set(PRODUCERS), cset=new Set(CONSUMERS);
+function groupOf(name){
+  var inP=pset.has(name), inC=cset.has(name);
+  if(inP&&inC) return "both";
+  return inP ? "prod" : "cons";
+}
+function renderPC(list, id){
+  document.getElementById(id).innerHTML = list.map(function(n,i){
+    return '<div class="pc-item" data-g="'+groupOf(n)+'" data-n="'+n+'"><span class="rk">'+(i+1)+'</span>'+n+'</div>';
+  }).join("");
+}
+renderPC(PRODUCERS,"prodList");
+renderPC(CONSUMERS,"consList");
+var hlMode="none";
+document.querySelectorAll(".pcbtn").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll(".pcbtn").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on"); hlMode=b.getAttribute("data-h"); applyHL();
+  });
+});
+function applyHL(){
+  document.querySelectorAll(".pc-item").forEach(function(it){
+    it.classList.remove("dim","hl-both","hl-prod","hl-cons");
+    var g=it.getAttribute("data-g");
+    if(hlMode==="none"){ return; }
+    if(g===hlMode){ it.classList.add("hl-"+g); }
+    else { it.classList.add("dim"); }
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep vs. Surface Learning-Approach Matrix — Huh, Lee & Jo (2021) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --deep:#2a78d6; --surface:#eb6834;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:33px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:710px;color:#eaf1fb;margin:0 0 26px}
+  .reused-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(42,120,214,.28);border:1px solid rgba(150,200,255,.6);color:#dbeafe;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .reused-tag .dot{width:9px;height:9px;border-radius:50%;background:#6fb0ff;box-shadow:0 0 0 3px rgba(111,176,255,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:24px;font-weight:800;line-height:1;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--blue);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:790px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* task box */
+  .taskbox{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+  .taskbox .tb-icon{flex:0 0 84px;text-align:center}
+  .taskbox .tb-icon .em{font-size:44px;line-height:1}
+  .taskbox .tb-icon .lbl{font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+  .taskbox .tb-body{flex:1 1 320px}
+  .taskbox h4{margin:0 0 6px;font-size:16px}
+  .taskbox p{margin:0 0 10px;font-size:14.5px}
+  .taskbox .tb-facts{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+  .tb-fact{background:var(--bg);border:1px solid var(--hair);border-radius:10px;padding:8px 12px;font-size:12.5px}
+  .tb-fact b{color:var(--ink)}
+
+  /* matrix */
+  .approach-legend{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+  .al{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+  .al .sw{width:14px;height:14px;border-radius:4px}
+  .matrix{display:grid;grid-template-columns:110px 1fr 1fr 1fr;gap:8px}
+  .mx-h{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);
+    display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;text-align:center}
+  .mx-rowh{font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:flex-end;text-align:right;padding-right:6px;color:#fff;border-radius:10px}
+  .mx-rowh.deep{background:var(--deep)}
+  .mx-rowh.surface{background:var(--surface)}
+  .mx-rowh span{padding:0 8px}
+  .cell{border:2px solid var(--hair);border-radius:11px;padding:12px;cursor:pointer;background:#fff;transition:.14s;min-height:64px}
+  .cell:hover{border-color:var(--blue);transform:translateY(-1px)}
+  .cell.active{box-shadow:0 0 0 2px var(--ink) inset}
+  .cell.deep.active{border-color:var(--deep)}
+  .cell.surface.active{border-color:var(--surface)}
+  .cell .ctop{font-size:12px;font-weight:800;margin-bottom:5px}
+  .cell.deep .ctop{color:var(--deep)}
+  .cell.surface .ctop{color:var(--surface)}
+  .cell .cprev{font-size:11.5px;color:var(--sub);line-height:1.35}
+  .mx-detail{margin-top:16px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;border-left:5px solid var(--blue)}
+  .mx-detail h3{margin:0 0 4px;font-size:18px}
+  .mx-detail .md-tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:0 0 12px}
+  .mx-detail ul{margin:0;padding-left:20px;font-size:14.5px}
+  .mx-detail li{margin-bottom:6px}
+
+  /* classify */
+  .classify{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .ex-card{border:1px solid var(--hair);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .ex-card .ex-meta{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);margin-bottom:8px}
+  .ex-quote{font-size:14.5px;font-style:italic;color:var(--ink);border-left:3px solid var(--hair);padding:2px 0 2px 14px;margin:0 0 14px}
+  .ex-controls{display:flex;gap:22px;flex-wrap:wrap}
+  .ex-group label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);display:block;margin-bottom:6px}
+  .btnrow{display:flex;gap:6px;flex-wrap:wrap}
+  .pick{border:1.5px solid var(--hair);background:#fff;border-radius:9px;padding:7px 13px;font-size:12.5px;font-weight:700;
+    cursor:pointer;font-family:var(--font);color:var(--ink);transition:.12s}
+  .pick:hover{border-color:var(--blue)}
+  .pick.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .ex-reveal{display:none;margin-top:14px;font-size:13.5px;padding:12px 15px;border-radius:10px}
+  .ex-reveal.show{display:block}
+  .ex-reveal.ok{background:rgba(0,131,0,.08);border:1px solid rgba(0,131,0,.3)}
+  .ex-reveal.miss{background:rgba(235,104,52,.08);border:1px solid rgba(235,104,52,.3)}
+  .ex-reveal .rvc{font-weight:800}
+  .try-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:11px 20px;font-size:14px;font-weight:800;
+    cursor:pointer;font-family:var(--font);transition:.15s}
+  .btn:hover{background:#2568bd}
+  .btn.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+  .btn.ghost:hover{background:rgba(42,120,214,.08)}
+  .try-score{display:none;margin-top:16px;background:linear-gradient(160deg,#0f2b52,#1d4b8f);color:#fff;border-radius:12px;padding:16px 20px}
+  .try-score.show{display:block}
+  .try-score .ts-big{font-size:19px;font-weight:800}
+  .try-score p{margin:8px 0 0;font-size:13.5px;color:#cfe0f5}
+
+  /* results */
+  .part-bars{display:flex;flex-direction:column;gap:14px;margin-bottom:8px}
+  .pb-row{display:flex;align-items:center;gap:12px}
+  .pb-name{flex:0 0 150px;font-size:13.5px;font-weight:700}
+  .pb-name small{display:block;font-weight:600;color:var(--sub);font-size:11.5px}
+  .pb-track{flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;border:1px solid var(--hair)}
+  .pb-deep,.pb-surf{display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:800;color:#fff;transition:width .6s}
+  .pb-deep{background:var(--deep)}
+  .pb-surf{background:var(--surface)}
+  .results-note{background:#eef7ff;border:1px solid #cfe4fb;border-radius:12px;padding:14px 18px;margin-top:18px;font-size:14px}
+  .results-note b{color:var(--blue)}
+
+  /* table 2 grid */
+  .t2{margin-top:22px;overflow-x:auto}
+  .t2 table{border-collapse:collapse;width:100%;min-width:440px;font-size:13px}
+  .t2 th,.t2 td{padding:8px 10px;text-align:center;border:1px solid var(--hair)}
+  .t2 th{background:var(--bg);font-weight:800;font-size:12px}
+  .t2 td.rh{text-align:left;font-weight:700;background:var(--bg)}
+  .t2 .grp-deep{color:var(--deep)}
+  .t2 .grp-surf{color:var(--surface)}
+
+  /* table 3 comparison */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+  .cmp-col{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+  .cmp-col.ind{border-top:4px solid var(--surface)}
+  .cmp-col.grp{border-top:4px solid var(--deep)}
+  .cmp-col h4{margin:0 0 3px;font-size:16px}
+  .cmp-col .ch{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin:0 0 12px}
+  .cmp-col.ind .ch{color:var(--surface)}
+  .cmp-col.grp .ch{color:var(--deep)}
+  .cmp-col h5{margin:12px 0 5px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--sub)}
+  .cmp-col ul{margin:0;padding-left:18px;font-size:13px}
+  .cmp-col li{margin-bottom:4px}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  @media(max-width:760px){.hero h1{font-size:26px}.cmp{grid-template-columns:1fr}.matrix{grid-template-columns:80px 1fr 1fr 1fr}.pb-name{flex-basis:110px}}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>Deep vs. Surface Learning-Approach Matrix</h1>
+    <p class="lede">How do students actually tackle a task — do they dig for meaning, or just get it done? This study coded 9th-graders' talk during a thermal-camera "Heat Busters!" mission against a deep/surface learning-approach matrix, comparing those who worked alone with those who worked in groups. Explore the matrix, classify real transcript snippets, and see what collaboration changed.</p>
+    <span class="reused-tag"><span class="dot"></span>Instrument she reused &nbsp;·&nbsp; Huh, Lee &amp; Jo (2021), after Biggs / Entwistle / Marton</span>
+    <div class="chips">
+      <div class="chip"><span class="n">2</span><span class="l">approaches</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">dimensions</span></div>
+      <div class="chip"><span class="n">6</span><span class="l">matrix cells</span></div>
+      <div class="chip"><span class="n">10</span><span class="l">9th-graders</span></div>
+      <div class="chip"><span class="n">2 v 2</span><span class="l">individuals v groups</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--blue)"></i> Blue = instrument Jo <b>reused</b> (framework by Biggs, Entwistle &amp; Marton)</span>
+    <span><i style="background:var(--deep)"></i> Deep approach</span>
+    <span><i style="background:var(--surface)"></i> Surface approach</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this instrument is</h2></div>
+    <p class="sec-intro">A "learning approach" is how a student tackles a task. Since the 1970s, researchers (Marton &amp; Säljö; Biggs; Entwistle) have distinguished a <strong>deep approach</strong> — seeking meaning, connecting ideas, questioning — from a <strong>surface approach</strong> — memorizing, repeating, doing the minimum. Each shows up across three dimensions: <strong>cognitive</strong> (how you think), <strong>affective</strong> (how you feel), and <strong>strategic</strong> (how you manage the work). This study borrowed that framework as a discourse-coding scheme and applied it to a real geography task.</p>
+
+    <div class="taskbox">
+      <div class="tb-icon"><div class="em">🌡️</div><div class="lbl">The task</div></div>
+      <div class="tb-body">
+        <h4>“Heat Busters!”</h4>
+        <p>Ten 9th-graders in a Korean middle school hunted for where their school loses heat, using a portable thermal-imaging camera clipped to a smartphone, then proposed energy-saving fixes. Over six 45-minute periods, chest-mounted cameras recorded 30–40 minutes of think-aloud talk per student, which was transcribed and coded against the matrix. Some students worked alone; some in small groups.</p>
+        <div class="tb-facts">
+          <div class="tb-fact"><b>2</b> individuals (A, B)</div>
+          <div class="tb-fact"><b>2</b> small groups of 4 (C, D)</div>
+          <div class="tb-fact"><b>Method:</b> semantic discourse + thematic analysis</div>
+          <div class="tb-fact"><b>Product:</b> heat-loss improvement proposal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>The 2 × 3 approach matrix</h2></div>
+    <p class="sec-intro">Two approaches crossed with three dimensions gives six coding cells. Click any cell to see the behavioral indicators the study used (Table 1, reconstructed from Entwistle, McCune &amp; Walker 2001 and Marton &amp; Säljö 1976).</p>
+
+    <div class="approach-legend">
+      <span class="al"><span class="sw" style="background:var(--deep)"></span>Deep — seeking meaning</span>
+      <span class="al"><span class="sw" style="background:var(--surface)"></span>Surface — getting it done</span>
+    </div>
+
+    <div class="matrix" id="matrix"></div>
+    <div class="mx-detail" id="mxDetail"></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Classify the discourse</h2></div>
+    <p class="sec-intro">Here are six real snippets of student talk from the study's transcripts. For each, pick the approach and the dimension you'd code it as, then reveal how the researchers coded it. (A = individual; letters within a group snippet are teammates.)</p>
+
+    <div class="classify">
+      <div id="exList"></div>
+      <div class="try-actions">
+        <button class="btn" id="revealBtn">Reveal the study's coding</button>
+        <button class="btn ghost" id="tryReset">Reset</button>
+      </div>
+      <div class="try-score" id="tryScore"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>What collaboration changed</h2></div>
+    <p class="sec-intro">The headline result: the two students who worked alone talked mostly in <span style="color:var(--surface);font-weight:700">surface</span> terms; the two groups talked mostly in <span style="color:var(--deep);font-weight:700">deep</span> terms. Each bar shows the share of a participant's coded discourse (Table 2).</p>
+
+    <div class="part-bars" id="partBars"></div>
+
+    <div class="results-note">
+      <b>It's not just group vs. solo — roles matter too.</b> Group D leaned deeper than group C. Why? In group D, three of four students acted as facilitators, initiating discussion and building on ideas together; group C had a single facilitator. The presence of teammates creates the conditions for deep learning — but each member acting as a co-facilitator amplifies it.
+    </div>
+
+    <div class="t2">
+      <h4 style="margin:0 0 6px;font-size:15px">Full breakdown — Table 2 (% of each participant's coded discourse)</h4>
+      <table>
+        <thead><tr><th style="text-align:left">Approach · Dimension</th><th>A <small>(indiv.)</small></th><th>B <small>(indiv.)</small></th><th>C <small>(group)</small></th><th>D <small>(group)</small></th></tr></thead>
+        <tbody id="t2body"></tbody>
+      </table>
+    </div>
+
+    <div class="cmp">
+      <div class="cmp-col ind">
+        <h4>Individuals</h4><p class="ch">Surface-leaning · Table 3</p>
+        <h5>Cognitive</h5><ul><li>Focus on the surface of problems without considering reasons or principles</li><li>Collect data through simple, repetitive processes</li><li>Seldom connect prior knowledge to collected data</li><li>Work without reflecting on objectives or strategies</li></ul>
+        <h5>Affective</h5><ul><li>Pressure to devise new ideas; anxiety about failure</li><li>Undue uncertainty about their data</li></ul>
+        <h5>Strategic</h5><ul><li>Ask the teacher whether data are adequate</li><li>Rigid time control to finish quickly</li><li>Keep to the original plan; explore a small area</li></ul>
+      </div>
+      <div class="cmp-col grp">
+        <h4>Small groups</h4><p class="ch">Deep-leaning · Table 3</p>
+        <h5>Cognitive</h5><ul><li>Build explanations and interpretations</li><li>Closely observe and describe the phenomenon</li><li>Consider different viewpoints; make connections</li><li>Wonder and actively ask questions</li></ul>
+        <h5>Affective</h5><ul><li>Positively overcome unexpected difficulties</li><li>Proactively explore new ideas; enjoy group discussion</li></ul>
+        <h5>Strategic</h5><ul><li>Regulate the task by communicating with teammates</li><li>Check the effective route; tune the device for clear data</li><li>Explore a wide area</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>A reused framework, applied to a new task</h4>
+      <p>The deep/surface matrix isn't original to this study — it's the well-established framework of Marton &amp; Säljö (1976), Biggs (1989), and Entwistle. The authors <strong>reconstructed</strong> Table 1's indicators from Entwistle, McCune &amp; Walker (2001) and applied them as a discourse-coding scheme. What's new is the application: the "Heat Busters!" task and the individual-vs-group comparison. That's why this page is marked <em>reused</em> (blue). The transcript snippets in Section 3 are genuine short excerpts published in the article.</p>
+    </div>
+    <div class="callout">
+      <h4>A very small case study</h4>
+      <p>The findings rest on just <strong>two individuals and two groups</strong> (from ten volunteers), coded primarily by one researcher and triangulated with the others. The authors are explicit that this is too small to generalize, that teams were self-selected (so facilitator roles varied by chance), and that deep and surface approaches often work <em>together</em> rather than being a strict either/or. Treat the percentages as a rich illustration of a mechanism, not a population estimate.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Huh, S., Lee, J., &amp; Jo, I. (2021). The Influence of Collaboration on Students' Learning Approaches in a Geography Task. <em>Research in Geographic Education, 23</em>(1), 32–51.</p>
+    <p class="small" style="color:#8b98af">Deep/surface matrix (Table 1) reconstructed by the authors from Entwistle, McCune &amp; Walker (2001) and Marton &amp; Säljö (1976); framework foundations from Biggs (1989) and Entwistle (1998). Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------- Table 1: matrix indicators ---------- */
+var DIMS = ["Cognitive","Affective","Strategic"];
+var MATRIX = {
+  "Deep|Cognitive":["Connecting prior knowledge, experience, and new ideas","Finding hidden patterns and principles","Checking evidence to support claims","Critically examining logic and arguments","Recognizing that understanding is developing in the process"],
+  "Deep|Affective":["Actively interested in the content and process","Intrinsic motivation"],
+  "Deep|Strategic":["Managing time and effort efficiently","Finding appropriate conditions and materials for learning","Considering evaluation criteria and requirements to reflect learning","Self-regulation and metacognition on learning"],
+  "Surface|Cognitive":["Memorizing facts and solving problems through repetitive processes","Fragmentation of some unrelated knowledge","Seldom finding the value or meaning of the task","Working on the task without reflecting on objectives or strategies"],
+  "Surface|Affective":["Focusing on difficulties in realizing new ideas","Feeling excessive pressure and anxiety about failure","Extrinsic motivation"],
+  "Surface|Strategic":["Focusing on evaluation criteria and requirements just to complete the task","Repeating a few points of the task while doing little work","Seeking extrinsic help for the tasks"]
+};
+var PREVIEW = {
+  "Deep|Cognitive":"Connect ideas, find patterns, weigh evidence…",
+  "Deep|Affective":"Genuine interest; intrinsic motivation…",
+  "Deep|Strategic":"Self-regulate; metacognition; manage effort…",
+  "Surface|Cognitive":"Memorize, repeat, don't reflect on the goal…",
+  "Surface|Affective":"Anxiety about failure; extrinsic motivation…",
+  "Surface|Strategic":"Do the minimum; seek outside help…"
+};
+
+var matrix = document.getElementById("matrix");
+var mxDetail = document.getElementById("mxDetail");
+function buildMatrix(){
+  var html = '<div class="mx-h"></div>' + DIMS.map(function(d){return '<div class="mx-h">'+d+'</div>';}).join("");
+  ["Deep","Surface"].forEach(function(app){
+    html += '<div class="mx-rowh '+app.toLowerCase()+'"><span>'+app+'</span></div>';
+    DIMS.forEach(function(d){
+      var key = app+"|"+d;
+      html += '<div class="cell '+app.toLowerCase()+'" data-key="'+key+'">'+
+        '<div class="ctop">'+app+' · '+d+'</div>'+
+        '<div class="cprev">'+PREVIEW[key]+'</div></div>';
+    });
+  });
+  matrix.innerHTML = html;
+  matrix.querySelectorAll(".cell").forEach(function(c){
+    c.addEventListener("click", function(){ showCell(c.getAttribute("data-key")); });
+  });
+}
+function showCell(key){
+  matrix.querySelectorAll(".cell").forEach(function(c){c.classList.toggle("active", c.getAttribute("data-key")===key);});
+  var parts = key.split("|"), app = parts[0], dim = parts[1];
+  var color = app==="Deep" ? "var(--deep)" : "var(--surface)";
+  mxDetail.style.borderLeftColor = color;
+  mxDetail.innerHTML = '<h3 style="color:'+color+'">'+app+' · '+dim+'</h3>'+
+    '<p class="md-tag" style="color:'+color+'">Behavioral indicators used for coding</p>'+
+    '<ul>'+MATRIX[key].map(function(i){return "<li>"+i+"</li>";}).join("")+'</ul>';
+}
+buildMatrix();
+showCell("Deep|Cognitive");
+
+/* ---------- Section 3: classify ---------- */
+var EXCERPTS = [
+  {who:"Individual B — in the field", quote:"“Why do we have so few (heat-loss places) in our school? It is not this either. This is… just an equipment… not this. Not here either. The time is almost over. I do not know what I have done is right.”",
+   app:"Surface", dim:"Cognitive",
+   why:"Working through the task without reflecting on whether the data meet the objective — taking pictures, moving on, unsure if any of it is right. A textbook surface-cognitive pattern."},
+  {who:"Individual B — post-class interview", quote:"“I think it would be better to be alone. If there are others, it might have a conflict when we are gathering opinions… I could take a picture of what I want freely, and I can find it faster and quicker.”",
+   app:"Surface", dim:"Strategic",
+   why:"A strategy built around speed and staying inside a fixed plan, avoiding the friction of coordinating — the surface-strategic emphasis on completing quickly over exploring."},
+  {who:"Individual B — returning early, with the teacher", quote:"Teacher: “Do you think it is real heat loss?… find where the heat is being lost that needs improvements, not the temperature difference.”  B: “Oh… yes. Quick, quick.”",
+   app:"Surface", dim:"Affective",
+   why:"Hesitation and anxiety in an uncertain situation, leaning on the teacher's reassurance and rushing — the surface-affective mix of pressure and extrinsic direction."},
+  {who:"Small group D — spotting an elevator outside", quote:"A: “Isn't that an elevator? Let's go.” B: “Oh iron! Because there is so much iron!” C: “Oh, does iron become hot because of sunlight?” A: “Oh, you found an awesome thing! Great job!”",
+   app:"Deep", dim:"Cognitive",
+   why:"Building an explanation for a new observation and actively wondering/asking questions together — deep-cognitive sense-making sparked by the group."},
+  {who:"Small group C — Student K, interview", quote:"“Head-to-head, I think we can handle a lot more than when I am working alone. We have four heads and eight eyes, and our interest is also various… we can think about a case with diverse perspectives.”",
+   app:"Deep", dim:"Affective",
+   why:"A positive, proactive attitude toward the task grounded in enjoying the group — the deep-affective engagement collaboration fosters."},
+  {who:"Small group C — in the field", quote:"A: “Do you want to take a picture of that?” … C: “Hey, we need to take a picture where heat leaks away. That is just a temperature difference.” A: “Oh, that is true…”",
+   app:"Deep", dim:"Strategic",
+   why:"Team members regulating the task by reminding each other of its intention and requirements — deep-strategic self-regulation done collectively."}
+];
+var picks = {}; // idx -> {app, dim}
+var exList = document.getElementById("exList");
+function renderEx(){
+  picks = {};
+  exList.innerHTML = EXCERPTS.map(function(e,i){
+    return '<div class="ex-card"><div class="ex-meta">'+e.who+'</div>'+
+      '<p class="ex-quote">'+e.quote+'</p>'+
+      '<div class="ex-controls">'+
+        '<div class="ex-group"><label>Approach</label><div class="btnrow">'+
+          '<button class="pick" data-i="'+i+'" data-k="app" data-v="Deep">Deep</button>'+
+          '<button class="pick" data-i="'+i+'" data-k="app" data-v="Surface">Surface</button></div></div>'+
+        '<div class="ex-group"><label>Dimension</label><div class="btnrow">'+
+          '<button class="pick" data-i="'+i+'" data-k="dim" data-v="Cognitive">Cognitive</button>'+
+          '<button class="pick" data-i="'+i+'" data-k="dim" data-v="Affective">Affective</button>'+
+          '<button class="pick" data-i="'+i+'" data-k="dim" data-v="Strategic">Strategic</button></div></div>'+
+      '</div><div class="ex-reveal" id="exr'+i+'"></div></div>';
+  }).join("");
+  exList.querySelectorAll(".pick").forEach(function(b){
+    b.addEventListener("click", function(){
+      var i=b.getAttribute("data-i"), k=b.getAttribute("data-k"), v=b.getAttribute("data-v");
+      if(!picks[i]) picks[i]={};
+      picks[i][k]=v;
+      exList.querySelectorAll('.pick[data-i="'+i+'"][data-k="'+k+'"]').forEach(function(x){x.classList.remove("on");});
+      b.classList.add("on");
+    });
+  });
+}
+renderEx();
+
+document.getElementById("revealBtn").addEventListener("click", function(){
+  var correct = 0;
+  EXCERPTS.forEach(function(e,i){
+    var p = picks[i]||{};
+    var appOk = p.app===e.app, dimOk = p.dim===e.dim, both = appOk&&dimOk;
+    if(both) correct++;
+    var rv = document.getElementById("exr"+i);
+    rv.className = "ex-reveal show " + (both?"ok":"miss");
+    rv.innerHTML = '<span class="rvc">'+(both?"✓ ":"→ ")+"Study coded this: "+e.app+" · "+e.dim+"</span>"+
+      (p.app||p.dim ? ' <span class="small">(you: '+(p.app||"—")+" · "+(p.dim||"—")+')</span>' : '')+
+      '<div style="margin-top:6px">'+e.why+'</div>';
+  });
+  var ts = document.getElementById("tryScore");
+  ts.className = "try-score show";
+  ts.innerHTML = '<span class="ts-big">You matched '+correct+' of 6 on both approach and dimension.</span>'+
+    '<p>Notice the pattern: the individual (A/B) snippets land in the surface row; the group (C/D) snippets land in the deep row. That split is exactly the study’s central finding.</p>';
+  ts.scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+document.getElementById("tryReset").addEventListener("click", function(){
+  renderEx(); document.getElementById("tryScore").className="try-score";
+});
+
+/* ---------- Section 4: results ---------- */
+/* Table 2 values [A,B,C,D] per cell */
+var T2 = {
+  "Deep|Cognitive":[0,0,25,50],
+  "Deep|Affective":[0,0,12.5,10],
+  "Deep|Strategic":[12.5,0,37.5,20],
+  "Surface|Cognitive":[50,54,12.5,10],
+  "Surface|Affective":[12.5,10,0,0],
+  "Surface|Strategic":[25,36,12.5,10]
+};
+var PARTS = [
+  {id:0, name:"Individual A", sub:"worked alone"},
+  {id:1, name:"Individual B", sub:"worked alone"},
+  {id:2, name:"Small group C", sub:"1 facilitator"},
+  {id:3, name:"Small group D", sub:"3 facilitators"}
+];
+function deepTotal(idx){ return T2["Deep|Cognitive"][idx]+T2["Deep|Affective"][idx]+T2["Deep|Strategic"][idx]; }
+function surfTotal(idx){ return T2["Surface|Cognitive"][idx]+T2["Surface|Affective"][idx]+T2["Surface|Strategic"][idx]; }
+document.getElementById("partBars").innerHTML = PARTS.map(function(p){
+  var d = deepTotal(p.id), s = surfTotal(p.id);
+  return '<div class="pb-row"><div class="pb-name">'+p.name+'<small>'+p.sub+'</small></div>'+
+    '<div class="pb-track">'+
+      (d>0?'<div class="pb-deep" style="width:'+d+'%">'+(d>=12?'Deep '+d+'%':'')+'</div>':'')+
+      (s>0?'<div class="pb-surf" style="width:'+s+'%">'+(s>=12?'Surface '+s+'%':'')+'</div>':'')+
+    '</div></div>';
+}).join("");
+
+/* Table 2 grid */
+var order = ["Deep|Cognitive","Deep|Affective","Deep|Strategic","Surface|Cognitive","Surface|Affective","Surface|Strategic"];
+document.getElementById("t2body").innerHTML = order.map(function(key){
+  var parts = key.split("|"), app=parts[0], dim=parts[1];
+  var cls = app==="Deep"?"grp-deep":"grp-surf";
+  var cells = T2[key].map(function(v){ return '<td>'+(v===0?'—':v+'%')+'</td>'; }).join("");
+  return '<tr><td class="rh '+cls+'">'+app+' · '+dim+'</td>'+cells+'</tr>';
+}).join("");
+</script>
+</body>
+</html>

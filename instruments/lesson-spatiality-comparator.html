@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson-Plan Spatiality Pre/Post Comparator — Jo & Bednarz (2014) · Instrument Lab</title>
+<style>
+  :root{
+    --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
+    --blue:#2a78d6; --green:#008300; --magenta:#e87ba4; --yellow:#eda100; --orange:#eb6834;
+    --pre:#9aa6bb;
+    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
+    --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+  .hero{background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);color:#fff;padding:54px 0 60px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:32px;line-height:1.15;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .lede{font-size:17px;max-width:720px;color:#eaf1fb;margin:0 0 26px}
+  .built-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;
+    background:rgba(0,131,0,.22);border:1px solid rgba(120,220,120,.5);color:#d9ffd9;padding:5px 12px;border-radius:999px;margin-bottom:24px}
+  .built-tag .dot{width:9px;height:9px;border-radius:50%;background:#54d954;box-shadow:0 0 0 3px rgba(84,217,84,.25)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 16px;min-width:104px}
+  .chip .n{font-size:24px;font-weight:800;line-height:1;display:block}
+  .chip .l{font-size:12.5px;color:#dbe6f6;margin-top:5px;display:block}
+
+  section{padding:42px 0}
+  .sec-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
+    background:var(--green);color:#fff;font-weight:800;font-size:15px;margin-right:11px;flex:0 0 auto}
+  .sec-head{display:flex;align-items:center;margin-bottom:8px}
+  .sec-head h2{font-size:23px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-intro{color:var(--sub);font-size:15.5px;max-width:800px;margin:0 0 24px}
+  .divider{height:1px;background:var(--hair);border:0;margin:0}
+  .small{font-size:12.5px;color:var(--sub)}
+
+  /* dimensions strip */
+  .dims{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .dim{flex:1 1 220px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-top:4px solid var(--green)}
+  .dim h4{margin:0 0 5px;font-size:15px}
+  .dim p{margin:0;font-size:13px;color:var(--sub)}
+  .dim .lv{font-size:12px;color:var(--ink);margin-top:8px;font-weight:600}
+
+  /* coding activity */
+  .coder{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .obj-card{border:1px solid var(--hair);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .obj-card .oc-meta{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);margin-bottom:8px}
+  .obj-quote{font-size:15px;font-weight:600;border-left:3px solid var(--green);padding:2px 0 2px 14px;margin:0 0 14px}
+  .oc-controls{display:flex;gap:20px;flex-wrap:wrap}
+  .oc-group label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);display:block;margin-bottom:6px}
+  .btnrow{display:flex;gap:6px;flex-wrap:wrap}
+  .pick{border:1.5px solid var(--hair);background:#fff;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:700;
+    cursor:pointer;font-family:var(--font);color:var(--ink);transition:.12s}
+  .pick:hover{border-color:var(--green)}
+  .pick.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .oc-reveal{display:none;margin-top:14px;font-size:13.5px;padding:12px 15px;border-radius:10px}
+  .oc-reveal.show{display:block}
+  .oc-reveal.ok{background:rgba(0,131,0,.08);border:1px solid rgba(0,131,0,.3)}
+  .oc-reveal.miss{background:rgba(235,104,52,.08);border:1px solid rgba(235,104,52,.3)}
+  .oc-reveal .rvc{font-weight:800}
+  .btn{background:var(--green);color:#fff;border:0;border-radius:10px;padding:11px 20px;font-size:14px;font-weight:800;
+    cursor:pointer;font-family:var(--font);transition:.15s}
+  .btn:hover{background:#036e03}
+  .btn.blue{background:var(--blue)}
+  .btn.blue:hover{background:#2568bd}
+  .btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green)}
+  .btn.ghost:hover{background:rgba(0,131,0,.08)}
+  .btn.ghost.blue{color:var(--blue);border-color:var(--blue)}
+  .btn:disabled{opacity:.4;cursor:default}
+  .try-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .try-score{display:none;margin-top:16px;background:linear-gradient(160deg,#0f2b52,#1d4b8f);color:#fff;border-radius:12px;padding:16px 20px}
+  .try-score.show{display:block}
+  .try-score .ts-big{font-size:19px;font-weight:800}
+  .try-score p{margin:8px 0 0;font-size:13.5px;color:#cfe0f5}
+
+  /* comparator */
+  .cmp-controls{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .seg{display:inline-flex;background:var(--bg);border:1px solid var(--hair);border-radius:999px;padding:4px}
+  .seg button{border:0;background:transparent;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:800;
+    cursor:pointer;font-family:var(--font);color:var(--sub)}
+  .seg button.on{background:var(--ink);color:#fff}
+  .phase-badge{font-size:12.5px;font-weight:800;padding:6px 14px;border-radius:999px}
+  .phase-badge.pre{background:#eef1f7;color:var(--sub)}
+  .phase-badge.post{background:rgba(0,131,0,.12);color:var(--green)}
+
+  .cmp-panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .grp-h{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin:16px 0 10px}
+  .grp-h:first-child{margin-top:0}
+  .m-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .m-label{flex:0 0 172px;font-size:13px;font-weight:600}
+  .m-track{flex:1;background:#eef1f7;border-radius:999px;height:22px;position:relative;overflow:hidden}
+  .m-fill{height:100%;border-radius:999px;background:var(--pre);transition:width .8s cubic-bezier(.2,.7,.2,1),background .5s}
+  .m-fill.post{background:var(--green)}
+  .m-val{flex:0 0 128px;font-size:12.5px;font-weight:700}
+  .m-val .delta{font-weight:800;margin-left:6px}
+  .m-val .up{color:var(--green)}
+  .m-val .down{color:var(--orange)}
+  .cmp-note{background:#eef7ff;border:1px solid #cfe4fb;border-radius:12px;padding:14px 18px;margin-top:18px;font-size:14px}
+  .cmp-note b{color:var(--blue)}
+
+  /* qualitative */
+  .strat{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .stratc{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-left:4px solid var(--green)}
+  .stratc .sn{font-size:12px;font-weight:800;color:var(--green)}
+  .stratc h4{margin:4px 0 6px;font-size:15px}
+  .stratc p{margin:0;font-size:13.5px;color:var(--sub)}
+  .quote{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:14px 18px;margin-top:14px;font-size:14px;font-style:italic}
+  .quote span{display:block;font-style:normal;font-size:12px;color:var(--sub);margin-top:6px;font-weight:700}
+
+  .callout{background:#fff8ec;border:1px solid #f2dcae;border-left:5px solid var(--yellow);border-radius:12px;padding:16px 20px;margin:14px 0;font-size:14px}
+  .callout h4{margin:0 0 6px;font-size:14px;color:#8a6400;text-transform:uppercase;letter-spacing:.05em}
+  .callout p{margin:0 0 8px}
+  .callout p:last-child{margin:0}
+
+  .sources{background:#111a2b;color:#c7d2e6;padding:36px 0 44px;font-size:13.5px}
+  .sources h3{color:#fff;font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em}
+  .sources p{margin:0 0 10px;line-height:1.6}
+  .sources a{color:#8fbaf0;text-decoration:none;word-break:break-word}
+  .sources a:hover{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:22px 0 0;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  @media(max-width:760px){.hero h1{font-size:25px}.strat{grid-template-columns:1fr}.m-label{flex-basis:120px}.m-val{flex-basis:96px}}
+</style>
+</head>
+<body>
+<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
+</div>
+
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
+    <h1>Lesson-Plan Spatiality: Pre/Post Comparator</h1>
+    <p class="lede">Does teaching teachers about spatial thinking actually change how they plan lessons? This study coded 24 pre-service teachers' lesson plans — before and after a spatial-thinking workshop — using the 2009 Taxonomy. Code a few objectives yourself, then run the workshop and watch the numbers move.</p>
+    <span class="built-tag"><span class="dot"></span>Results companion to the 2009 Taxonomy (built) &nbsp;·&nbsp; Jo &amp; Bednarz (2014)</span>
+    <div class="chips">
+      <div class="chip"><span class="n">24</span><span class="l">pre-service teachers</span></div>
+      <div class="chip"><span class="n">~4 hr</span><span class="l">workshop</span></div>
+      <div class="chip"><span class="n">3</span><span class="l">taxonomy dimensions</span></div>
+      <div class="chip"><span class="n">71</span><span class="l">objectives coded</span></div>
+      <div class="chip"><span class="n">pre → post</span><span class="l">design</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="legend">
+    <span><i style="background:var(--green)"></i> Green = built on Jo's 2009 Taxonomy of Spatial Thinking</span>
+    <span><i style="background:var(--pre)"></i> Pre-workshop</span>
+    <span><i style="background:var(--green)"></i> Post-workshop</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>What this measures</h2></div>
+    <p class="sec-intro">Pedagogical content knowledge (PCK) is a teacher's ability to make a subject teachable. Here it's operationalized concretely: the "spatiality" of the lesson plans they write. Twenty-four pre-service teachers wrote a lesson plan on Canada's settlement patterns, attended a ~4-hour workshop on teaching spatial thinking, then wrote another. Every objective and assessment item in both plans was coded on the three dimensions of the <strong>2009 Taxonomy of Spatial Thinking</strong> — the instrument you've already explored in this Lab.</p>
+
+    <div class="dims">
+      <div class="dim"><h4>Concepts of space</h4><p>How spatial is the concept the task requires?</p><div class="lv">Non-spatial → Spatial primitives → Simple-spatial → Complex-spatial</div></div>
+      <div class="dim"><h4>Tools of representation</h4><p>Does the task use maps, graphs, diagrams, models?</p><div class="lv">Non-use → Use</div></div>
+      <div class="dim"><h4>Processes of reasoning</h4><p>What level of cognition does it demand?</p><div class="lv">Input → Processing → Output</div></div>
+    </div>
+    <p class="small" style="margin-top:14px">A lesson plan asked for 3 objectives + step-by-step procedures + 3 assessment items. 71 objectives &amp; 71 items (pre) and 71 objectives &amp; 74 items (post) were coded.</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Code a lesson objective</h2></div>
+    <p class="sec-intro">This is exactly what the researchers did to every objective. For each item below, pick its concept level, whether it uses a representation, and its cognitive process — then reveal the study's coding. (The first three are the paper's own Table 1 examples.)</p>
+
+    <div class="coder">
+      <div id="objList"></div>
+      <div class="try-actions">
+        <button class="btn" id="revealBtn">Reveal the study's coding</button>
+        <button class="btn ghost" id="codeReset">Reset</button>
+      </div>
+      <div class="try-score" id="tryScore"></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Run the workshop — does it move the numbers?</h2></div>
+    <p class="sec-intro">Here's the measured effect. Pick lesson objectives or assessment items, then press <b>Run the workshop</b> to shift every bar from its pre- to its post-workshop value. Each figure is the share of coded items at that level (Figure 2).</p>
+
+    <div class="cmp-controls">
+      <div class="seg" id="targetSeg">
+        <button data-t="objectives" class="on">Lesson objectives</button>
+        <button data-t="assessment">Assessment items</button>
+      </div>
+      <button class="btn blue" id="runBtn">▶ Run the workshop</button>
+      <button class="btn ghost blue" id="resetPhase">Reset to pre</button>
+      <span class="phase-badge pre" id="phaseBadge">Showing: pre-workshop</span>
+    </div>
+
+    <div class="cmp-panel" id="cmpPanel"></div>
+
+    <div class="cmp-note">
+      <b>How to read the cognitive shift:</b> a <em>drop</em> in input-level and a <em>rise</em> in processing- and output-level is the desired direction — it means objectives moved from mere recall toward analysis and creation. The clearest single gain: complex-spatial concepts in objectives nearly doubled (15.5% → 26.8%).
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>What teachers actually changed</h2></div>
+    <p class="sec-intro">Beyond the numbers, the qualitative analysis found four concrete strategies pre-service teachers adopted in their revised plans.</p>
+
+    <div class="strat">
+      <div class="stratc"><span class="sn">Strategy 1</span><h4>Teach concepts explicitly</h4><p>Set aside time to define spatial concepts directly instead of assuming students know them — “explicitly teach about what a region is.”</p></div>
+      <div class="stratc"><span class="sn">Strategy 2</span><h4>Use richer spatial concepts</h4><p>Overlay, pattern, and distribution appeared far more often — e.g., overlaying population density with terrain, weather, and resources.</p></div>
+      <div class="stratc"><span class="sn">Strategy 3</span><h4>Put representations in students' hands</h4><p>Not just showing maps, but having students create their own charts, graphs, and diagrams to portray information.</p></div>
+      <div class="stratc"><span class="sn">Strategy 4</span><h4>Push toward higher-order thinking</h4><p>Ask students to hypothesize, explain their reasoning, and justify decisions rather than just name and list.</p></div>
+    </div>
+
+    <div class="quote">
+      “What I really got from the workshop was not just assuming that my students know what these things are but explicitly describing them.”
+      <span>— a participant, on revising from pre- to post-lesson plan</span>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- HONESTY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
+    <div class="callout">
+      <h4>Every number is from the paper — a couple of items are illustrative</h4>
+      <p>All pre/post percentages are reproduced from Figure 2 and the text. The three lettered coding items in Section 2 are the paper's actual Table 1 examples; items 4–5 are <strong>original illustrations</strong> built from the concepts the study discusses (overlay, distribution, hypothesizing). One assessment figure — processing-level, pre — isn't stated directly and is <em>inferred</em> as the remainder so the three cognitive levels sum to 100%; it's flagged in the chart.</p>
+    </div>
+    <div class="callout">
+      <h4>A small, short, single-group study</h4>
+      <p>This is 24 pre-service teachers, one ~4-hour workshop, with no control group and pre/post plans on the same topic — so the gains are encouraging but not proof of lasting classroom change (the authors call for longitudinal follow-up). Note the honest limit the authors stress themselves: even after the workshop, about 70% of objectives and over half of assessment items still used <em>no</em> spatial representation — the hardest skill to build. Percentage drops in primitives/simple-spatial reflect a shift of emphasis toward complex-spatial, not a devaluing, since each plan allowed only three objectives.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<footer class="sources">
+  <div class="wrap">
+    <h3>Source</h3>
+    <p>Jo, I., &amp; Bednarz, S.&nbsp;W. (2014). Developing pre-service teachers' pedagogical content knowledge for teaching spatial thinking through geography. <em>Journal of Geography in Higher Education, 38</em>(2), 301–313.</p>
+    <p>DOI: <a href="https://doi.org/10.1080/03098265.2014.911828" target="_blank" rel="noopener">10.1080/03098265.2014.911828</a></p>
+    <p class="small" style="color:#8b98af">Coding instrument: the Taxonomy of Spatial Thinking (Jo &amp; Bednarz, 2009), the built instrument this page extends. Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ---------- Section 2: coding activity ---------- */
+var CONCEPTS = ["Non-spatial","Spatial primitives","Simple-spatial","Complex-spatial"];
+var REPS = ["Non-use","Use"];
+var PROCS = ["Input","Processing","Output"];
+
+var OBJECTS = [
+  {real:true, text:"To explain why they believe Canada is a plural society",
+   concept:"Non-spatial", rep:"Non-use", proc:"Processing",
+   why:"“Plural society” is a non-spatial concept; no representation is used; explaining a belief calls for processing-level reasoning, not just recall."},
+  {real:true, text:"Name and describe each of Canada's regions",
+   concept:"Simple-spatial", rep:"Non-use", proc:"Input",
+   why:"“Region” is a simple-spatial concept; no representation is provided or required; recalling names and characteristics is input-level thinking."},
+  {real:true, text:"To explain patterns of settlement due to climate conditions through class discussion and evaluation of maps",
+   concept:"Complex-spatial", rep:"Use", proc:"Processing",
+   why:"A settlement–climate “pattern” is a complex-spatial concept; evaluating maps uses a representation; explaining the relationship is processing-level."},
+  {real:false, text:"Students create their own charts and graphs to portray Canada's resource distribution",
+   concept:"Simple-spatial", rep:"Use", proc:"Output",
+   why:"Illustrative. “Distribution” is a simple-spatial concept; students build a representation (use); creating a product is output-level cognition."},
+  {real:false, text:"Using map overlay, hypothesize why settlement clusters where climate and resources coincide, and justify the reasoning",
+   concept:"Complex-spatial", rep:"Use", proc:"Output",
+   why:"Illustrative. Overlaying to explain a settlement pattern is complex-spatial; overlay uses representations; hypothesizing and justifying is output-level."}
+];
+var picks = {};
+var objList = document.getElementById("objList");
+function renderObjs(){
+  picks = {};
+  objList.innerHTML = OBJECTS.map(function(o,i){
+    var meta = o.real ? "Table 1 example · lesson "+(i<2?"objective":"item") : "Illustrative example";
+    return '<div class="obj-card"><div class="oc-meta">'+meta+'</div>'+
+      '<p class="obj-quote">“'+o.text+'”</p>'+
+      '<div class="oc-controls">'+
+        grp(i,"concept","Concept level",CONCEPTS)+
+        grp(i,"rep","Representation",REPS)+
+        grp(i,"proc","Cognitive process",PROCS)+
+      '</div><div class="oc-reveal" id="ocr'+i+'"></div></div>';
+  }).join("");
+  objList.querySelectorAll(".pick").forEach(function(b){
+    b.addEventListener("click", function(){
+      var i=b.getAttribute("data-i"), k=b.getAttribute("data-k"), v=b.getAttribute("data-v");
+      if(!picks[i]) picks[i]={};
+      picks[i][k]=v;
+      objList.querySelectorAll('.pick[data-i="'+i+'"][data-k="'+k+'"]').forEach(function(x){x.classList.remove("on");});
+      b.classList.add("on");
+    });
+  });
+}
+function grp(i,k,label,opts){
+  return '<div class="oc-group"><label>'+label+'</label><div class="btnrow">'+
+    opts.map(function(o){return '<button class="pick" data-i="'+i+'" data-k="'+k+'" data-v="'+o+'">'+o+'</button>';}).join("")+
+    '</div></div>';
+}
+renderObjs();
+
+document.getElementById("revealBtn").addEventListener("click", function(){
+  var full=0;
+  OBJECTS.forEach(function(o,i){
+    var p=picks[i]||{};
+    var cOk=p.concept===o.concept, rOk=p.rep===o.rep, pOk=p.proc===o.proc;
+    var all=cOk&&rOk&&pOk;
+    if(all) full++;
+    var rv=document.getElementById("ocr"+i);
+    rv.className="oc-reveal show "+(all?"ok":"miss");
+    rv.innerHTML='<span class="rvc">'+(all?"✓ ":"→ ")+"Study coding: "+o.concept+" · "+o.rep+" · "+o.proc+"</span>"+
+      '<div style="margin-top:6px">'+o.why+'</div>';
+  });
+  var ts=document.getElementById("tryScore");
+  ts.className="try-score show";
+  ts.innerHTML='<span class="ts-big">You fully matched '+full+' of '+OBJECTS.length+' items (all three dimensions).</span>'+
+    '<p>Coding is deliberately fine-grained — that granularity is what lets the study detect a shift toward complex-spatial concepts and higher-order thinking after the workshop.</p>';
+  ts.scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+document.getElementById("codeReset").addEventListener("click", function(){
+  renderObjs(); document.getElementById("tryScore").className="try-score";
+});
+
+/* ---------- Section 3: pre/post comparator ---------- */
+var METRICS = {
+  objectives:[
+    {g:"Concepts of space", label:"Complex-spatial concepts", pre:15.49, post:26.76},
+    {g:"Tools of representation", label:"Use of representation", pre:22.54, post:30.99},
+    {g:"Processes of reasoning", label:"Input-level", pre:40.85, post:25.35},
+    {g:"Processes of reasoning", label:"Processing-level", pre:49.30, post:57.75},
+    {g:"Processes of reasoning", label:"Output-level", pre:9.85, post:16.90}
+  ],
+  assessment:[
+    {g:"Concepts of space", label:"Simple-spatial concepts", pre:43.66, post:50.00},
+    {g:"Concepts of space", label:"Complex-spatial concepts", pre:11.27, post:20.27},
+    {g:"Tools of representation", label:"Use of representation", pre:38.03, post:48.65},
+    {g:"Processes of reasoning", label:"Input-level", pre:38.03, post:31.08},
+    {g:"Processes of reasoning", label:"Processing-level", pre:39.43, post:35.14, inferred:true},
+    {g:"Processes of reasoning", label:"Output-level", pre:22.54, post:33.78}
+  ]
+};
+var target="objectives", phase="pre";
+var cmpPanel=document.getElementById("cmpPanel");
+var phaseBadge=document.getElementById("phaseBadge");
+var SCALE=60; // % track corresponds to 60 percentage points for headroom
+
+function renderCmp(){
+  var rows=METRICS[target], html="", lastG=null;
+  rows.forEach(function(m){
+    if(m.g!==lastG){ html+='<div class="grp-h">'+m.g+'</div>'; lastG=m.g; }
+    var val = phase==="pre"?m.pre:m.post;
+    var w = Math.min(100, val/SCALE*100);
+    var delta = m.post-m.pre;
+    var dtxt = phase==="post" ? '<span class="delta '+(delta>=0?"up":"down")+'">'+(delta>=0?"▲ +":"▼ ")+Math.abs(delta).toFixed(2)+'</span>' : '';
+    html+='<div class="m-row"><div class="m-label">'+m.label+(m.inferred?' <span class="small">*</span>':'')+'</div>'+
+      '<div class="m-track"><div class="m-fill '+(phase==="post"?"post":"")+'" style="width:'+w.toFixed(1)+'%"></div></div>'+
+      '<div class="m-val">'+val.toFixed(2)+'%'+dtxt+'</div></div>';
+  });
+  if(target==="assessment") html+='<p class="small" style="margin:10px 0 0"><span>*</span> Processing-level (pre) is inferred as the remainder so the three cognitive levels sum to 100%.</p>';
+  cmpPanel.innerHTML=html;
+  phaseBadge.className="phase-badge "+phase;
+  phaseBadge.textContent = "Showing: "+(phase==="pre"?"pre-workshop":"post-workshop");
+}
+document.querySelectorAll("#targetSeg button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#targetSeg button").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on"); target=b.getAttribute("data-t"); renderCmp();
+  });
+});
+document.getElementById("runBtn").addEventListener("click", function(){ phase="post"; renderCmp(); });
+document.getElementById("resetPhase").addEventListener("click", function(){ phase="pre"; renderCmp(); });
+renderCmp();
+</script>
+</body>
+</html>

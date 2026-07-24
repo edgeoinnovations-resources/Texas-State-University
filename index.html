@@ -23,19 +23,14 @@
   *,*::before,*::after{box-sizing:border-box;}
   html{-webkit-text-size-adjust:100%;}
   body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:var(--font);
-    font-size:16px;
-    line-height:1.55;
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--font);font-size:16px;line-height:1.55;
   }
 
   /* ---------- hero ---------- */
   .hero{
     background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);
-    color:#fff;
-    padding:64px 24px 72px;
+    color:#fff;padding:64px 24px 72px;
   }
   .hero-inner{max-width:940px;margin:0 auto;}
   .eyebrow{
@@ -43,36 +38,22 @@
     color:#a9c8f0;margin:0 0 14px;
   }
   .hero h1{
-    margin:0 0 16px;
-    font-size:clamp(30px,5.2vw,50px);
-    line-height:1.12;
-    letter-spacing:-.02em;
-    font-weight:800;
+    margin:0 0 16px;font-size:clamp(30px,5.2vw,50px);
+    line-height:1.12;letter-spacing:-.02em;font-weight:800;
   }
-  .hero p.sub{
-    margin:0;
-    max-width:64ch;
-    font-size:clamp(16px,2.1vw,19px);
-    color:#dce8fb;
-  }
+  .hero p.sub{margin:0;max-width:64ch;font-size:clamp(16px,2.1vw,19px);color:#dce8fb;}
   .hero .meta{
-    margin:26px 0 0;
-    display:flex;flex-wrap:wrap;gap:10px 26px;
+    margin:26px 0 0;display:flex;flex-wrap:wrap;gap:10px 26px;
     font-size:13px;color:#bcd5f4;
   }
   .hero .meta b{color:#fff;font-weight:700;}
 
-  /* ---------- shell ---------- */
   .wrap{max-width:940px;margin:0 auto;padding:0 24px;}
 
   /* ---------- legend ---------- */
   .legend{
-    background:var(--card);
-    border:1px solid var(--hair);
-    border-radius:14px;
-    box-shadow:var(--shadow);
-    padding:18px 22px;
-    margin:-34px auto 44px;
+    background:var(--card);border:1px solid var(--hair);border-radius:14px;
+    box-shadow:var(--shadow);padding:18px 22px;margin:-34px auto 44px;
     display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;
   }
   .legend h2{
@@ -83,15 +64,12 @@
 
   /* ---------- badges ---------- */
   .badge{
-    display:inline-block;
-    font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
-    padding:4px 10px;border-radius:999px;
-    border:1px solid transparent;
-    white-space:nowrap;
+    display:inline-block;font-size:11px;font-weight:800;letter-spacing:.07em;
+    text-transform:uppercase;padding:4px 10px;border-radius:999px;
+    border:1px solid transparent;white-space:nowrap;
   }
   .badge-built{background:#e3f3e3;color:#00600b;border-color:#b6dfb6;}
   .badge-reused{background:#e2eefc;color:#164e91;border-color:#b8d5f4;}
-  .badge-context{background:#eef0f5;color:#5c677d;border-color:var(--hair);}
 
   /* ---------- timeline ---------- */
   .timeline{position:relative;padding:0 0 8px 0;margin:0 0 56px;}
@@ -99,44 +77,24 @@
     content:"";position:absolute;left:57px;top:10px;bottom:10px;
     width:2px;background:var(--hair);border-radius:2px;
   }
-
   .year-row{position:relative;display:flex;gap:28px;margin:0 0 34px;}
   .year-label{
-    flex:0 0 116px;
-    position:relative;
-    padding-top:14px;
-    text-align:right;
-    padding-right:34px;
+    flex:0 0 116px;position:relative;padding-top:14px;
+    text-align:right;padding-right:34px;
   }
-  .year-label span{
-    font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--ink);
-  }
-  /* the node dot sits on the spine */
+  .year-label span{font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--ink);}
   .year-label::after{
     content:"";position:absolute;right:-7px;top:22px;
     width:14px;height:14px;border-radius:50%;
-    background:var(--blue);border:3px solid var(--bg);
-    box-shadow:0 0 0 2px var(--blue);
+    background:var(--blue);border:3px solid var(--bg);box-shadow:0 0 0 2px var(--blue);
   }
-  .year-row.is-context .year-label span{color:var(--sub);font-size:16px;font-weight:700;}
-  .year-row.is-context .year-label::after{
-    background:var(--bg);box-shadow:0 0 0 2px var(--hair);top:18px;
-    width:10px;height:10px;right:-5px;
-  }
-
   .year-cards{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:14px;}
 
   /* ---------- cards ---------- */
   .card{
-    display:block;
-    background:var(--card);
-    border:1px solid var(--hair);
-    border-left:5px solid var(--hair);
-    border-radius:14px;
-    box-shadow:var(--shadow);
-    padding:18px 22px;
-    text-decoration:none;
-    color:inherit;
+    display:block;background:var(--card);border:1px solid var(--hair);
+    border-left:5px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);
+    padding:18px 22px;text-decoration:none;color:inherit;
     transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;
   }
   .card:hover,.card:focus-visible{
@@ -147,47 +105,25 @@
   .card:focus-visible{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,120,214,.35);}
   .card-built{border-left-color:var(--green);}
   .card-reused{border-left-color:var(--blue);}
-
-  .card-top{
-    display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px 12px;
-    margin-bottom:6px;
-  }
+  .card-top{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px 12px;margin-bottom:6px;}
   .card h3{
     margin:0;flex:1 1 260px;min-width:0;
     font-size:18px;line-height:1.32;font-weight:700;letter-spacing:-.01em;
   }
-  .flagship{
-    color:var(--yellow);font-size:15px;line-height:1;
-    margin-left:2px;
-  }
-  .cite{
-    margin:0 0 8px;
-    font-size:13px;color:var(--sub);font-style:italic;
-  }
+  .flagship{color:var(--yellow);font-size:15px;line-height:1;margin-left:2px;}
+  .cite{margin:0 0 8px;font-size:13px;color:var(--sub);font-style:italic;}
   .blurb{margin:0;font-size:14.5px;color:var(--sub);}
-  .go{
-    display:inline-block;margin-top:12px;
-    font-size:13px;font-weight:700;color:var(--blue);
-  }
+  .go{display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--blue);}
   .card:hover .go{text-decoration:underline;}
 
-  /* ---------- context markers ---------- */
-  .context-note{
-    border:1px dashed var(--hair);
-    border-radius:12px;
-    background:transparent;
-    padding:12px 18px;
-    color:var(--sub);
-    font-size:13.5px;
+  /* ---------- series grouping label ---------- */
+  .series-note{
+    margin:2px 0 -2px;font-size:12px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--sub);
   }
-  .context-note .badge{margin-right:10px;vertical-align:1px;}
 
   /* ---------- footer ---------- */
-  footer{
-    border-top:1px solid var(--hair);
-    background:#fff;
-    padding:34px 24px 46px;
-  }
+  footer{border-top:1px solid var(--hair);background:#fff;padding:34px 24px 46px;}
   footer .wrap{max-width:940px;}
   footer p{margin:0 0 12px;font-size:13.5px;color:var(--sub);max-width:74ch;}
   footer a{color:var(--blue);}
@@ -198,14 +134,10 @@
     .hero{padding:46px 20px 56px;}
     .wrap{padding:0 20px;}
     .legend{margin:-28px auto 34px;padding:16px 18px;gap:12px 18px;}
-    /* spine simplifies: move to far left, stack year above cards */
     .timeline::before{left:6px;}
     .year-row{flex-direction:column;gap:12px;padding-left:28px;margin-bottom:28px;}
-    .year-label{
-      flex:none;text-align:left;padding:0 0 0 0;
-    }
+    .year-label{flex:none;text-align:left;padding:0;}
     .year-label::after{right:auto;left:-28px;top:8px;}
-    .year-row.is-context .year-label::after{left:-26px;top:8px;}
     .card{padding:16px 18px;}
   }
   @media (prefers-reduced-motion:reduce){
@@ -218,13 +150,13 @@
 
 <header class="hero">
   <div class="hero-inner">
-    <p class="eyebrow">Texas State University · Geography Education</p>
+    <p class="eyebrow">Texas State University &middot; Geography Education</p>
     <h1>Dr. Injeong Jo — Instrument Lab</h1>
     <p class="sub">An interactive tour of the research instruments Dr. Injeong Jo built and reused across 2009&ndash;2024 &mdash; each one rebuilt here as a hands-on page you can actually click through.</p>
     <p class="meta">
-      <span><b>12</b> interactive instruments</span>
+      <span><b>26</b> interactive instruments</span>
       <span><b>2009&ndash;2024</b> chronological</span>
-      <span><b>8</b> built &middot; <b>4</b> reused</span>
+      <span><b>18</b> built &middot; <b>8</b> reused</span>
     </p>
   </div>
 </header>
@@ -233,15 +165,14 @@
 
   <section class="legend" aria-label="Legend">
     <h2>Legend</h2>
-    <span class="legend-item"><span class="badge badge-built">Built</span> instrument she developed</span>
+    <span class="legend-item"><span class="badge badge-built">Built</span> instrument she developed or adapted</span>
     <span class="legend-item"><span class="badge badge-reused">Reused</span> existing instrument she applied</span>
     <span class="legend-item"><span class="flagship" aria-hidden="true">&#9733;</span> flagship contribution</span>
-    <span class="legend-item"><span class="badge badge-context">Context</span> throughline year, no page</span>
   </section>
 
   <div class="timeline">
 
-    <!-- 2009 -->
+    <!-- ===== 2009 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2009</span></div>
       <div class="year-cards">
@@ -251,24 +182,29 @@
             <span class="badge badge-built">Built</span>
           </div>
           <p class="cite">Jo &amp; Bednarz (2009)</p>
-          <p class="blurb">The 4&times;2&times;3 = 24-cell taxonomy as a rotatable 3D WebGL cube you can walk cell by cell.</p>
+          <p class="blurb">The 4&times;2&times;3 = 24-cell taxonomy as a rotatable 3D WebGL cube you can walk cell by cell. The foundation nearly everything below builds on.</p>
           <span class="go">Open the cube &rarr;</span>
         </a>
       </div>
     </div>
 
-    <!-- 2010 context -->
-    <div class="year-row is-context">
+    <!-- ===== 2010 ===== -->
+    <div class="year-row">
       <div class="year-label"><span>2010</span></div>
       <div class="year-cards">
-        <div class="context-note">
-          <span class="badge badge-context">Context &middot; no page</span>
-          Conceptual guidance on designing spatially demanding questions extends the taxonomy into practice.
-        </div>
+        <a class="card card-built" href="instruments/question-authoring-tool.html">
+          <div class="card-top">
+            <h3>Spatial-Question Authoring Tool</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo, Bednarz &amp; Metoyer (2010)</p>
+          <p class="blurb">Turns the taxonomy into a writing tool: score any question on all three axes, then rewrite it to demand more spatial thinking.</p>
+          <span class="go">Author a question &rarr;</span>
+        </a>
       </div>
     </div>
 
-    <!-- 2011 -->
+    <!-- ===== 2011 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2011</span></div>
       <div class="year-cards">
@@ -284,7 +220,7 @@
       </div>
     </div>
 
-    <!-- 2013 -->
+    <!-- ===== 2013 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2013</span></div>
       <div class="year-cards">
@@ -300,7 +236,7 @@
       </div>
     </div>
 
-    <!-- 2014 -->
+    <!-- ===== 2014 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2014</span></div>
       <div class="year-cards">
@@ -313,14 +249,35 @@
           <p class="blurb">40-item, 5-point Likert inventory of a teacher's disposition to teach spatial thinking, with reverse-scored safeguards.</p>
           <span class="go">Take the inventory &rarr;</span>
         </a>
-        <div class="context-note">
-          <span class="badge badge-context">Context &middot; no page</span>
-          The 2009 Taxonomy is reused this same year to code lesson plans &mdash; the first of several downstream applications.
-        </div>
+        <a class="card card-built" href="instruments/lesson-spatiality-comparator.html">
+          <div class="card-top">
+            <h3>Lesson-Plan Spatiality: Pre/Post Comparator</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo &amp; Bednarz (2014)</p>
+          <p class="blurb">The 2009 taxonomy turned back on teachers themselves &mdash; coding lesson plans before and after training to see whether instruction actually changes planning.</p>
+          <span class="go">Compare pre/post &rarr;</span>
+        </a>
       </div>
     </div>
 
-    <!-- 2016 -->
+    <!-- ===== 2015 ===== -->
+    <div class="year-row">
+      <div class="year-label"><span>2015</span></div>
+      <div class="year-cards">
+        <a class="card card-reused" href="instruments/gst-integration-explorer.html">
+          <div class="card-top">
+            <h3>GST Integration-Level Explorer</h3>
+            <span class="badge badge-reused">Reused</span>
+          </div>
+          <p class="cite">Instrument: Gao (2002); applied by Jo &amp; Mu&ntilde;iz Solari (2015)</p>
+          <p class="blurb">Gao's four-level model of how deeply GPS, remote sensing, and GIS can be woven into a course &mdash; integration isn't all-or-nothing.</p>
+          <span class="go">Explore the levels &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 2016 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2016</span></div>
       <div class="year-cards">
@@ -345,18 +302,66 @@
       </div>
     </div>
 
-    <!-- 2018 context -->
-    <div class="year-row is-context">
-      <div class="year-label"><span>2018</span></div>
+    <!-- ===== 2017 ===== -->
+    <div class="year-row">
+      <div class="year-label"><span>2017</span></div>
       <div class="year-cards">
-        <div class="context-note">
-          <span class="badge badge-context">Context &middot; no page</span>
-          The Taxonomy is adapted again to analyse astronaut-photograph tasks, showing its reach beyond textbooks.
-        </div>
+        <a class="card card-built" href="instruments/online-source-evaluator.html">
+          <div class="card-top">
+            <h3>Online Source Evaluator</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Hong &amp; Jo (2017), adopting criteria from Lee, Paik &amp; Jo (2012)</p>
+          <p class="blurb">How 65 undergraduates found and ranked 1,300 web sources on oil prices, sorted into 13 source types &mdash; with the study's own "not useful" mirror-reasons.</p>
+          <span class="go">Evaluate a source &rarr;</span>
+        </a>
       </div>
     </div>
 
-    <!-- 2019 -->
+    <!-- ===== 2018 ===== -->
+    <div class="year-row">
+      <div class="year-label"><span>2018</span></div>
+      <div class="year-cards">
+        <a class="card card-built" href="instruments/astronaut-photo-taxonomy.html">
+          <div class="card-top">
+            <h3>Astronaut-Photo Taxonomy Variant</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Ghaffari, Jo &amp; Currit (2018)</p>
+          <p class="blurb">The 2009 taxonomy adapted for remote sensing &mdash; can photographs taken from the Space Station teach students to think spatially?</p>
+          <span class="go">Explore the variant &rarr;</span>
+        </a>
+        <a class="card card-reused" href="instruments/chi-square-demo.html">
+          <div class="card-top">
+            <h3>Chi-Square Goodness-of-Fit Demo</h3>
+            <span class="badge badge-reused">Reused</span>
+          </div>
+          <p class="cite">Technique after Thompson (2006); applied in Ghaffari, Jo &amp; Currit (2018)</p>
+          <p class="blurb">The exact statistical test behind the astronaut-photo study, made interactive &mdash; how do you know a difference is real and not noise?</p>
+          <span class="go">Run the test &rarr;</span>
+        </a>
+        <a class="card card-built" href="instruments/china-korea-disposition-comparator.html">
+          <div class="card-top">
+            <h3>China&ndash;Korea Disposition Comparator</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Lee, Jo, Xuan &amp; Zhou (2018)</p>
+          <p class="blurb">Jo's own 2014 disposition inventory run cross-nationally &mdash; do future geography teachers in China and Korea differ in wanting to teach spatial thinking?</p>
+          <span class="go">Compare countries &rarr;</span>
+        </a>
+        <a class="card card-built" href="instruments/energy-profile-quadrant-sorter.html">
+          <div class="card-top">
+            <h3>Energy Profile Quadrant Sorter</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo (2018)</p>
+          <p class="blurb">An inquiry lesson sorting countries into energy quadrants &mdash; why energy is a different problem for Saudi Arabia than for Japan, or Nigeria than Germany.</p>
+          <span class="go">Sort the countries &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 2019 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2019</span></div>
       <div class="year-cards">
@@ -372,7 +377,7 @@
       </div>
     </div>
 
-    <!-- 2020 -->
+    <!-- ===== 2020 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2020</span></div>
       <div class="year-cards">
@@ -385,26 +390,88 @@
           <p class="blurb">Marsh et al.'s generation &amp; recognition test of appropriate spatial concepts, replicated online for the 2020 GIS study.</p>
           <span class="go">Take the test &rarr;</span>
         </a>
+        <a class="card card-reused" href="instruments/online-interaction-matrix.html">
+          <div class="card-top">
+            <h3>Online Interaction &times; Active-Learning Goal Matrix</h3>
+            <span class="badge badge-reused">Reused</span>
+          </div>
+          <p class="cite">Instruments: Moore (1989) &amp; Sulla (2019); applied by Jo, Huh, Bannert &amp; Grubb (2020)</p>
+          <p class="blurb">Moore's three interaction types crossed with Sulla's active-learning goals to audit what actually engages students in an online course.</p>
+          <span class="go">Open the matrix &rarr;</span>
+        </a>
       </div>
     </div>
 
-    <!-- 2022 -->
+    <!-- ===== 2021 ===== -->
+    <div class="year-row">
+      <div class="year-label"><span>2021</span></div>
+      <div class="year-cards">
+        <a class="card card-reused" href="instruments/learning-approach-matrix.html">
+          <div class="card-top">
+            <h3>Deep vs. Surface Learning-Approach Matrix</h3>
+            <span class="badge badge-reused">Reused</span>
+          </div>
+          <p class="cite">Instrument: Entwistle, McCune &amp; Walker (2001); applied by Huh, Lee &amp; Jo (2021)</p>
+          <p class="blurb">Deep and surface learning indicators reconstructed as a discourse-coding scheme &mdash; do students dig for meaning, or just get it done?</p>
+          <span class="go">Code some talk &rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 2022 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2022</span></div>
       <div class="year-cards">
+        <p class="series-note">The Geography Teacher 19(2) &mdash; GeoActivity Types in APHG symposium</p>
         <a class="card card-built" href="instruments/geoactivity-optic-scrap.html">
           <div class="card-top">
             <h3>GeoActivity Scaffolds &mdash; OPTIC &amp; SCRAP</h3>
             <span class="badge badge-built">Built</span>
           </div>
-          <p class="cite">Jo, Crane, Hong &amp; Huh (2022)</p>
+          <p class="cite">Jo, Crane, Hong &amp; Huh (2022) &middot; 19(2):56&ndash;59</p>
           <p class="blurb">OPTIC (photo analysis) and SCRAP (map analysis) student-facing classroom routines as interactive &ldquo;analysis machines.&rdquo;</p>
           <span class="go">Run the scaffolds &rarr;</span>
+        </a>
+        <a class="card card-built" href="instruments/geoactivity-discussions.html">
+          <div class="card-top">
+            <h3>GeoActivity Types in APHG: Discussions</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Hong, Loux, Huh &amp; Jo (2022) &middot; 19(2):60&ndash;64</p>
+          <p class="blurb">Socratic seminars for AP Human Geography &mdash; eight question types with model stems, six unit-by-unit topics, and an analytic rubric.</p>
+          <span class="go">Open the seminar &rarr;</span>
+        </a>
+        <a class="card card-built" href="instruments/geoactivity-field-study.html">
+          <div class="card-top">
+            <h3>GeoActivity Types in APHG: Field Study</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Huh, Crane, Loux, Hong &amp; Jo (2022) &middot; 19(2):65&ndash;70</p>
+          <p class="blurb">Four local field studies for ninth-grade APHG, plus the two-criteria reflection rubric used to grade them.</p>
+          <span class="go">Walk the field studies &rarr;</span>
+        </a>
+        <a class="card card-built" href="instruments/geoactivity-exam-prep.html">
+          <div class="card-top">
+            <h3>GeoActivity Types in APHG: Exam Preparation</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Hong, Haakenson, Martin, Huh &amp; Jo (2022) &middot; 19(2):71&ndash;74</p>
+          <p class="blurb">Two tech-based exam-prep workflows &mdash; AP Classroom progress checks for self-reflection, plus rubric-driven free-response practice.</p>
+          <span class="go">Prep for the exam &rarr;</span>
+        </a>
+        <a class="card card-built" href="instruments/geoactivity-culminating-project.html">
+          <div class="card-top">
+            <h3>APHG Culminating Project: Surviving a Zombie Apocalypse</h3>
+            <span class="badge badge-built">Built</span>
+          </div>
+          <p class="cite">Jo, Bannert, Huh &amp; Hong (2022) &middot; 19(2):75&ndash;79</p>
+          <p class="blurb">A post-exam, project-based finale where student groups synthesize the whole APHG course into one applied scenario.</p>
+          <span class="go">Open the project &rarr;</span>
         </a>
       </div>
     </div>
 
-    <!-- 2023 -->
+    <!-- ===== 2023 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2023</span></div>
       <div class="year-cards">
@@ -420,7 +487,7 @@
       </div>
     </div>
 
-    <!-- 2024 -->
+    <!-- ===== 2024 ===== -->
     <div class="year-row">
       <div class="year-label"><span>2024</span></div>
       <div class="year-cards">
