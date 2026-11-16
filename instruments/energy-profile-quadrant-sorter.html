@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lab-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Energy Profile Quadrant Sorter — Jo (2018) · Instrument Lab</title>
+<title>Energy Profile Quadrant Sorter — Jo Instrument Lab</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312233f'/%3E%3Cpath d='M8 22l8-13 8 13z' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E">
+<meta name="description" content="An inquiry lesson that sorts countries by energy use and net energy imports into four policy quadrants.">
 <style>
   :root{
     --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
@@ -127,13 +129,9 @@
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
 </style>
+<link rel="stylesheet" href="../assets/lab.css">
 </head>
-<body>
-<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
-</div>
-
-
+<body data-lab-id="energy-profile-quadrant-sorter">
 <header class="hero">
   <div class="wrap">
     <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
@@ -256,7 +254,7 @@
     <h3>Source</h3>
     <p>Jo, I. (2018). World Energy Issues: An Inquiry-Based Lesson Using ArcGIS Online. <em>The Geography Teacher, 15</em>(1), 43–46.</p>
     <p>DOI: <a href="https://doi.org/10.1080/19338341.2017.1395753" target="_blank" rel="noopener">10.1080/19338341.2017.1395753</a></p>
-    <p class="small" style="color:#8b98af">Data sources in the lesson: World Bank (energy use per capita), oil production/consumption and electricity-access layers via ArcGIS Online. Lesson development supported by the National Geographic Society &amp; Texas Higher Education Coordinating Board. Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+    <p class="small" style="color:#8b98af">Data sources in the lesson: World Bank (energy use per capita), oil production/consumption and electricity-access layers via ArcGIS Online. Lesson development supported by the National Geographic Society &amp; Texas Higher Education Coordinating Board. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
   </div>
 </footer>
 
@@ -397,5 +395,7 @@ function applyHL(){
   });
 }
 </script>
+<script src="../assets/data.js"></script>
+<script src="../assets/lab.js"></script>
 </body>
 </html>

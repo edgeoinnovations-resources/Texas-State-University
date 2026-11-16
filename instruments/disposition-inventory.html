@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lab-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teaching Spatial Thinking Disposition Inventory — interactive demo</title>
+<title>Teaching Spatial Thinking Disposition Inventory — Jo Instrument Lab</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312233f'/%3E%3Cpath d='M8 22l8-13 8 13z' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E">
+<meta name="description" content="A 40-item, five-category Likert inventory of a teacher&#x27;s disposition to teach spatial thinking through geography.">
 <style>
   :root{
     --bg:#f5f3ec; --panel:#fff; --panel-2:#fbfaf5; --ink:#232a2f; --soft:#4c5760; --muted:#8a929b; --line:#e4ded1;
@@ -128,13 +130,10 @@
     .item{grid-template-columns:1fr}
   }
 </style>
+<link rel="stylesheet" href="../assets/lab.css">
 </head>
-<body>
-<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
-</div>
-
-  <header class="hero">
+<body data-lab-id="disposition-inventory">
+<header class="hero">
     <div class="wrap">
       <div class="kicker">Interactive Instrument · Jo &amp; Bednarz (2014) ★</div>
       <h1>Are you <em>inclined</em> to teach spatial thinking?</h1>
@@ -405,5 +404,7 @@
   drawRadarStatic(); updateRadar();
 })();
 </script>
+<script src="../assets/data.js"></script>
+<script src="../assets/lab.js"></script>
 </body>
 </html>

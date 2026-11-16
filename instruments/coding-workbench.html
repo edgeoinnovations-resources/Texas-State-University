@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" data-lab-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Taxonomy Coding Workbench — Jo Instrument Lab</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312233f'/%3E%3Cpath d='M8 22l8-13 8 13z' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E">
+<meta name="description" content="Code your own questions, objectives or tasks with Jo and Bednarz's 24-cell taxonomy of spatial thinking, then export the coded data.">
+<style>
+  .wb{max-width:1120px;margin:0 auto;padding:24px 20px 40px;font:15px/1.55 var(--lab-font);color:var(--lab-ink);}
+  .wb h1{font-size:clamp(24px,3.6vw,32px);line-height:1.2;margin:0 0 8px;letter-spacing:-.01em;}
+  .wb .lede{color:var(--lab-sub);max-width:76ch;margin:0 0 22px;font-size:16px;}
+  .wb section{background:#fff;border:1px solid var(--lab-line);border-radius:12px;padding:18px 20px;margin:0 0 18px;}
+  .wb h2{font-size:18px;margin:0 0 4px;}
+  .wb h2 span{display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:var(--lab-navy);color:#fff;font-size:13px;margin-right:8px;}
+  .wb p.sub{margin:0 0 12px;color:var(--lab-sub);font-size:14px;max-width:80ch;}
+  .wb textarea,.wb input[type=text],.wb select{font:14.5px var(--lab-font);border:1px solid #c4ccd8;border-radius:7px;padding:7px 9px;background:#fff;color:var(--lab-ink);box-sizing:border-box;max-width:100%;}
+  .wb textarea{width:100%;min-height:110px;resize:vertical;}
+  .wb textarea:focus-visible,.wb input:focus-visible,.wb select:focus-visible{outline:3px solid #8ec3d6;outline-offset:1px;}
+  .row{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin-top:10px;}
+  .row label{font-size:13.5px;color:var(--lab-sub);font-weight:600;}
+  table{border-collapse:collapse;width:100%;font-size:14px;}
+  th,td{border-bottom:1px solid var(--lab-line);padding:7px 8px;text-align:left;vertical-align:top;}
+  th{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--lab-sub);white-space:nowrap;background:#f6f8fa;position:sticky;top:0;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  #items td.txt{min-width:240px;}
+  #items select{padding:5px 6px;font-size:13.5px;}
+  #items input.note{width:130px;}
+  .hints{margin-top:4px;font-size:12.5px;color:var(--lab-mute);}
+  .hints b{font-weight:600;color:var(--lab-accent-ink);}
+  .cellno{display:inline-block;min-width:30px;text-align:center;font-weight:700;border-radius:6px;padding:2px 6px;background:#eef1f5;}
+  .lv0{background:#eef1f5;color:#4b586c;} .lv1{background:#d6ecf3;color:#0f4a5e;} .lv2{background:#9fd2e2;color:#083a4b;} .lv3{background:#1f6f8b;color:#fff;}
+  .x{border:0;background:none;color:#9b2c2c;cursor:pointer;font-size:16px;padding:2px 6px;border-radius:6px;}
+  .x:hover{background:#fbeaea;}
+  .empty{padding:18px;text-align:center;color:var(--lab-mute);border:1px dashed #c9d1dc;border-radius:10px;}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
+  .bar{display:grid;grid-template-columns:130px 1fr 78px;gap:8px;align-items:center;font-size:13.5px;margin:5px 0;}
+  .bar i{display:block;height:14px;border-radius:4px;background:var(--lab-accent);min-width:2px;}
+  .bar .trk{background:#eef1f5;border-radius:4px;}
+  .bar span:last-child{text-align:right;font-variant-numeric:tabular-nums;color:var(--lab-sub);}
+  .cube{display:grid;grid-template-columns:auto repeat(6,1fr);gap:4px;font-size:12.5px;max-width:640px;}
+  .cube div{padding:6px 4px;text-align:center;border-radius:6px;}
+  .cube .h{font-weight:700;color:var(--lab-sub);font-size:11.5px;}
+  .cube .rh{text-align:right;padding-right:8px;font-weight:600;white-space:nowrap;}
+  .cube .c{border:1px solid var(--lab-line);} .cube .c small{display:block;font-size:10.5px;opacity:.75;}
+  .cube .c.int{border-color:#1f6f8b;border-width:2px;}
+  .stat{background:#f3f6f9;border:1px solid var(--lab-line);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:10px;}
+  .warn{background:var(--lab-warn-bg);border:1px solid var(--lab-warn-line);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:10px;}
+  details.ref{margin-top:8px;} details.ref summary{cursor:pointer;font-weight:600;color:var(--lab-accent-ink);}
+  .reflist{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px;font-size:13.5px;}
+  .reflist h4{margin:0 0 4px;font-size:13px;}
+  .reflist p{margin:0;color:var(--lab-sub);}
+  @media (max-width:640px){.bar{grid-template-columns:104px 1fr 66px;} .wb section{padding:14px;}}
+</style>
+<link rel="stylesheet" href="../assets/lab.css">
+</head>
+<body data-lab-id="coding-workbench">
+<main class="wb">
+  <h1>Taxonomy Coding Workbench</h1>
+  <p class="lede">Code your own questions, lesson objectives or tasks with Jo and Bednarz's three-axis taxonomy. Each item gets a cell number from 1 to 24 and an integration level, and the tables below update as you go. Your work is saved in this browser and exports to CSV.</p>
+
+  <section aria-labelledby="h1">
+    <h2 id="h1"><span>1</span>Add items</h2>
+    <p class="sub">Paste one item per line, or import a CSV with a <code>text</code> column (optional columns: <code>id</code>, <code>group</code>, <code>concept</code>, <code>representation</code>, <code>cognitive</code>, <code>note</code>). A group can be anything you want to compare: a textbook, a page location, pre or post.</p>
+    <textarea id="paste" aria-label="Items to add, one per line" placeholder="Define cultural boundaries.&#10;Look at the map of coal, gas, and oil resources. Which states appear to have the richest energy resources?"></textarea>
+    <div class="row">
+      <label for="grp">Group for these items</label><input type="text" id="grp" placeholder="e.g. Textbook A, end of chapter">
+      <button class="lab-btn primary" type="button" id="add">Add items</button>
+      <label class="lab-btn" for="csvin" style="cursor:pointer">Import CSV</label><input type="file" id="csvin" accept=".csv,text/csv" hidden>
+      <button class="lab-btn" type="button" id="demo">Load three worked examples</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="h2">
+    <h2 id="h2"><span>2</span>Code each item</h2>
+    <p class="sub">Choose the highest-level spatial concept the item needs, whether it requires using or creating a representation, and the cognitive process it demands. Hints under each item flag verbs and concepts from the taxonomy's lists; they are prompts, not codes.</p>
+    <div class="row" style="margin:0 0 10px">
+      <label><input type="checkbox" id="onlyOpen"> Show only items not fully coded</label>
+      <span id="progress" style="color:var(--lab-sub);font-size:14px"></span>
+    </div>
+    <div class="lab-scroll"><table id="items"><thead><tr><th>#</th><th>Item</th><th>Group</th><th>Concept</th><th>Representation</th><th>Cognitive process</th><th>Cell</th><th>Note</th><th><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Remove</span></th></tr></thead><tbody></tbody></table></div>
+    <div class="empty" id="empty">No items yet. Add some above to start coding.</div>
+    <details class="ref">
+      <summary>Coding reference: the taxonomy's categories</summary>
+      <div class="reflist">
+        <div><h4>Concepts of space</h4><p><b>Non-spatial.</b> No spatial concept needed.</p><p><b>Spatial primitives.</b> Place-specific identity, location, magnitude.</p><p><b>Simple-spatial.</b> Distance, direction, connection and linkage, movement, transition, boundary, region, shape, reference frame, arrangement, adjacency, enclosure.</p><p><b>Complex-spatial.</b> Distribution, pattern, dispersion and clustering, density, diffusion, dominance, hierarchy and network, spatial association, overlay, layer, gradient, profile, relief, scale, map projection, buffer.</p></div>
+        <div><h4>Tools of representation</h4><p><b>Non-use.</b> The item can be answered without a representation.</p><p><b>Use.</b> The item requires using or creating a map, diagram, chart, graph or photo.</p></div>
+        <div><h4>Cognitive process (after Costa, 2001)</h4><p><b>Input.</b> Name, define, list, identify, recognize, recite, recall, observe, describe, select, complete, count, match.</p><p><b>Processing.</b> Explain, analyze, state causality, compare, contrast, distinguish, classify, categorize, organize, summarize, synthesize, infer, make analogies, exemplify, experiment, sequence.</p><p><b>Output.</b> Evaluate, judge, predict, forecast, hypothesize, speculate, plan, create, design, invent, imagine, generalize, build a model, apply a principle.</p></div>
+        <div><h4>Cell number and integration</h4><p>Cell = concept level × 6 + representation × 3 + cognitive level + 1, following Fig. 1 of the 2009 paper. Nine cells use a spatial concept <i>and</i> a representation: 10, 11, 16 (simplest); 12, 17, 22 (higher); 18, 23, 24 (highest). All other cells are "not integrated".</p></div>
+      </div>
+      <div class="warn"><b>A numbering point to know before you cite cells.</b> Table 3 of Jo &amp; Bednarz (2011) labels two examples as simple-spatial yet assigns them cells 7 and 11, which Fig. 1 places at the spatial-primitive level. This workbench follows Fig. 1, so a simple-spatial, non-use, input item is cell 13. Check the papers and state which numbering you follow.</div>
+    </details>
+  </section>
+
+  <section aria-labelledby="h3">
+    <h2 id="h3"><span>3</span>Results</h2>
+    <p class="sub">Counts cover fully coded items only.</p>
+    <div id="results"></div>
+  </section>
+
+  <section aria-labelledby="h4">
+    <h2 id="h4"><span>4</span>Compare groups</h2>
+    <p class="sub">A chi-square test of whether the distribution differs across your groups, the same family of test the 2011 location study used. It needs at least two groups with coded items.</p>
+    <div class="row" style="margin-top:0"><label for="dim">Compare groups on</label>
+      <select id="dim"><option value="c">Concept level</option><option value="r">Representation</option><option value="g">Cognitive process</option><option value="lv">Integration level</option><option value="int">Integrated vs. not</option></select></div>
+    <div id="groups"></div>
+  </section>
+
+  <section aria-labelledby="h5">
+    <h2 id="h5"><span>5</span>Check agreement with a second coder</h2>
+    <p class="sub">Export your CSV, have a second coder code the same items in their own browser, then load their export here. Items are matched by <code>id</code>.</p>
+    <div class="row" style="margin-top:0"><label class="lab-btn" for="second" style="cursor:pointer">Load second coder's CSV</label><input type="file" id="second" accept=".csv,text/csv" hidden></div>
+    <div id="kappa"></div>
+  </section>
+
+  <section aria-labelledby="h6">
+    <h2 id="h6"><span>6</span>Export and manage</h2>
+    <p class="sub">The CSV holds one row per item with codes as labels, plus cell number and integration level. The project file restores everything, including notes.</p>
+    <div class="row" style="margin-top:0">
+      <button class="lab-btn primary" type="button" id="exCsv">Export coded data (CSV)</button>
+      <button class="lab-btn" type="button" id="exSum">Export summary tables (CSV)</button>
+      <button class="lab-btn" type="button" id="exJson">Save project file</button>
+      <label class="lab-btn" for="inJson" style="cursor:pointer">Open project file</label><input type="file" id="inJson" accept=".json,application/json" hidden>
+      <button class="lab-btn danger" type="button" id="wipe">Delete all items</button>
+      <span class="lab-status" id="msg" role="status"></span>
+    </div>
+  </section>
+</main>
+
+<footer class="lab-foot"><div class="lab-foot-in">
+  <p><b>About this tool.</b> A working tool built for this site on the coding scheme in Jo &amp; Bednarz (2009). It is not an instrument the authors published. If you report results, describe them as an application of that scheme and cite the article.</p>
+  <p><a href="../index.html">All instruments</a> · <a href="../index.html#bibliography">Full bibliography</a></p>
+</div></footer>
+
+<script src="../assets/data.js"></script>
+<script src="../assets/lab.js"></script>
+<script>
+(function(){
+  "use strict";
+  var U = window.LAB.util, KEY = "workbench:project";
+  var C = ["Non-spatial","Spatial primitive","Simple-spatial","Complex-spatial"], R = ["Non-use","Use"], G = ["Input","Processing","Output"];
+  var LV = ["Not integrated","Integrated: simplest","Integrated: higher","Integrated: highest"];
+  var LVMAP = {10:1,11:1,16:1,12:2,17:2,22:2,18:3,23:3,24:3};
+  var VERBS = [["Input",["name","define","list","identify","recognize","recite","recall","observe","describe","select","complete","count","match","locate","label"]],
+               ["Processing",["explain","analyze","analyse","compare","contrast","distinguish","classify","categorize","organize","summarize","synthesize","infer","sequence","why"]],
+               ["Output",["evaluate","judge","predict","forecast","hypothesize","speculate","plan","create","design","invent","imagine","generalize","propose","justify"]]];
+  var CONS = [["Spatial primitive",["location","located","magnitude","where"]],
+              ["Simple-spatial",["distance","direction","connection","linkage","movement","transition","boundary","boundaries","region","regions","shape","adjacent","adjacency","arrangement","enclosure"]],
+              ["Complex-spatial",["distribution","distributed","pattern","patterns","clustering","cluster","dispersion","density","diffusion","dominance","hierarchy","network","spatial association","overlay","layer","gradient","profile","relief","scale","projection","buffer"]]];
+  var REPS = ["map","maps","diagram","chart","graph","photo","photograph","image","figure","table","satellite"];
+
+  var P = U.store.get(KEY, null) || { items: [], seq: 1 };
+  var second = null;
+  function save(){ U.store.set(KEY, P); }
+  function $(s){ return document.querySelector(s); }
+  function cell(it){ return it.c==null||it.r==null||it.g==null ? null : it.c*6 + it.r*3 + it.g + 1; }
+  function level(n){ return n==null ? null : (LVMAP[n]||0); }
+  function coded(){ return P.items.filter(function(i){ return cell(i)!=null; }); }
+  function pct(n,t){ return t ? (100*n/t).toFixed(1)+"%" : "–"; }
+
+  function hints(text){
+    var t = " "+text.toLowerCase().replace(/[^a-z\s-]/g," ")+" ", out = [];
+    function scan(lists, tag){ lists.forEach(function(L){ var hit = L[1].filter(function(w){ return t.indexOf(" "+w+" ")>-1 || t.indexOf(" "+w+"s ")>-1; }); if(hit.length) out.push(tag+": <b>"+hit.slice(0,3).join(", ")+"</b> ("+L[0].toLowerCase()+")"); }); }
+    scan(VERBS,"verb"); scan(CONS,"concept");
+    var rp = REPS.filter(function(w){ return t.indexOf(" "+w+" ")>-1; }); if(rp.length) out.push("representation: <b>"+rp.slice(0,2).join(", ")+"</b>");
+    return out.join(" · ");
+  }
+  function sel(it, k, opts){
+    return '<select data-id="'+it.id+'" data-k="'+k+'" aria-label="'+({c:"Concept level",r:"Representation",g:"Cognitive process"})[k]+' for item '+it.id+'"><option value="">–</option>'+
+      opts.map(function(o,i){ return '<option value="'+i+'"'+(it[k]===i?" selected":"")+'>'+o+'</option>'; }).join("")+'</select>';
+  }
+  function renderItems(){
+    var only = $("#onlyOpen").checked, tb = $("#items tbody");
+    var rows = P.items.filter(function(i){ return !only || cell(i)==null; });
+    tb.innerHTML = rows.map(function(it){
+      var n = cell(it), lv = level(n), h = hints(it.text);
+      return '<tr data-row="'+it.id+'"><td class="num">'+it.id+'</td><td class="txt">'+U.esc(it.text)+(h?'<div class="hints">'+h+'</div>':"")+'</td><td>'+U.esc(it.group||"")+'</td><td>'+sel(it,"c",C)+'</td><td>'+sel(it,"r",R)+'</td><td>'+sel(it,"g",G)+'</td>'+
+        '<td class="cellcol">'+cellHtml(n,lv)+'</td><td><input class="note" type="text" data-id="'+it.id+'" value="'+U.esc(it.note||"")+'" aria-label="Note for item '+it.id+'"></td>'+
+        '<td><button class="x" type="button" data-del="'+it.id+'" aria-label="Remove item '+it.id+'">×</button></td></tr>';
+    }).join("");
+    $("#empty").style.display = P.items.length ? "none" : "";
+    $("#items").style.display = P.items.length ? "" : "none";
+    $("#progress").textContent = P.items.length ? coded().length+" of "+P.items.length+" fully coded" : "";
+  }
+  function cellHtml(n,lv){ return n==null ? '<span class="cellno">–</span>' : '<span class="cellno lv'+lv+'" title="'+LV[lv]+'">'+n+'</span>'; }
+
+  function bars(title, labels, counts, total){
+    var max = Math.max.apply(null, counts.concat([1]));
+    return "<div><h3 style='font-size:14px;margin:0 0 6px'>"+title+"</h3>"+labels.map(function(l,i){
+      return '<div class="bar"><span>'+l+'</span><span class="trk"><i style="width:'+(100*counts[i]/max)+'%"></i></span><span>'+counts[i]+" · "+pct(counts[i],total)+'</span></div>'; }).join("")+"</div>";
+  }
+  function tally(list, f, n){ var a = []; for(var i=0;i<n;i++) a.push(0); list.forEach(function(it){ a[f(it)]++; }); return a; }
+  function renderResults(){
+    var L = coded(), T = L.length, box = $("#results");
+    if(!T){ box.innerHTML = '<div class="empty">Results appear once at least one item is fully coded.</div>'; return; }
+    var cells = tally(L, function(i){ return cell(i)-1; }, 24), lv = tally(L, function(i){ return level(cell(i)); }, 4);
+    var grid = '<div class="cube" role="table" aria-label="Items per taxonomy cell"><div></div>';
+    R.forEach(function(r){ G.forEach(function(g){ grid += '<div class="h">'+r+"<br>"+g+'</div>'; }); });
+    for(var c=3;c>=0;c--){ grid += '<div class="rh">'+C[c]+'</div>'; for(var k=0;k<6;k++){ var n=c*6+k+1, v=cells[n-1], l=LVMAP[n]||0, a=v?Math.min(.12+.88*v/Math.max.apply(null,cells),1):0;
+      grid += '<div class="c'+(l?" int":"")+'" style="background:rgba(31,111,139,'+a.toFixed(2)+');color:'+(a>.55?"#fff":"inherit")+'"><small>cell '+n+'</small>'+v+'</div>'; } }
+    grid += "</div>";
+    box.innerHTML = '<div class="cols">'+bars("Concepts of space",C,tally(L,function(i){return i.c;},4),T)+bars("Tools of representation",R,tally(L,function(i){return i.r;},2),T)+bars("Cognitive process",G,tally(L,function(i){return i.g;},3),T)+bars("Integration of the three components",LV,lv,T)+'</div>'+
+      '<h3 style="font-size:14px;margin:18px 0 8px">Items per cell (outlined cells integrate all three components)</h3><div class="lab-scroll">'+grid+'</div>'+
+      '<div class="stat"><b>'+(T-lv[0])+" of "+T+" items ("+pct(T-lv[0],T)+")</b> integrate a spatial concept, a representation and a cognitive process. For comparison, Jo &amp; Bednarz (2009) report that about 24% of 3,010 textbook questions did.</div>";
+  }
+
+  /* chi-square upper-tail probability via the regularised incomplete gamma function */
+  function lgam(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.001208650973866179,-0.000005395239384953], y=x, t=x+5.5; t-=(x+.5)*Math.log(t); var s=1.000000000190015; for(var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); }
+  function gammq(a,x){ if(x<=0) return 1; var i;
+    if(x<a+1){ var ap=a, sum=1/a, del=sum; for(i=0;i<500;i++){ ap++; del*=x/ap; sum+=del; if(Math.abs(del)<Math.abs(sum)*1e-12) break; } return 1-sum*Math.exp(-x+a*Math.log(x)-lgam(a)); }
+    var b=x+1-a, c=1e300, d=1/b, h=d; for(i=1;i<500;i++){ var an=-i*(i-a); b+=2; d=an*d+b; if(Math.abs(d)<1e-300)d=1e-300; c=b+an/c; if(Math.abs(c)<1e-300)c=1e-300; d=1/d; var dl=d*c; h*=dl; if(Math.abs(dl-1)<1e-12) break; }
+    return Math.exp(-x+a*Math.log(x)-lgam(a))*h; }
+  function dimOf(k){ return k==="c"?{f:function(i){return i.c;},lab:C}:k==="r"?{f:function(i){return i.r;},lab:R}:k==="g"?{f:function(i){return i.g;},lab:G}:k==="lv"?{f:function(i){return level(cell(i));},lab:LV}:{f:function(i){return level(cell(i))?1:0;},lab:["Not integrated","Integrated"]}; }
+  function renderGroups(){
+    var L = coded(), D = dimOf($("#dim").value), box = $("#groups"), names = [];
+    L.forEach(function(i){ var g=i.group||"(no group)"; if(names.indexOf(g)<0) names.push(g); });
+    if(names.length<2){ box.innerHTML = '<div class="empty">Add a second group to compare distributions.</div>'; return; }
+    var tab = names.map(function(g){ return tally(L.filter(function(i){ return (i.group||"(no group)")===g; }), D.f, D.lab.length); });
+    var keep = D.lab.map(function(_,j){ return tab.some(function(r){ return r[j]>0; }); });
+    var colT = D.lab.map(function(_,j){ return tab.reduce(function(s,r){ return s+r[j]; },0); }), rowT = tab.map(function(r){ return r.reduce(function(a,b){return a+b;},0); }), N = rowT.reduce(function(a,b){return a+b;},0);
+    var chi=0, small=0, ncol=keep.filter(Boolean).length;
+    tab.forEach(function(r,i){ r.forEach(function(o,j){ if(!keep[j]) return; var e=rowT[i]*colT[j]/N; if(e<5) small++; chi+=(o-e)*(o-e)/e; }); });
+    var df=(names.length-1)*(ncol-1), p = df>0 ? gammq(df/2, chi/2) : null;
+    var h = '<div class="lab-scroll"><table><thead><tr><th>Group</th>'+D.lab.map(function(l){return '<th class="num">'+l+'</th>';}).join("")+'<th class="num">Total</th></tr></thead><tbody>'+
+      tab.map(function(r,i){ return '<tr><td>'+U.esc(names[i])+'</td>'+r.map(function(v){ return '<td class="num">'+v+' <span style="color:var(--lab-mute)">('+pct(v,rowT[i])+')</span></td>'; }).join("")+'<td class="num">'+rowT[i]+'</td></tr>'; }).join("")+'</tbody></table></div>';
+    h += df>0 ? '<div class="stat">χ² = <b>'+chi.toFixed(2)+'</b>, df = '+df+', p '+(p<.001?"&lt; .001":"= "+p.toFixed(3))+'. '+(p<.05?"The distributions differ across groups at α = .05.":"No difference across groups at α = .05.")+'</div>' : '<div class="stat">Only one category is in use, so there is nothing to test.</div>';
+    if(small) h += '<div class="warn">'+small+' expected count'+(small>1?"s are":" is")+' below 5. The chi-square approximation is unreliable here; collapse categories or code more items before reporting this result.</div>';
+    box.innerHTML = h;
+  }
+
+  function kappa(a,b){ var n=a.length, cats={}, agree=0; a.forEach(function(x,i){ cats[x]=1; cats[b[i]]=1; if(x===b[i]) agree++; }); var pe=0; Object.keys(cats).forEach(function(k){ var pa=a.filter(function(x){return String(x)===k;}).length/n, pb=b.filter(function(x){return String(x)===k;}).length/n; pe+=pa*pb; }); var po=agree/n; return { po:po, k: pe===1 ? 1 : (po-pe)/(1-pe) }; }
+  function renderKappa(){
+    var box = $("#kappa"); if(!second){ box.innerHTML=""; return; }
+    var pairs = []; P.items.forEach(function(i){ var o=second[String(i.id)]; if(o && cell(i)!=null && cell(o)!=null) pairs.push([i,o]); });
+    if(pairs.length<2){ box.innerHTML='<div class="warn">Fewer than two items could be matched by id with both coders fully coded.</div>'; return; }
+    var dims=[["Concept level",function(i){return i.c;}],["Representation",function(i){return i.r;}],["Cognitive process",function(i){return i.g;}],["Cell (all three)",function(i){return cell(i);}]];
+    box.innerHTML = '<div class="lab-scroll"><table style="margin-top:10px"><thead><tr><th>Dimension</th><th class="num">Agreement</th><th class="num">Cohen\'s κ</th></tr></thead><tbody>'+dims.map(function(d){ var r=kappa(pairs.map(function(p){return d[1](p[0]);}),pairs.map(function(p){return d[1](p[1]);})); return '<tr><td>'+d[0]+'</td><td class="num">'+(100*r.po).toFixed(1)+'%</td><td class="num">'+r.k.toFixed(2)+'</td></tr>'; }).join("")+'</tbody></table></div><div class="stat">'+pairs.length+' items matched. Disagreements: '+(pairs.filter(function(p){return cell(p[0])!==cell(p[1]);}).map(function(p){return "#"+p[0].id;}).join(", ")||"none")+'.</div>';
+  }
+
+  function parseCSV(t){ var rows=[], row=[], f="", q=false; t=t.replace(/^﻿/,""); for(var i=0;i<t.length;i++){ var ch=t[i]; if(q){ if(ch==='"'){ if(t[i+1]==='"'){f+='"';i++;} else q=false; } else f+=ch; } else if(ch==='"') q=true; else if(ch===","){ row.push(f); f=""; } else if(ch==="\n"||ch==="\r"){ if(ch==="\r"&&t[i+1]==="\n") i++; row.push(f); f=""; if(row.some(function(x){return x!=="";})) rows.push(row); row=[]; } else f+=ch; } row.push(f); if(row.some(function(x){return x!=="";})) rows.push(row); return rows; }
+  function idx(list, v){ if(v==null||v==="") return null; var s=String(v).trim().toLowerCase(); for(var i=0;i<list.length;i++) if(list[i].toLowerCase()===s) return i; var n=parseInt(s,10); return isNaN(n)||n<0||n>=list.length ? null : n; }
+  function fromCSV(text){ var rows=parseCSV(text); if(!rows.length) return []; var head=rows[0].map(function(h){return h.trim().toLowerCase();}), has=head.indexOf("text")>-1; if(!has){ head=["text"]; } else rows.shift();
+    var col=function(n){ return head.indexOf(n); };
+    return rows.map(function(r){ var g=function(n){ var i=col(n); return i<0?"":(r[i]||""); }; return { id:g("id"), text:g("text").trim(), group:g("group").trim(), c:idx(C,g("concept")), r:idx(R,g("representation")), g:idx(G,g("cognitive")), note:g("note") }; }).filter(function(i){ return i.text; }); }
+  function addItems(list){ list.forEach(function(i){ P.items.push({ id:P.seq++, text:i.text, group:i.group||"", c:i.c==null?null:i.c, r:i.r==null?null:i.r, g:i.g==null?null:i.g, note:i.note||"" }); }); save(); all(); }
+  function readFile(inp, cb){ var f=inp.files[0]; if(!f) return; var fr=new FileReader(); fr.onload=function(){ cb(String(fr.result)); inp.value=""; }; fr.readAsText(f); }
+  function all(){ renderItems(); renderResults(); renderGroups(); renderKappa(); }
+  function msg(t){ $("#msg").textContent=t; }
+
+  $("#add").onclick=function(){ var g=$("#grp").value.trim(); var lines=$("#paste").value.split(/\r?\n/).map(function(s){return s.trim();}).filter(Boolean); if(!lines.length) return; addItems(lines.map(function(t){ return {text:t,group:g}; })); $("#paste").value=""; };
+  $("#csvin").onchange=function(){ readFile(this,function(t){ var l=fromCSV(t); addItems(l); msg(l.length+" items imported"); }); };
+  $("#demo").onclick=function(){ addItems([
+    {text:"Define market-oriented agriculture.",group:"Worked examples (Jo & Bednarz, 2011, Table 3)",c:0,r:0,g:0,note:"Paper: cell 1"},
+    {text:"Define cultural boundaries.",group:"Worked examples (Jo & Bednarz, 2011, Table 3)",c:2,r:0,g:0,note:"Paper lists cell 7; Fig. 1 numbering gives 13"},
+    {text:"Look at the map of coal, gas, and oil resources. Which states and provinces appear to have the richest energy resources?",group:"Worked examples (Jo & Bednarz, 2011, Table 3)",c:2,r:1,g:1,note:"Paper lists cell 11; Fig. 1 numbering gives 17"}]); };
+  $("#onlyOpen").onchange=renderItems; $("#dim").onchange=renderGroups;
+  $("#items").addEventListener("change",function(e){ var t=e.target, it=P.items.filter(function(i){return String(i.id)===t.getAttribute("data-id");})[0]; if(!it) return;
+    if(t.tagName==="SELECT"){ it[t.getAttribute("data-k")] = t.value===""?null:+t.value; var n=cell(it); t.closest("tr").querySelector(".cellcol").innerHTML=cellHtml(n,level(n)); $("#progress").textContent=coded().length+" of "+P.items.length+" fully coded"; renderResults(); renderGroups(); renderKappa(); }
+    else it.note=t.value; save(); });
+  $("#items").addEventListener("click",function(e){ var d=e.target.getAttribute("data-del"); if(!d) return; P.items=P.items.filter(function(i){return String(i.id)!==d;}); save(); all(); });
+  $("#second").onchange=function(){ readFile(this,function(t){ second={}; fromCSV(t).forEach(function(i){ if(i.id) second[String(i.id).trim()]=i; }); renderKappa(); }); };
+  function exportRows(){ return [["id","text","group","concept","representation","cognitive","cell","integration","note"]].concat(P.items.map(function(i){ var n=cell(i); return [i.id,i.text,i.group,i.c==null?"":C[i.c],i.r==null?"":R[i.r],i.g==null?"":G[i.g],n==null?"":n,n==null?"":LV[level(n)],i.note]; })); }
+  $("#exCsv").onclick=function(){ U.download("taxonomy-coded-items.csv",U.csv(exportRows()),"text/csv"); };
+  $("#exSum").onclick=function(){ var L=coded(),T=L.length,rows=[["table","category","n","percent"]]; function put(n,lab,arr){ arr.forEach(function(v,i){ rows.push([n,lab[i],v,T?(100*v/T).toFixed(1):""]); }); }
+    put("Concept",C,tally(L,function(i){return i.c;},4)); put("Representation",R,tally(L,function(i){return i.r;},2)); put("Cognitive process",G,tally(L,function(i){return i.g;},3)); put("Integration",LV,tally(L,function(i){return level(cell(i));},4));
+    tally(L,function(i){return cell(i)-1;},24).forEach(function(v,i){ rows.push(["Cell","Cell "+(i+1),v,T?(100*v/T).toFixed(1):""]); }); U.download("taxonomy-summary.csv",U.csv(rows),"text/csv"); };
+  $("#exJson").onclick=function(){ U.download("taxonomy-project.json",JSON.stringify(P,null,2),"application/json"); };
+  $("#inJson").onchange=function(){ readFile(this,function(t){ try{ var o=JSON.parse(t); if(!o.items) throw 0; P=o; save(); all(); msg("Project opened"); }catch(e){ msg("That file is not a workbench project."); } }); };
+  var armed=false; $("#wipe").onclick=function(){ if(!armed){ armed=true; this.textContent="Click again to delete all items"; var b=this; setTimeout(function(){ armed=false; b.textContent="Delete all items"; },4000); return; } P={items:[],seq:1}; second=null; save(); all(); armed=false; this.textContent="Delete all items"; msg("All items deleted"); };
+  all();
+})();
+</script>
+</body>
+</html>

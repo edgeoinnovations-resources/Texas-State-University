@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lab-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OPTIC &amp; SCRAP — GeoActivity Scaffolds (Jo, Crane, Hong &amp; Huh, 2022)</title>
+<title>GeoActivity Scaffolds — OPTIC &amp; SCRAP — Jo Instrument Lab</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312233f'/%3E%3Cpath d='M8 22l8-13 8 13z' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E">
+<meta name="description" content="Two student-facing routines: OPTIC for analysing photographs and SCRAP for analysing maps.">
 <style>
   :root{
     --bg:#f5f3ec; --panel:#fff; --panel-2:#fbfaf5; --ink:#232a2f; --ink-2:#4c5760; --muted:#8a929b; --line:#e4ded1;
@@ -78,13 +80,10 @@
   .foot{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
   @media(max-width:760px){ .tabs{flex-direction:column} .toolgrid{grid-template-columns:1fr} .visual{position:static} .fourf,.tips{grid-template-columns:1fr 1fr} header.hero h1{font-size:23px} }
 </style>
+<link rel="stylesheet" href="../assets/lab.css">
 </head>
-<body>
-<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
-</div>
-
-  <div class="wrap">
+<body data-lab-id="geoactivity-optic-scrap">
+<div class="wrap">
     <header class="hero">
       <div class="kicker">Interactive · Jo, Crane, Hong &amp; Huh (2022)</div>
       <h1>Two routines that turn “glancing at a map” into analyzing it</h1>
@@ -175,7 +174,7 @@
         </div>
         <div class="series" style="margin-top:14px"><b>Part of a series.</b> This is one of the 2022 “GeoActivity Types in APHG” articles in <i>The Geography Teacher</i>. Its siblings cover discussions, field study (with field-note templates), exam preparation, and an end-of-year culminating project — a whole toolkit of student-facing routines. SCRAP is adapted from Gersmehl’s (2014) modes of spatial thinking; OPTIC comes from the Texas Education Agency’s Lighthouse Project (2006).</div>
       </div>
-      <div class="foot">Source: Jo, Crane, Hong &amp; Huh (2022), <i>The Geography Teacher</i> 19(2):56–59 (full text in the connected Zotero library). OPTIC and SCRAP prompts are verbatim from the article's Tables 1 &amp; 2. Example guiding questions are drawn from the article's worked examples (Menzel “Material World” photos; a world-language-families map). Illustrations are stylized stand-ins, not the copyrighted originals.</div>
+      <div class="foot">Source: Jo, Crane, Hong &amp; Huh (2022), <i>The Geography Teacher</i> 19(2):56–59. OPTIC and SCRAP prompts are verbatim from the article's Tables 1 &amp; 2. Example guiding questions are drawn from the article's worked examples (Menzel “Material World” photos; a world-language-families map). Illustrations are stylized stand-ins, not the copyrighted originals.</div>
     </section>
   </div>
 
@@ -249,5 +248,7 @@
   });
 })();
 </script>
+<script src="../assets/data.js"></script>
+<script src="../assets/lab.js"></script>
 </body>
 </html>

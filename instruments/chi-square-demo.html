@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lab-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chi-Square Goodness-of-Fit Demo — Ghaffari, Jo &amp; Currit (2018) · Instrument Lab</title>
+<title>Chi-Square Goodness-of-Fit Calculator — Jo Instrument Lab</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312233f'/%3E%3Cpath d='M8 22l8-13 8 13z' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E">
+<meta name="description" content="The test behind the astronaut-photo study, worked step by step and usable with your own counts.">
 <style>
   :root{
     --ink:#1a2230; --sub:#54607a; --hair:#dfe4ee; --bg:#f4f6fb; --card:#ffffff;
@@ -110,13 +112,9 @@
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
 </style>
+<link rel="stylesheet" href="../assets/lab.css">
 </head>
-<body>
-<div style="background:#0d2547;padding:8px 16px;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <a href="../index.html" style="color:#dce8fb;text-decoration:none;">← Back to the Jo Instrument Lab</a>
-</div>
-
-
+<body data-lab-id="chi-square-demo">
 <header class="hero">
   <div class="wrap">
     <span class="kicker">Dr. Injeong Jo · Instrument Lab</span>
@@ -222,7 +220,7 @@
   <div class="wrap">
     <h3>Source</h3>
     <p>Ghaffari, Z., Jo, I., &amp; Currit, N.&nbsp;A. (2018). NASA Astronaut Photography of Earth: A Resource to Facilitate Students' Learning and Using Geospatial Concepts. <em>International Journal of Geospatial and Environmental Research, 5</em>(3), Article 6 — Tables 2–4 and Appendices I &amp; V.</p>
-    <p class="small" style="color:#8b98af">Concept coding via the Taxonomy of Spatial Thinking (Jo &amp; Bednarz, 2009). Chi-square goodness-of-fit test after Thompson (2006). Verified against the full text held in the project Zotero library. Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
+    <p class="small" style="color:#8b98af">Concept coding via the Taxonomy of Spatial Thinking (Jo &amp; Bednarz, 2009). Chi-square goodness-of-fit test after Thompson (2006). Part of the Dr. Injeong Jo Instrument Lab — one interactive page per research instrument.</p>
   </div>
 </footer>
 
@@ -322,5 +320,7 @@ document.getElementById("progBody").innerHTML = PHOTOS.map(function(p){
 
 loadData();
 </script>
+<script src="../assets/data.js"></script>
+<script src="../assets/lab.js"></script>
 </body>
 </html>

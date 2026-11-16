@@ -1,528 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lab-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dr. Injeong Jo — Instrument Lab</title>
-<meta name="description" content="An interactive tour of the research instruments Dr. Injeong Jo built and reused across 2009–2024 in geography education.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312233f'/%3E%3Cpath d='M8 22l8-13 8 13z' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E">
+<meta name="description" content="A searchable catalogue of the research instruments Dr. Injeong Jo built and reused in geography education, 2009–2024, each as an interactive page linked to its reference article.">
+<link rel="stylesheet" href="assets/lab.css">
 <style>
-  :root{
-    --blue:#2a78d6;
-    --green:#008300;
-    --magenta:#e87ba4;
-    --yellow:#eda100;
-    --orange:#eb6834;
-    --ink:#1a2230;
-    --sub:#54607a;
-    --hair:#dfe4ee;
-    --bg:#f4f6fb;
-    --card:#ffffff;
-    --shadow:0 1px 3px rgba(24,39,75,.07),0 6px 20px rgba(24,39,75,.06);
-    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  *,*::before,*::after{box-sizing:border-box;}
-  html{-webkit-text-size-adjust:100%;}
-  body{
-    margin:0;background:var(--bg);color:var(--ink);
-    font-family:var(--font);font-size:16px;line-height:1.55;
-  }
+  body{font:16px/1.55 var(--lab-font);color:var(--lab-ink);background:var(--lab-paper);}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px;}
+  .hero{background:var(--lab-navy);color:#fff;padding:44px 0 40px;}
+  .hero .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9fb4d1;margin:0 0 10px;}
+  .hero h1{margin:0 0 12px;font-size:clamp(28px,4.6vw,44px);line-height:1.12;letter-spacing:-.02em;}
+  .hero p.sub{margin:0;max-width:68ch;color:#d5e1f2;font-size:clamp(16px,2vw,18px);}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 0;padding:0;list-style:none;}
+  .stats li{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:9px 14px;font-size:13.5px;color:#c9d8ee;}
+  .stats b{display:block;font-size:22px;color:#fff;line-height:1.15;}
+  .start{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:22px 0 6px;}
+  .start a{display:block;background:#fff;border:1px solid var(--lab-line);border-radius:12px;padding:14px 16px;text-decoration:none;color:inherit;}
+  .start a:hover,.start a:focus-visible{border-color:var(--lab-accent);outline:none;box-shadow:0 0 0 3px rgba(31,111,139,.18);}
+  .start b{display:block;color:var(--lab-accent-ink);margin-bottom:2px;}
+  .start span{font-size:14px;color:var(--lab-sub);}
 
-  /* ---------- hero ---------- */
-  .hero{
-    background:linear-gradient(160deg,#12305e 0%,#1d4b8f 55%,#2a78d6 100%);
-    color:#fff;padding:64px 24px 72px;
-  }
-  .hero-inner{max-width:940px;margin:0 auto;}
-  .eyebrow{
-    font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-    color:#a9c8f0;margin:0 0 14px;
-  }
-  .hero h1{
-    margin:0 0 16px;font-size:clamp(30px,5.2vw,50px);
-    line-height:1.12;letter-spacing:-.02em;font-weight:800;
-  }
-  .hero p.sub{margin:0;max-width:64ch;font-size:clamp(16px,2.1vw,19px);color:#dce8fb;}
-  .hero .meta{
-    margin:26px 0 0;display:flex;flex-wrap:wrap;gap:10px 26px;
-    font-size:13px;color:#bcd5f4;
-  }
-  .hero .meta b{color:#fff;font-weight:700;}
+  .tools{position:sticky;top:0;z-index:5;background:var(--lab-paper);border-bottom:1px solid var(--lab-line);padding:12px 0;margin-top:14px;}
+  .tools .r1{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;}
+  .lab-input{font:15px var(--lab-font);padding:8px 11px;border:1px solid #c4ccd8;border-radius:8px;background:#fff;color:var(--lab-ink);min-width:0;}
+  #q{flex:1 1 240px;}
+  .seg{display:inline-flex;border:1px solid #b9cbd6;border-radius:8px;overflow:hidden;background:#fff;}
+  .seg button{font:600 13.5px var(--lab-font);border:0;background:none;padding:8px 12px;cursor:pointer;color:var(--lab-accent-ink);}
+  .seg button[aria-pressed=true]{background:var(--lab-accent);color:#fff;}
+  .seg button:focus-visible{outline:3px solid #8ec3d6;outline-offset:-3px;}
+  .count{font-size:14px;color:var(--lab-sub);margin:8px 0 0;}
+  h2.sec{font-size:22px;margin:34px 0 6px;letter-spacing:-.01em;}
+  p.secsub{margin:0 0 14px;color:var(--lab-sub);max-width:80ch;font-size:15px;}
 
-  .wrap{max-width:940px;margin:0 auto;padding:0 24px;}
+  .year{display:grid;grid-template-columns:76px 1fr;gap:16px;margin:22px 0 0;}
+  .year h3{margin:0;font-size:20px;font-weight:800;padding-top:12px;color:var(--lab-navy);}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px;}
+  .card{background:#fff;border:1px solid var(--lab-line);border-top:4px solid var(--fam,#888);border-radius:12px;padding:14px 16px 12px;display:flex;flex-direction:column;gap:6px;}
+  .card h4{margin:0;font-size:17px;line-height:1.3;}
+  .card h4 a{color:var(--lab-ink);text-decoration:none;}
+  .card h4 a:hover,.card h4 a:focus-visible{color:var(--lab-accent-ink);text-decoration:underline;outline:none;}
+  .card .chips{display:flex;flex-wrap:wrap;gap:5px;}
+  .card p{margin:0;font-size:14.5px;color:var(--lab-sub);}
+  .card p.ref{font-size:13.5px;color:var(--lab-ink);}
+  .card .acts{margin-top:auto;padding-top:8px;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;font-weight:600;}
+  .card .acts a{color:var(--lab-accent-ink);}
+  .star{color:#b07a00;}
+  @media (max-width:640px){.year{grid-template-columns:1fr;gap:8px;}.year h3{padding-top:0;}.cards{grid-template-columns:1fr;}}
 
-  /* ---------- legend ---------- */
-  .legend{
-    background:var(--card);border:1px solid var(--hair);border-radius:14px;
-    box-shadow:var(--shadow);padding:18px 22px;margin:-34px auto 44px;
-    display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;
-  }
-  .legend h2{
-    margin:0;font-size:12px;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--sub);
-  }
-  .legend-item{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--sub);}
+  table.cat{border-collapse:collapse;width:100%;font-size:14px;background:#fff;border:1px solid var(--lab-line);}
+  table.cat th,table.cat td{padding:8px 10px;border-bottom:1px solid var(--lab-line);text-align:left;vertical-align:top;}
+  table.cat th{background:#eef1f5;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--lab-sub);white-space:nowrap;}
+  table.cat th button{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;}
+  table.cat th button::after{content:" ↕";opacity:.5;}
+  table.cat td a{color:var(--lab-accent-ink);font-weight:600;}
+  table.cat td.m{min-width:230px;color:var(--lab-sub);}
 
-  /* ---------- badges ---------- */
-  .badge{
-    display:inline-block;font-size:11px;font-weight:800;letter-spacing:.07em;
-    text-transform:uppercase;padding:4px 10px;border-radius:999px;
-    border:1px solid transparent;white-space:nowrap;
-  }
-  .badge-built{background:#e3f3e3;color:#00600b;border-color:#b6dfb6;}
-  .badge-reused{background:#e2eefc;color:#164e91;border-color:#b8d5f4;}
+  #map{background:#fff;border:1px solid var(--lab-line);border-radius:12px;padding:8px;}
+  #map svg{display:block;min-width:900px;width:100%;height:auto;}
+  #map text{font:12px var(--lab-font);fill:var(--lab-ink);}
+  #map a:focus-visible rect,#map a:hover rect{stroke:var(--lab-navy);stroke-width:2.5;}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;color:var(--lab-sub);margin:10px 0 0;}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;}
 
-  /* ---------- timeline ---------- */
-  .timeline{position:relative;padding:0 0 8px 0;margin:0 0 56px;}
-  .timeline::before{
-    content:"";position:absolute;left:57px;top:10px;bottom:10px;
-    width:2px;background:var(--hair);border-radius:2px;
-  }
-  .year-row{position:relative;display:flex;gap:28px;margin:0 0 34px;}
-  .year-label{
-    flex:0 0 116px;position:relative;padding-top:14px;
-    text-align:right;padding-right:34px;
-  }
-  .year-label span{font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--ink);}
-  .year-label::after{
-    content:"";position:absolute;right:-7px;top:22px;
-    width:14px;height:14px;border-radius:50%;
-    background:var(--blue);border:3px solid var(--bg);box-shadow:0 0 0 2px var(--blue);
-  }
-  .year-cards{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:14px;}
-
-  /* ---------- cards ---------- */
-  .card{
-    display:block;background:var(--card);border:1px solid var(--hair);
-    border-left:5px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);
-    padding:18px 22px;text-decoration:none;color:inherit;
-    transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;
-  }
-  .card:hover,.card:focus-visible{
-    transform:translateY(-2px);
-    box-shadow:0 2px 5px rgba(24,39,75,.10),0 12px 30px rgba(24,39,75,.12);
-    outline:none;
-  }
-  .card:focus-visible{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,120,214,.35);}
-  .card-built{border-left-color:var(--green);}
-  .card-reused{border-left-color:var(--blue);}
-  .card-top{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px 12px;margin-bottom:6px;}
-  .card h3{
-    margin:0;flex:1 1 260px;min-width:0;
-    font-size:18px;line-height:1.32;font-weight:700;letter-spacing:-.01em;
-  }
-  .flagship{color:var(--yellow);font-size:15px;line-height:1;margin-left:2px;}
-  .cite{margin:0 0 8px;font-size:13px;color:var(--sub);font-style:italic;}
-  .blurb{margin:0;font-size:14.5px;color:var(--sub);}
-  .go{display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--blue);}
-  .card:hover .go{text-decoration:underline;}
-
-  /* ---------- series grouping label ---------- */
-  .series-note{
-    margin:2px 0 -2px;font-size:12px;font-weight:700;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--sub);
-  }
-
-  /* ---------- footer ---------- */
-  footer{border-top:1px solid var(--hair);background:#fff;padding:34px 24px 46px;}
-  footer .wrap{max-width:940px;}
-  footer p{margin:0 0 12px;font-size:13.5px;color:var(--sub);max-width:74ch;}
-  footer a{color:var(--blue);}
-  footer p:last-child{margin-bottom:0;}
-
-  /* ---------- responsive ---------- */
-  @media (max-width:720px){
-    .hero{padding:46px 20px 56px;}
-    .wrap{padding:0 20px;}
-    .legend{margin:-28px auto 34px;padding:16px 18px;gap:12px 18px;}
-    .timeline::before{left:6px;}
-    .year-row{flex-direction:column;gap:12px;padding-left:28px;margin-bottom:28px;}
-    .year-label{flex:none;text-align:left;padding:0;}
-    .year-label::after{right:auto;left:-28px;top:8px;}
-    .card{padding:16px 18px;}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .card{transition:none;}
-    .card:hover,.card:focus-visible{transform:none;}
-  }
+  .bib{background:#fff;border:1px solid var(--lab-line);border-radius:12px;padding:6px 20px 12px;}
+  .bib ol{padding-left:22px;margin:10px 0;}
+  .bib li{margin:0 0 9px;font-size:14.5px;overflow-wrap:anywhere;}
+  .bib a{color:var(--lab-accent-ink);}
+  .gaps li{margin:0 0 10px;font-size:14.5px;} .gaps span{display:block;color:var(--lab-sub);}
+  .none{padding:26px;text-align:center;color:var(--lab-mute);border:1px dashed #c9d1dc;border-radius:12px;background:#fff;}
+  [hidden]{display:none !important;}
 </style>
 </head>
 <body>
-
-<header class="hero">
-  <div class="hero-inner">
-    <p class="eyebrow">Texas State University &middot; Geography Education</p>
-    <h1>Dr. Injeong Jo — Instrument Lab</h1>
-    <p class="sub">An interactive tour of the research instruments Dr. Injeong Jo built and reused across 2009&ndash;2024 &mdash; each one rebuilt here as a hands-on page you can actually click through.</p>
-    <p class="meta">
-      <span><b>26</b> interactive instruments</span>
-      <span><b>2009&ndash;2024</b> chronological</span>
-      <span><b>18</b> built &middot; <b>8</b> reused</span>
-    </p>
-  </div>
-</header>
+<a class="lab-skip" href="#catalogue">Skip to the catalogue</a>
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Texas State University · Geography Education</p>
+  <h1>Dr. Injeong Jo — Instrument Lab</h1>
+  <p class="sub">Every research instrument Dr. Jo built or reused between 2009 and 2024, turned into a page you can work with: what it measures, how it was used, a hands-on version, and a link to the reference article.</p>
+  <ul class="stats" id="stats"></ul>
+</div></header>
 
 <main class="wrap">
+  <div class="start">
+    <a href="instruments/taxonomy-3d-cube.html"><b>Start with the taxonomy</b><span>The 2009 three-axis taxonomy underlies a third of the instruments here.</span></a>
+    <a href="instruments/coding-workbench.html"><b>Code your own data</b><span>Apply the 24-cell scheme to your own questions or objectives and export a CSV.</span></a>
+    <a href="#bibliography"><b>Get the references</b><span>All source articles with DOIs, exportable to Zotero in one file.</span></a>
+  </div>
 
-  <section class="legend" aria-label="Legend">
-    <h2>Legend</h2>
-    <span class="legend-item"><span class="badge badge-built">Built</span> instrument she developed or adapted</span>
-    <span class="legend-item"><span class="badge badge-reused">Reused</span> existing instrument she applied</span>
-    <span class="legend-item"><span class="flagship" aria-hidden="true">&#9733;</span> flagship contribution</span>
+  <div class="tools" id="catalogue">
+    <div class="r1">
+      <input class="lab-input" id="q" type="search" placeholder="Search title, construct, population, author…" aria-label="Search instruments">
+      <select class="lab-input" id="fStatus" aria-label="Filter by origin"><option value="">Built and reused</option><option value="built">Built by Jo</option><option value="reused">Reused by Jo</option><option value="tool">Working tools</option></select>
+      <select class="lab-input" id="fFamily" aria-label="Filter by research strand"><option value="">All research strands</option></select>
+      <select class="lab-input" id="fKind" aria-label="Filter by instrument type"><option value="">All instrument types</option></select>
+      <div class="seg" role="group" aria-label="View">
+        <button type="button" data-view="cards" aria-pressed="true">Timeline</button>
+        <button type="button" data-view="table" aria-pressed="false">Table</button>
+        <button type="button" data-view="map" aria-pressed="false">Lineage</button>
+      </div>
+    </div>
+    <p class="count" id="count" role="status"></p>
+  </div>
+
+  <section id="v-cards" aria-label="Instruments by year"></section>
+  <section id="v-table" hidden aria-label="Instruments as a table">
+    <div class="lab-scroll"><table class="cat"><thead><tr>
+      <th><button type="button" data-sort="year">Year</button></th><th><button type="button" data-sort="title">Instrument</button></th><th><button type="button" data-sort="status">Origin</button></th><th><button type="button" data-sort="kind">Type</button></th><th>Measures</th><th>Studied with</th><th>Article</th>
+    </tr></thead><tbody></tbody></table></div>
+    <p style="margin:10px 0 0"><button class="lab-btn" type="button" id="tblCsv">Download this table (CSV)</button></p>
+  </section>
+  <section id="v-map" hidden aria-label="Lineage map">
+    <p class="secsub" style="margin-top:14px">Each box is an instrument, placed by year and research strand. A solid arrow means the later instrument is built on the earlier one. Dashed lines join the 2022 symposium series. Filters above dim what does not match.</p>
+    <div class="lab-scroll" id="map"></div>
+    <div class="legend" id="legend"></div>
   </section>
 
-  <div class="timeline">
-
-    <!-- ===== 2009 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2009</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/taxonomy-3d-cube.html">
-          <div class="card-top">
-            <h3>Taxonomy of Spatial Thinking &mdash; 3D rotatable cube <span class="flagship" aria-hidden="true">&#9733;</span></h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo &amp; Bednarz (2009)</p>
-          <p class="blurb">The 4&times;2&times;3 = 24-cell taxonomy as a rotatable 3D WebGL cube you can walk cell by cell. The foundation nearly everything below builds on.</p>
-          <span class="go">Open the cube &rarr;</span>
-        </a>
-      </div>
+  <h2 class="sec" id="bibliography">Bibliography</h2>
+  <p class="secsub">The reference article for every instrument, in APA style. DOIs were taken from the publisher records in the project's Zotero library; five articles have no DOI on record.</p>
+  <div class="bib">
+    <div class="lab-btns" style="margin-top:12px">
+      <button class="lab-btn primary" type="button" id="bRis">Download all (RIS for Zotero)</button>
+      <button class="lab-btn" type="button" id="bBib">Download all (BibTeX)</button>
+      <button class="lab-btn" type="button" id="bCopy">Copy all citations</button>
+      <label style="font-size:13.5px;color:var(--lab-sub);display:inline-flex;align-items:center;gap:6px"><input type="checkbox" id="zot"> Show “Open in my Zotero” links on instrument pages (site owner)</label>
     </div>
+    <ol id="bibList"></ol>
+  </div>
 
-    <!-- ===== 2010 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2010</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/question-authoring-tool.html">
-          <div class="card-top">
-            <h3>Spatial-Question Authoring Tool</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo, Bednarz &amp; Metoyer (2010)</p>
-          <p class="blurb">Turns the taxonomy into a writing tool: score any question on all three axes, then rewrite it to demand more spatial thinking.</p>
-          <span class="go">Author a question &rarr;</span>
-        </a>
-      </div>
-    </div>
+  <h2 class="sec">Not yet covered</h2>
+  <p class="secsub">Works by Dr. Jo in the project library that do not have a page yet.</p>
+  <ul class="gaps" id="gaps"></ul>
 
-    <!-- ===== 2011 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2011</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/where-spatial-questions-hide.html">
-          <div class="card-top">
-            <h3>Question-Location Coding Scheme</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo &amp; Bednarz (2011)</p>
-          <p class="blurb">Five-category scheme for <em>where</em> spatial questions hide in a textbook (in-text, margin, supplemental, end-of-section, end-of-chapter).</p>
-          <span class="go">Explore the scheme &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2013 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2013</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/college-readiness-geography.html">
-          <div class="card-top">
-            <h3>Seven-Goal College-Readiness Scheme</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo &amp; Milson (2013)</p>
-          <p class="blurb">Seven college-readiness goals crosswalked across national standards, with importance/proficiency/challenge gaps.</p>
-          <span class="go">Explore the goals &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2014 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2014</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/disposition-inventory.html">
-          <div class="card-top">
-            <h3>Teaching Spatial Thinking Disposition Inventory <span class="flagship" aria-hidden="true">&#9733;</span></h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo &amp; Bednarz (2014)</p>
-          <p class="blurb">40-item, 5-point Likert inventory of a teacher's disposition to teach spatial thinking, with reverse-scored safeguards.</p>
-          <span class="go">Take the inventory &rarr;</span>
-        </a>
-        <a class="card card-built" href="instruments/lesson-spatiality-comparator.html">
-          <div class="card-top">
-            <h3>Lesson-Plan Spatiality: Pre/Post Comparator</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo &amp; Bednarz (2014)</p>
-          <p class="blurb">The 2009 taxonomy turned back on teachers themselves &mdash; coding lesson plans before and after training to see whether instruction actually changes planning.</p>
-          <span class="go">Compare pre/post &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2015 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2015</span></div>
-      <div class="year-cards">
-        <a class="card card-reused" href="instruments/gst-integration-explorer.html">
-          <div class="card-top">
-            <h3>GST Integration-Level Explorer</h3>
-            <span class="badge badge-reused">Reused</span>
-          </div>
-          <p class="cite">Instrument: Gao (2002); applied by Jo &amp; Mu&ntilde;iz Solari (2015)</p>
-          <p class="blurb">Gao's four-level model of how deeply GPS, remote sensing, and GIS can be woven into a course &mdash; integration isn't all-or-nothing.</p>
-          <span class="go">Explore the levels &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2016 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2016</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/methods-review-2016.html">
-          <div class="card-top">
-            <h3>191-Article Methods-Review Database</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Zadrozny, McClure, Lee &amp; Jo (2016)</p>
-          <p class="blurb">A coded database of 191 research-methods articles auditing the subfield's rigor.</p>
-          <span class="go">Browse the database &rarr;</span>
-        </a>
-        <a class="card card-reused" href="instruments/stat-explorer.html">
-          <div class="card-top">
-            <h3>Spatial Thinking Ability Test (STAT)</h3>
-            <span class="badge badge-reused">Reused</span>
-          </div>
-          <p class="cite">Instrument: Lee &amp; Bednarz (2012); applied by Jo, Hong &amp; Verma (2016)</p>
-          <p class="blurb">The standardized 16-item spatial-thinking test Jo reused as a pre/post measure &mdash; 8-component explorer plus her 2016 Web-GIS results.</p>
-          <span class="go">Open the explorer &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2017 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2017</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/online-source-evaluator.html">
-          <div class="card-top">
-            <h3>Online Source Evaluator</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Hong &amp; Jo (2017), adopting criteria from Lee, Paik &amp; Jo (2012)</p>
-          <p class="blurb">How 65 undergraduates found and ranked 1,300 web sources on oil prices, sorted into 13 source types &mdash; with the study's own "not useful" mirror-reasons.</p>
-          <span class="go">Evaluate a source &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2018 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2018</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/astronaut-photo-taxonomy.html">
-          <div class="card-top">
-            <h3>Astronaut-Photo Taxonomy Variant</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Ghaffari, Jo &amp; Currit (2018)</p>
-          <p class="blurb">The 2009 taxonomy adapted for remote sensing &mdash; can photographs taken from the Space Station teach students to think spatially?</p>
-          <span class="go">Explore the variant &rarr;</span>
-        </a>
-        <a class="card card-reused" href="instruments/chi-square-demo.html">
-          <div class="card-top">
-            <h3>Chi-Square Goodness-of-Fit Demo</h3>
-            <span class="badge badge-reused">Reused</span>
-          </div>
-          <p class="cite">Technique after Thompson (2006); applied in Ghaffari, Jo &amp; Currit (2018)</p>
-          <p class="blurb">The exact statistical test behind the astronaut-photo study, made interactive &mdash; how do you know a difference is real and not noise?</p>
-          <span class="go">Run the test &rarr;</span>
-        </a>
-        <a class="card card-built" href="instruments/china-korea-disposition-comparator.html">
-          <div class="card-top">
-            <h3>China&ndash;Korea Disposition Comparator</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Lee, Jo, Xuan &amp; Zhou (2018)</p>
-          <p class="blurb">Jo's own 2014 disposition inventory run cross-nationally &mdash; do future geography teachers in China and Korea differ in wanting to teach spatial thinking?</p>
-          <span class="go">Compare countries &rarr;</span>
-        </a>
-        <a class="card card-built" href="instruments/energy-profile-quadrant-sorter.html">
-          <div class="card-top">
-            <h3>Energy Profile Quadrant Sorter</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo (2018)</p>
-          <p class="blurb">An inquiry lesson sorting countries into energy quadrants &mdash; why energy is a different problem for Saudi Arabia than for Japan, or Nigeria than Germany.</p>
-          <span class="go">Sort the countries &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2019 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2019</span></div>
-      <div class="year-cards">
-        <a class="card card-built" href="instruments/scientific-literacy-coding.html">
-          <div class="card-top">
-            <h3>Four-Domain Scientific-Literacy Coding</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Xuan et al. (2019)</p>
-          <p class="blurb">Four-domain scientific-literacy framework applied to 100 Chinese curriculum objectives.</p>
-          <span class="go">Explore the framework &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2020 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2020</span></div>
-      <div class="year-cards">
-        <a class="card card-reused" href="instruments/spatial-concept-test.html">
-          <div class="card-top">
-            <h3>Spatial-Concept Generation &amp; Recognition Test</h3>
-            <span class="badge badge-reused">Reused</span>
-          </div>
-          <p class="cite">Instrument: Marsh, Golledge &amp; Battersby (2007); applied by Jo &amp; Hong (2020)</p>
-          <p class="blurb">Marsh et al.'s generation &amp; recognition test of appropriate spatial concepts, replicated online for the 2020 GIS study.</p>
-          <span class="go">Take the test &rarr;</span>
-        </a>
-        <a class="card card-reused" href="instruments/online-interaction-matrix.html">
-          <div class="card-top">
-            <h3>Online Interaction &times; Active-Learning Goal Matrix</h3>
-            <span class="badge badge-reused">Reused</span>
-          </div>
-          <p class="cite">Instruments: Moore (1989) &amp; Sulla (2019); applied by Jo, Huh, Bannert &amp; Grubb (2020)</p>
-          <p class="blurb">Moore's three interaction types crossed with Sulla's active-learning goals to audit what actually engages students in an online course.</p>
-          <span class="go">Open the matrix &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2021 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2021</span></div>
-      <div class="year-cards">
-        <a class="card card-reused" href="instruments/learning-approach-matrix.html">
-          <div class="card-top">
-            <h3>Deep vs. Surface Learning-Approach Matrix</h3>
-            <span class="badge badge-reused">Reused</span>
-          </div>
-          <p class="cite">Instrument: Entwistle, McCune &amp; Walker (2001); applied by Huh, Lee &amp; Jo (2021)</p>
-          <p class="blurb">Deep and surface learning indicators reconstructed as a discourse-coding scheme &mdash; do students dig for meaning, or just get it done?</p>
-          <span class="go">Code some talk &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2022 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2022</span></div>
-      <div class="year-cards">
-        <p class="series-note">The Geography Teacher 19(2) &mdash; GeoActivity Types in APHG symposium</p>
-        <a class="card card-built" href="instruments/geoactivity-optic-scrap.html">
-          <div class="card-top">
-            <h3>GeoActivity Scaffolds &mdash; OPTIC &amp; SCRAP</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo, Crane, Hong &amp; Huh (2022) &middot; 19(2):56&ndash;59</p>
-          <p class="blurb">OPTIC (photo analysis) and SCRAP (map analysis) student-facing classroom routines as interactive &ldquo;analysis machines.&rdquo;</p>
-          <span class="go">Run the scaffolds &rarr;</span>
-        </a>
-        <a class="card card-built" href="instruments/geoactivity-discussions.html">
-          <div class="card-top">
-            <h3>GeoActivity Types in APHG: Discussions</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Hong, Loux, Huh &amp; Jo (2022) &middot; 19(2):60&ndash;64</p>
-          <p class="blurb">Socratic seminars for AP Human Geography &mdash; eight question types with model stems, six unit-by-unit topics, and an analytic rubric.</p>
-          <span class="go">Open the seminar &rarr;</span>
-        </a>
-        <a class="card card-built" href="instruments/geoactivity-field-study.html">
-          <div class="card-top">
-            <h3>GeoActivity Types in APHG: Field Study</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Huh, Crane, Loux, Hong &amp; Jo (2022) &middot; 19(2):65&ndash;70</p>
-          <p class="blurb">Four local field studies for ninth-grade APHG, plus the two-criteria reflection rubric used to grade them.</p>
-          <span class="go">Walk the field studies &rarr;</span>
-        </a>
-        <a class="card card-built" href="instruments/geoactivity-exam-prep.html">
-          <div class="card-top">
-            <h3>GeoActivity Types in APHG: Exam Preparation</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Hong, Haakenson, Martin, Huh &amp; Jo (2022) &middot; 19(2):71&ndash;74</p>
-          <p class="blurb">Two tech-based exam-prep workflows &mdash; AP Classroom progress checks for self-reflection, plus rubric-driven free-response practice.</p>
-          <span class="go">Prep for the exam &rarr;</span>
-        </a>
-        <a class="card card-built" href="instruments/geoactivity-culminating-project.html">
-          <div class="card-top">
-            <h3>APHG Culminating Project: Surviving a Zombie Apocalypse</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo, Bannert, Huh &amp; Hong (2022) &middot; 19(2):75&ndash;79</p>
-          <p class="blurb">A post-exam, project-based finale where student groups synthesize the whole APHG course into one applied scenario.</p>
-          <span class="go">Open the project &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2023 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2023</span></div>
-      <div class="year-cards">
-        <a class="card card-reused" href="instruments/tpack-gst-rubric.html">
-          <div class="card-top">
-            <h3>TPACK-Based GST Lesson-Assessment Rubric</h3>
-            <span class="badge badge-reused">Reused</span>
-          </div>
-          <p class="cite">Instrument: Harris, Grandgenett &amp; Hofer (2010); applied by Huh &amp; Jo (2023)</p>
-          <p class="blurb">The TPACK lesson-assessment rubric adapted for geospatial-technology lessons, with an interactive TPACK Venn and scorer.</p>
-          <span class="go">Score a lesson &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 2024 ===== -->
-    <div class="year-row">
-      <div class="year-label"><span>2024</span></div>
-      <div class="year-cards">
-        <a class="card card-reused" href="instruments/vsr-explainer.html">
-          <div class="card-top">
-            <h3>Video-Stimulated Recall &amp; Interview Protocols</h3>
-            <span class="badge badge-reused">Reused</span>
-          </div>
-          <p class="cite">Endacott &amp; Sturtz (2015) et al.; applied by Huh &amp; Jo (2024)</p>
-          <p class="blurb">An animated explainer of video-stimulated recall and interview protocols from the 2024 pedagogical-reasoning study.</p>
-          <span class="go">Watch the explainer &rarr;</span>
-        </a>
-        <a class="card card-built" href="instruments/spatial-concepts-gis-2024.html">
-          <div class="card-top">
-            <h3>16-Spatial-Concepts Self-Report Survey</h3>
-            <span class="badge badge-built">Built</span>
-          </div>
-          <p class="cite">Jo &amp; Hong-Dwyer (2024)</p>
-          <p class="blurb">A self-report survey of which spatial concepts students know, newly learned, or deepened through a GIS course.</p>
-          <span class="go">Take the survey &rarr;</span>
-        </a>
-      </div>
-    </div>
-
-  </div><!-- /.timeline -->
-
+  <h2 class="sec">How to read these pages</h2>
+  <p class="secsub"><b>Built</b> means an instrument Dr. Jo developed or adapted; <b>reused</b> means an existing instrument she applied, with the original credited on its page. Every page opens with a record stating what the instrument measures, who it was studied with, and which parts of the page come from the article and which were written for this site. Sample items for reused instruments are illustrations, not the published items.</p>
+  <p class="secsub">These pages are study aids. They are not official instruments and are not endorsed by the authors. Go to the cited article for exact wording, scoring and evidence of validity before using anything here in research.</p>
 </main>
 
-<footer>
-  <div class="wrap">
-    <p>These pages are <strong>interactive learning aids</strong> &mdash; recreations built to make each instrument's logic explorable, not official research instruments or scoring tools.</p>
-    <p>For the <strong>reused</strong> instruments, the sample items shown are <strong>original illustrations written for this site</strong> in the style of the published instrument, not the copyrighted original items. Consult the cited source for the authoritative instrument.</p>
-    <p>Source and issues: <a href="https://github.com/edgeoinnovations-resources/Texas-State-University">github.com/edgeoinnovations-resources/Texas-State-University</a></p>
-  </div>
-</footer>
+<footer class="lab-foot"><div class="lab-foot-in">
+  <p>Source and issues: <a id="repo" rel="noopener"></a></p>
+</div></footer>
 
+<script src="assets/data.js"></script>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+  "use strict";
+  var L = window.LAB, U = L.util, all = L.instruments, state = { view: "cards", sort: "year", dir: 1 };
+  var $ = function(s){ return document.querySelector(s); };
+  var papers = all.filter(function(i){ return !i.tool; });
+  $("#stats").innerHTML = [[papers.length,"instruments"],[papers.filter(function(i){return i.status==="built";}).length,"built by Jo"],[papers.filter(function(i){return i.status==="reused";}).length,"reused by Jo"],[U.uniqueRefs(papers).length,"reference articles"],["2009–2024","span"]].map(function(s){ return "<li><b>"+s[0]+"</b>"+s[1]+"</li>"; }).join("");
+  Object.keys(L.families).forEach(function(k){ $("#fFamily").insertAdjacentHTML("beforeend",'<option value="'+k+'">'+L.families[k].label+"</option>"); });
+  Object.keys(L.kinds).filter(function(k){ return all.some(function(i){ return i.kind===k; }); }).forEach(function(k){ $("#fKind").insertAdjacentHTML("beforeend",'<option value="'+k+'">'+L.kinds[k]+"</option>"); });
+  $("#repo").href = L.site.repo; $("#repo").textContent = L.site.repo.replace("https://","");
+
+  function hay(i){ return [i.title,i.blurb,i.measures,i.population,i.ref.authors,i.ref.title,i.ref.container,i.source||"",i.series||"",L.families[i.family].label,L.kinds[i.kind],i.year].join(" ").toLowerCase(); }
+  function match(i){ var q=$("#q").value.trim().toLowerCase().split(/\s+/).filter(Boolean), h=hay(i);
+    return q.every(function(w){ return h.indexOf(w)>-1; }) && (!$("#fStatus").value||i.status===$("#fStatus").value) && (!$("#fFamily").value||i.family===$("#fFamily").value) && (!$("#fKind").value||i.kind===$("#fKind").value); }
+  function shortRef(i){ var a=i.ref.authors.split(/\.,\s*(?:&\s*)?|,\s*&\s*/).map(function(x){ return x.split(",")[0].trim(); }).filter(Boolean); return (a.length>2?a[0]+" et al.":a.join(" & "))+" ("+i.ref.year+")"; }
+  function chips(i){ return '<span class="lab-chip '+i.status+'">'+U.statusLabel(i)+'</span><span class="lab-chip plain">'+L.kinds[i.kind]+"</span>"; }
+  function articleLink(i){ return i.ref.doi ? '<a href="'+U.doiUrl(i.ref)+'" rel="noopener">Article</a>' : '<a href="'+U.findUrl(i.ref)+'" rel="noopener">Find article</a>'; }
+
+  function cards(list){
+    var box=$("#v-cards"); if(!list.length){ box.innerHTML='<div class="none" style="margin-top:20px">No instruments match. Clear the search or filters.</div>'; return; }
+    var years={}, tools=[]; list.forEach(function(i){ if(i.tool) tools.push(i); else (years[i.year]=years[i.year]||[]).push(i); });
+    function card(i){ return '<article class="card" style="--fam:'+L.families[i.family].color+'"><div class="chips">'+chips(i)+'</div><h4><a href="'+U.href(i)+'">'+U.esc(i.title)+(i.flagship?' <span class="star" title="Flagship contribution" aria-label="Flagship contribution">★</span>':"")+'</a></h4><p class="ref">'+U.esc(shortRef(i))+(i.source?" · original: "+U.esc(i.source.split("(")[0].trim().replace(/[,.]$/,"")):"")+'</p><p>'+U.esc(i.blurb)+'</p><div class="acts"><a href="'+U.href(i)+'">Open instrument →</a>'+articleLink(i)+"</div></article>"; }
+    var h=""; if(tools.length) h+='<div class="year"><h3>Tools</h3><div class="cards">'+tools.map(card).join("")+"</div></div>";
+    Object.keys(years).sort().forEach(function(y){ var s=years[y].filter(function(i){return i.series;})[0]; h+='<div class="year"><h3>'+y+'</h3><div><div class="cards">'+years[y].map(card).join("")+"</div>"+(s&&years[y].length>2?'<p class="count" style="margin-top:8px">'+years[y].filter(function(i){return i.series;}).length+" of these form the <i>"+U.esc(s.series)+"</i> symposium in <i>The Geography Teacher</i> 19(2).</p>":"")+"</div></div>"; });
+    box.innerHTML=h;
+  }
+  function table(list){
+    var k=state.sort, d=state.dir; list=list.slice().sort(function(a,b){ var x=k==="kind"?L.kinds[a.kind]:a[k], y=k==="kind"?L.kinds[b.kind]:b[k]; return (x>y?1:x<y?-1:0)*d || a.year-b.year; });
+    $("#v-table tbody").innerHTML = list.map(function(i){ return "<tr><td>"+i.year+'</td><td><a href="'+U.href(i)+'">'+U.esc(i.title)+"</a><br><span style='color:var(--lab-sub);font-size:13px'>"+U.esc(shortRef(i))+"</span></td><td>"+U.statusLabel(i)+"</td><td>"+L.kinds[i.kind]+'</td><td class="m">'+U.esc(i.measures)+'</td><td class="m">'+U.esc(i.population)+"</td><td>"+articleLink(i)+"</td></tr>"; }).join("") || '<tr><td colspan="7" class="none">No instruments match.</td></tr>';
+    state.rows=list;
+  }
+  function map(list){
+    var show={}; list.forEach(function(i){ show[i.id]=1; });
+    var fams=Object.keys(L.families), years=[]; for(var y=2009;y<=2024;y++) years.push(y);
+    var X0=170, colW=118, rowH=66, top=34, W=X0+years.length*colW+10, bw=106, bh=40;
+    var slot={}, pos={}, lanes={}, yOff=top, laneY={};
+    fams.forEach(function(f){ var maxStack=1; years.forEach(function(yr){ var n=all.filter(function(i){ return i.family===f && i.year===yr; }).length; if(n>maxStack) maxStack=n; }); lanes[f]=maxStack; laneY[f]=yOff; yOff+=maxStack*(bh+8)+18; });
+    var H=yOff+6, s='<svg viewBox="0 0 '+W+" "+H+'" role="img" aria-label="Lineage map of instruments by year and research strand"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3d4a5f"/></marker></defs>';
+    years.forEach(function(yr,k){ var x=X0+k*colW; s+='<line x1="'+x+'" y1="22" x2="'+x+'" y2="'+H+'" stroke="#eef1f5"/><text x="'+(x+colW/2)+'" y="16" text-anchor="middle" style="font-weight:700;fill:#51607a">'+yr+"</text>"; });
+    fams.forEach(function(f){ var y=laneY[f], h=lanes[f]*(bh+8)+10; s+='<rect x="0" y="'+(y-5)+'" width="'+W+'" height="'+h+'" fill="'+L.families[f].color+'" opacity=".06"/>'; var words=L.families[f].label.split(" "), l1=words.slice(0,Math.ceil(words.length/2)).join(" "), l2=words.slice(Math.ceil(words.length/2)).join(" "); s+='<text x="8" y="'+(y+18)+'" style="font-weight:700;fill:'+L.families[f].color+'">'+U.esc(l1)+'</text><text x="8" y="'+(y+33)+'" style="font-weight:700;fill:'+L.families[f].color+'">'+U.esc(l2)+"</text>"; });
+    all.forEach(function(i){ var key=i.family+i.year, n=slot[key]||0; slot[key]=n+1; pos[i.id]={ x:X0+(i.year-2009)*colW+(colW-bw)/2, y:laneY[i.family]+n*(bh+8) }; });
+    var edges="";
+    all.forEach(function(i){ (i.builds||[]).forEach(function(p){ var a=pos[p], b=pos[i.id]; if(!a||!b) return; var on=show[i.id]&&show[p];
+      var x1=a.x+bw, y1=a.y+bh/2, x2=b.x, y2=b.y+bh/2; if(x2<=x1){ x1=a.x+bw/2; y1=a.y+bh; x2=b.x+bw/2; y2=b.y; edges+='<path d="M'+x1+" "+y1+" L"+x2+" "+(y2-2)+'" fill="none" stroke="#3d4a5f" stroke-width="1.4" marker-end="url(#ar)" opacity="'+(on?.8:.12)+'"/>'; }
+      else { var mx=(x1+x2)/2; edges+='<path d="M'+x1+" "+y1+" C"+mx+" "+y1+" "+mx+" "+y2+" "+(x2-2)+" "+y2+'" fill="none" stroke="#3d4a5f" stroke-width="1.4" marker-end="url(#ar)" opacity="'+(on?.8:.12)+'"/>'; } }); });
+    var ser=all.filter(function(i){ return i.series; }); for(var k2=1;k2<ser.length;k2++){ var a=pos[ser[k2-1].id], b=pos[ser[k2].id]; if(a.x===b.x) edges+='<line x1="'+(a.x+bw/2)+'" y1="'+(a.y+bh)+'" x2="'+(b.x+bw/2)+'" y2="'+b.y+'" stroke="#a8324a" stroke-dasharray="3 3"/>'; }
+    s+=edges;
+    all.forEach(function(i){ var p=pos[i.id], on=show[i.id], col=L.families[i.family].color, label=i.short||i.title, w=label.split(" "), l1=label, l2="";
+      if(label.length>17){ var cut=Math.ceil(w.length/2); l1=w.slice(0,cut).join(" "); l2=w.slice(cut).join(" "); }
+      s+='<a href="'+U.href(i)+'" opacity="'+(on?1:.22)+'"><title>'+U.esc(i.title+" — "+shortRef(i))+'</title><rect x="'+p.x+'" y="'+p.y+'" width="'+bw+'" height="'+bh+'" rx="7" fill="'+(i.status==="reused"?"#fff":col)+'" stroke="'+col+'" stroke-width="1.5"'+(i.tool?' stroke-dasharray="4 3"':"")+'/><text x="'+(p.x+bw/2)+'" y="'+(p.y+(l2?17:24))+'" text-anchor="middle" style="font-size:11px;font-weight:600;fill:'+(i.status==="reused"?"#1b2430":"#fff")+'">'+U.esc(l1)+"</text>"+(l2?'<text x="'+(p.x+bw/2)+'" y="'+(p.y+31)+'" text-anchor="middle" style="font-size:11px;font-weight:600;fill:'+(i.status==="reused"?"#1b2430":"#fff")+'">'+U.esc(l2)+"</text>":"")+"</a>"; });
+    $("#map").innerHTML=s+"</svg>";
+    $("#legend").innerHTML='<span><i style="background:#51607a"></i>Filled: built by Jo</span><span><i style="background:#fff;border:1.5px solid #51607a"></i>Outlined: reused by Jo</span><span><i style="background:#51607a;outline:1.5px dashed #51607a;outline-offset:1px"></i>Dashed outline: working tool</span><span>→ builds on</span>';
+  }
+  function render(){ var list=all.filter(match); $("#count").textContent=list.length+" of "+all.length+" shown"; cards(list); table(list); map(list); }
+  ["#q","#fStatus","#fFamily","#fKind"].forEach(function(s){ $(s).addEventListener("input",render); });
+  document.querySelectorAll(".seg button").forEach(function(b){ b.onclick=function(){ state.view=b.getAttribute("data-view"); document.querySelectorAll(".seg button").forEach(function(x){ x.setAttribute("aria-pressed", x===b); }); ["cards","table","map"].forEach(function(v){ $("#v-"+v).hidden = v!==state.view; }); U.store.set("indexView",state.view); }; });
+  document.querySelectorAll("[data-sort]").forEach(function(b){ b.onclick=function(){ var k=b.getAttribute("data-sort"); state.dir = state.sort===k ? -state.dir : 1; state.sort=k; table(all.filter(match)); }; });
+  $("#tblCsv").onclick=function(){ U.download("jo-instruments.csv",U.csv([["year","instrument","origin","type","research strand","measures","studied with","reference","doi","page"]].concat((state.rows||[]).map(function(i){ return [i.year,i.title,U.statusLabel(i),L.kinds[i.kind],L.families[i.family].label,i.measures,i.population,U.apa(i.ref,false),i.ref.doi||"",location.href.replace(/[^/]*$/,"")+"instruments/"+i.id+".html"]; }))),"text/csv"); };
+
+  var refs=U.uniqueRefs(papers).sort(function(a,b){ return a.authors.localeCompare(b.authors) || a.year-b.year; });
+  $("#bibList").innerHTML=refs.map(function(r){ return "<li>"+U.apa(r,true)+(r.doi?"":' <a href="'+U.findUrl(r)+'" rel="noopener">[find]</a>')+"</li>"; }).join("");
+  $("#bRis").onclick=function(){ U.download("jo-instrument-lab.ris",refs.map(U.ris).join("\r\n"),"application/x-research-info-systems"); };
+  $("#bBib").onclick=function(){ U.download("jo-instrument-lab.bib",refs.map(U.bibtex).join("\n\n"),"application/x-bibtex"); };
+  $("#bCopy").onclick=function(){ U.copy(refs.map(function(r){ return U.apa(r,false); }).join("\n\n"),this); };
+  $("#zot").checked=U.store.get("zoteroLinks",false); $("#zot").onchange=function(){ U.store.set("zoteroLinks",this.checked); };
+  $("#gaps").innerHTML=L.gaps.map(function(g){ return "<li>"+U.esc(g.cite)+"<span>"+U.esc(g.note)+"</span></li>"; }).join("");
+  render();
+  var v=U.store.get("indexView","cards"); if(v!=="cards"){ var b=document.querySelector('.seg button[data-view="'+v+'"]'); if(b) b.click(); }
+})();
+</script>
 </body>
 </html>
