@@ -129,7 +129,7 @@
       <div class="chip"><span class="n">3</span><span class="l">spatial-thinking components</span></div>
       <div class="chip"><span class="n">4</span><span class="l">concept levels</span></div>
       <div class="chip"><span class="n">3</span><span class="l">cognitive levels</span></div>
-      <div class="chip"><span class="n">6</span><span class="l">fully-spatial cells</span></div>
+      <div class="chip"><span class="n">9</span><span class="l">integrated cells</span></div>
     </div>
   </div>
 </header>
@@ -175,10 +175,10 @@
 <section>
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">3</span><h2>The 24 cells</h2></div>
-    <p class="sec-intro">Every question lands in one of 24 cells — 4 concept levels × 2 representation options × 3 cognitive levels. The <strong>six green cells</strong> engage all three components of spatial thinking (a spatial concept + a representation + reasoning-level cognition). Your current question is outlined.</p>
+    <p class="sec-intro">Every question lands in one of 24 cells — 4 concept levels × 2 representation options × 3 cognitive levels. The <strong>nine green cells</strong> (10, 11, 12, 16, 17, 18, 22, 23, 24) integrate all three components of spatial thinking: a spatial concept, a representation, and a cognitive process. Jo &amp; Bednarz (2009) rank them in three levels, from simplest (10, 11, 16) to highest (18, 23, 24). Your current question is outlined.</p>
     <div class="cells"><table id="cellTable"></table></div>
     <div class="grid-legend">
-      <span><i style="background:rgba(0,131,0,.2);border:1.5px solid rgba(0,131,0,.4)"></i> Fully-integrated spatial-thinking cell</span>
+      <span><i style="background:rgba(0,131,0,.2);border:1.5px solid rgba(0,131,0,.4)"></i> Integrates all three components</span>
       <span><i style="background:#eef1f7;border:1.5px solid var(--hair)"></i> Incomplete (one or two components)</span>
       <span><i style="background:#fff;border:3px solid var(--ink)"></i> Your current question</span>
     </div>
@@ -210,7 +210,7 @@
     <div class="sec-head"><span class="sec-num">5</span><h2>Honesty notes</h2></div>
     <div class="callout">
       <h4>The cell numbers are exact; a couple of examples are paraphrased</h4>
-      <p>The 24-cell numbering here is reconstructed from the paper's own four worked examples (Cell 1, 19, 10, 24) and reproduces them exactly. The example questions "Define natural vegetation" and "Define population density" are the paper's; the map-based examples paraphrase the Figure&nbsp;1 items the text <em>describes</em> (location on a map → Cell 10; distribution on a map → Cell 24), since the figure's exact wording isn't in the article text. The "fully-integrated" (green) set follows the paper's stated principle — a spatial concept + a representation + reasoning-level (processing/output) cognition — as Figure&nbsp;2's exact coloring isn't reproduced here.</p>
+      <p>The 24-cell numbering here is reconstructed from the paper's own four worked examples (Cell 1, 19, 10, 24) and reproduces them exactly. The example questions "Define natural vegetation" and "Define population density" are the paper's; the map-based examples paraphrase the Figure&nbsp;1 items the text <em>describes</em> (location on a map → Cell 10; distribution on a map → Cell 24), since the figure's exact wording isn't in the article text. The integrated (green) set is the nine cells Jo &amp; Bednarz (2009) identify as combining a spatial concept with a representation; the article's own example, Cell 10, is one of them even though it is an input-level question.</p>
     </div>
     <div class="callout">
       <h4>A tool, honestly scoped</h4>
@@ -262,12 +262,11 @@ function cellNumber(){
   return byId(CONCEPTS,sel.concept).idx*6 + byId(REPS,sel.rep).idx*3 + byId(COGS,sel.cog).idx + 1;
 }
 function completeSet(){
-  // spatial concept + use + (processing|output)
+  // spatial concept + use of a representation, at any cognitive level: the nine integrated cells of Jo & Bednarz (2009)
   var s=[];
   CONCEPTS.forEach(function(c){ if(!c.spatial) return;
     REPS.forEach(function(r){ if(!r.uses) return;
-      COGS.forEach(function(g){ if(!g.reasons) return;
-        s.push(c.idx*6 + r.idx*3 + g.idx + 1);
+      COGS.forEach(function(g){ s.push(c.idx*6 + r.idx*3 + g.idx + 1);
       });
     });
   });
@@ -295,14 +294,16 @@ function update(){
   var n=cellNumber();
   var cConcept=byId(CONCEPTS,sel.concept), cRep=byId(REPS,sel.rep), cCog=byId(COGS,sel.cog);
   var e1=cConcept.spatial, e2=cRep.uses, e3=cCog.reasons;
-  var count=(e1?1:0)+(e2?1:0)+(e3?1:0);
-  var vClass = count===3?"full":count>=2?"part":"min";
-  var vText = count===3?"Fully-integrated spatial question":count===2?"Partially spatial (2 of 3)":count===1?"Minimally spatial (1 of 3)":"Not a spatial-thinking question";
+  var integrated = e1 && e2;
+  var LEVEL = {10:"simplest",11:"simplest",16:"simplest",12:"higher",17:"higher",22:"higher",18:"highest",23:"highest",24:"highest"};
+  var vClass = integrated ? (LEVEL[n]==="simplest"?"part":"full") : (e1||e2) ? "part" : "min";
+  var vText = integrated ? "Integrates all three components · "+LEVEL[n]+" level" : e1 ? "Not integrated: no representation is used" : e2 ? "Not integrated: no spatial concept is needed" : "Not a spatial-thinking question";
   var tips=[];
   if(!e1) tips.push("Swap the non-spatial concept for a spatial one (location, distance, region, distribution…) so students reason about space.");
   if(!e2) tips.push("Add a <b>map, graph, or diagram</b> the student must read or create.");
-  if(!e3) tips.push("Raise the cognitive demand from recall to <b>processing</b> (compare, explain) or <b>output</b> (evaluate, generalize, design).");
-  var tipsHtml = tips.length ? '<ul>'+tips.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul>' : '<span class="allgood">✓ This question engages all three components — a model spatial-thinking question.</span>';
+  if(!e3) tips.push("Raise the cognitive demand from input to <b>processing</b> (compare, explain) or <b>output</b> (evaluate, generalize, design) to reach a higher level of spatial thinking.");
+  if(integrated && LEVEL[n]!=="highest" && cConcept.idx<3) tips.push("Use a <b>complex-spatial concept</b> (distribution, pattern, density, diffusion…) to move toward cells 18, 23 and 24.");
+  var tipsHtml = tips.length ? '<ul>'+tips.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul>' : '<span class="allgood">✓ Cell '+n+' is at the highest level of spatial thinking in the taxonomy.</span>';
 
   document.getElementById("result").innerHTML =
     '<div class="cellbig"><span class="cn">Taxonomy cell</span><span class="cv">'+n+'</span><span class="cn">of 24</span></div>'+

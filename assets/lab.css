@@ -115,3 +115,5 @@ html[data-lab-theme] pre{overflow-x:auto;}
 }
 
 html[data-lab-theme] body{height:auto;min-height:100%;}
+
+.lab-checked{display:block;margin-top:6px;font-size:13px;color:#5d4a0c;}

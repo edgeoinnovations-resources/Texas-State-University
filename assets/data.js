@@ -36,6 +36,8 @@ window.LAB = {
       population: "3,010 questions in four Texas-adopted high-school world geography textbooks",
       use: "Walk the 24 cells and see which nine count as integrating all three components.",
       provenance: "Cell structure, numbering and the nine integrated cells follow Fig. 1 of the paper. The example question shown for each cell is illustrative unless marked as a worked example.",
+      research: "The article reports an expert validity check: five raters scored face validity 4.3 and content validity 4.6 on a 5-point scale. No inter-coder reliability is reported for the question coding, so plan your own second-coder check; the Coding Workbench computes Cohen's kappa.",
+      checked: "16 November 2026",
       builds: [], related: ["coding-workbench"],
       ref: { authors: "Jo, I., & Bednarz, S. W.", year: 2009, title: "Evaluating geography textbook questions from a spatial perspective: Using concepts of space, tools of representation, and cognitive processes to evaluate spatiality", container: "Journal of Geography", volume: "108", issue: "1", pages: "4–13", doi: "10.1080/00221340902758401", type: "article", zotero: "3ZSTSBH5" }
     },
@@ -47,7 +49,9 @@ window.LAB = {
       measures: "Where a teacher-written question sits in the 24-cell taxonomy, and what would move it toward an integrated cell.",
       population: "Practising geography teachers (practitioner article)",
       use: "Type a question, code it, read the cell and the suggested revisions.",
-      provenance: "Coding categories follow Jo & Bednarz (2009). Revision prompts are this site's paraphrase of the article's guidance.",
+      provenance: "Coding categories and the nine integrated cells follow Jo & Bednarz (2009). Revision prompts are this site's paraphrase of the article's guidance.",
+      research: "A practitioner article with no sample or statistics. It also shows the taxonomy used to match pre-test and post-test questions by cell number, which is a design idea worth borrowing for test construction.",
+      checked: "16 November 2026",
       builds: ["taxonomy-3d-cube"], related: ["coding-workbench"],
       ref: { authors: "Jo, I., Bednarz, S., & Metoyer, S.", year: 2010, title: "Selecting and designing questions to facilitate spatial thinking", container: "The Geography Teacher", volume: "7", issue: "2", pages: "49–55", doi: "10.1080/19338341.2010.510779", type: "article", zotero: "FP3UT76L" }
     },
@@ -60,6 +64,8 @@ window.LAB = {
       population: "The same 3,010 questions as the 2009 study, re-analysed by location",
       use: "Click a page zone to see its share of spatial concepts, representation use and integrated questions.",
       provenance: "Counts per location (185 / 375 / 243 / 1,131 / 1,076) and percentages are the paper's reported values. The textbook page is a schematic drawn for this site.",
+      research: "Differences between locations were tested with chi-square, followed by post hoc comparisons at a Bonferroni-corrected alpha of .005. Results cover the first two units of four textbooks, student editions only.",
+      checked: "16 November 2026",
       builds: ["taxonomy-3d-cube"], related: ["chi-square-demo", "coding-workbench"],
       ref: { authors: "Jo, I., & Bednarz, S. W.", year: 2011, title: "Textbook questions to support spatial thinking: Differences in spatiality by question location", container: "Journal of Geography", volume: "110", issue: "2", pages: "70–80", doi: "10.1080/00221341.2011.521848", type: "article", zotero: "QQYADW4G" }
     },
@@ -72,6 +78,8 @@ window.LAB = {
       population: "353 educators (260 high-school teachers, 93 college faculty)",
       use: "Toggle between the two groups' views and inspect the importance–proficiency gap for each goal.",
       provenance: "Goals, ratings and challenge categories are the paper's reported values.",
+      research: "Importance and proficiency were rated on six-point scales by 260 teachers and 93 professors; group differences are reported with confidence intervals. Open-ended challenge responses were coded into eighteen categories.",
+      checked: "16 November 2026",
       builds: [], related: [],
       ref: { authors: "Jo, I., & Milson, A. J.", year: 2013, title: "College readiness for geography: Perceptions of high school teachers and college faculty", container: "Journal of Geography", volume: "112", issue: "5", pages: "193–204", doi: "10.1080/00221341.2012.761718", type: "article", zotero: "4BQF3ZQV" }
     },
@@ -84,6 +92,8 @@ window.LAB = {
       population: "Pre-service geography teachers (instrument proposed as an exemplar; no sample in this paper)",
       use: "Answer a 15-item slice, see category means and how the reverse-scored items work.",
       provenance: "The page shows 15 of the 40 published items. The full instrument reverse-scores five items (#4, #11, #15, #16, #34); four of those fall in the slice shown. The authors state that validity and reliability had not yet been established.",
+      research: "All 40 items are in the article's appendix. Score by summing 1–5 responses after reversing items 4, 11, 15, 16 and 34; totals run from 40 to 200, and the authors suggest a mean above 4.0 as 'fairly disposed', a theoretical guide only. The authors state validity and reliability were not yet established, so report your own. Note that the printed appendix numbers two consecutive items '11'.",
+      checked: "16 November 2026",
       builds: ["taxonomy-3d-cube"], related: ["china-korea-disposition-comparator"],
       ref: { authors: "Jo, I., & Bednarz, S. W.", year: 2014, title: "Dispositions toward teaching spatial thinking through geography: Conceptualization and an exemplar assessment", container: "Journal of Geography", volume: "113", issue: "5", pages: "198–207", doi: "10.1080/00221341.2014.881409", type: "article", zotero: "WHLHFJDM" }
     },
@@ -96,6 +106,8 @@ window.LAB = {
       population: "24 pre-service teachers",
       use: "Code sample objectives yourself, then compare pre- and post-workshop distributions.",
       provenance: "Counts and the Table 1 examples are from the paper; other practice objectives are written for this site.",
+      research: "A single-group pre/post comparison of 24 pre-service teachers' lesson plans, reported as percentages without inferential tests. Treat it as a coding procedure to reuse, not as evidence of effect size.",
+      checked: "16 November 2026",
       builds: ["taxonomy-3d-cube"], related: ["coding-workbench", "disposition-inventory"],
       ref: { authors: "Jo, I., & Bednarz, S. W.", year: 2014, title: "Developing pre-service teachers' pedagogical content knowledge for teaching spatial thinking through geography", container: "Journal of Geography in Higher Education", volume: "38", issue: "2", pages: "301–313", doi: "10.1080/03098265.2014.911828", type: "article", zotero: "ZNTEKX2K" }
     },
@@ -108,6 +120,8 @@ window.LAB = {
       population: "Conceptual chapter (no sample)",
       use: "Step through the four levels and watch how data moves between the technologies.",
       provenance: "The four-level model is Gao's (2002). Classroom examples are written for this site.",
+      research: "A conceptual model with no measurement procedure. The chapter proposes level 2 (interactive) as a reasonable target for formal education; using the levels as a coding scheme would be your own adaptation.",
+      checked: "16 November 2026",
       source: "Gao, J. (2002). Integration of GPS with remote sensing and GIS: Reality and prospect.",
       builds: [], related: ["tpack-gst-rubric"],
       ref: { authors: "Jo, I., & Muñiz Solari, O.", year: 2015, title: "An agenda of GST in geography education for the future", container: "In O. Muñiz Solari, A. Demirci, & J. van der Schee (Eds.), Geospatial technologies and geography education in a changing world", volume: "", issue: "", pages: "205–221", publisher: "Springer", doi: "10.1007/978-4-431-55519-3_17", type: "chapter", zotero: "3I43SNHM" }
@@ -121,6 +135,8 @@ window.LAB = {
       population: "191 empirical articles from Journal of Geography, Journal of Geography in Higher Education, and International Research in Geographical and Environmental Education",
       use: "Drill from design type into techniques and example studies.",
       provenance: "Counts are the article's reported values; percentages are computed from those counts.",
+      research: "The review coded 191 articles from three journals as 55 quantitative, 65 qualitative and 71 mixed methods. Useful as a baseline for a methods section or for updating the review past its coverage period.",
+      checked: "16 November 2026",
       builds: [], related: ["chi-square-demo"],
       ref: { authors: "Zadrozny, J., McClure, C., Lee, J., & Jo, I.", year: 2016, title: "Designs, techniques, and reporting strategies in geography education: A review of research methods", container: "Review of International Geographical Education Online", volume: "6", issue: "3", pages: "216–233", doi: null, type: "article", zotero: "KP489NMD" }
     },
@@ -133,6 +149,8 @@ window.LAB = {
       population: "Undergraduates in world geography (Jo, Hong & Verma, 2016)",
       use: "Explore the eight components with practice items and see the 2016 pre/post results.",
       provenance: "Component structure follows Lee & Bednarz (2012). Every sample item is an original illustration written for this site, not a STAT item.",
+      research: "The STAT itself must be obtained from Lee and Bednarz; this page reproduces none of its items. Jo, Hong and Verma compared pre and post means within seven classes (306 students, two universities) in a non-equivalent control group design.",
+      checked: "16 November 2026",
       source: "Lee, J., & Bednarz, R. (2012). Components of spatial thinking: Evidence from a spatial thinking ability test. Journal of Geography, 111(1), 15–26.",
       builds: [], related: ["spatial-concept-test"],
       ref: { authors: "Jo, I., Hong, J. E., & Verma, K.", year: 2016, title: "Facilitating spatial thinking in world geography using Web-based GIS", container: "Journal of Geography in Higher Education", volume: "40", issue: "3", pages: "442–459", doi: "10.1080/03098265.2016.1150439", type: "article", zotero: "54ZYBQA5" }
@@ -146,6 +164,8 @@ window.LAB = {
       population: "65 undergraduates in a world geography course, fall 2015",
       use: "Compare source types by frequency and usefulness rank, then classify a source yourself.",
       provenance: "Source types, counts and criteria are the paper's. Criteria definitions were adopted by the authors from Lee, Paik & Joo (2012).",
+      research: "A case study: 65 of 125 enrolled students completed an extra-credit task, after a 15-student pilot. The authors caution against generalising because of the sample and the single topic.",
+      checked: "16 November 2026",
       source: "Criteria: Lee, J. Y., Paik, W., & Joo, S. (2012). Information Research, 17(1), paper 511.",
       builds: [], related: [],
       ref: { authors: "Hong, J. E., & Jo, I.", year: 2017, title: "Undergraduate students' use of online information in world geography: Source types and selection criteria", container: "Review of International Geographical Education Online", volume: "7", issue: "2", pages: "171–189", doi: null, type: "article", zotero: "8HEV7HJ2" }
@@ -159,6 +179,8 @@ window.LAB = {
       population: "32 undergraduates in a remote-sensing course",
       use: "Open each photograph's target concept and the concept levels students actually used.",
       provenance: "Counts are from the paper's tables. Photograph thumbnails are schematic drawings; the NASA photo IDs point to the originals.",
+      research: "Thirty-two students described the same six photographs in three assignments; concept use was compared with chi-square goodness-of-fit tests. The authors added descriptors such as colour to the taxonomy's list of primitives.",
+      checked: "16 November 2026",
       builds: ["taxonomy-3d-cube"], related: ["chi-square-demo"],
       ref: { authors: "Ghaffari, Z., Jo, I., & Currit, N. A.", year: 2018, title: "NASA astronaut photography of Earth: A resource to facilitate students' learning and using geospatial concepts", container: "International Journal of Geospatial and Environmental Research", volume: "5", issue: "3", pages: "Article 6", doi: null, type: "article", zotero: "NQYAPNE3" }
     },
@@ -171,6 +193,8 @@ window.LAB = {
       population: "Applied to concept-level counts in Ghaffari, Jo & Currit (2018)",
       use: "Load the study's counts or type your own; read χ², degrees of freedom, the critical value and p.",
       provenance: "Study counts are from the paper's tables and appendices. The calculation is standard and runs in your browser.",
+      research: "The calculator reproduces the article's worked example (chi-square = 48.55 for photograph 1, assignment 1). The article's Table 3a prints one term as 24.5744 where the arithmetic gives 27.5744; the reported total is consistent with the corrected value.",
+      checked: "16 November 2026",
       source: "Standard chi-square goodness-of-fit test, as applied in the 2018 study.",
       builds: ["astronaut-photo-taxonomy"], related: ["where-spatial-questions-hide", "coding-workbench"],
       ref: { authors: "Ghaffari, Z., Jo, I., & Currit, N. A.", year: 2018, title: "NASA astronaut photography of Earth: A resource to facilitate students' learning and using geospatial concepts", container: "International Journal of Geospatial and Environmental Research", volume: "5", issue: "3", pages: "Article 6", doi: null, type: "article", zotero: "NQYAPNE3" }
@@ -184,6 +208,8 @@ window.LAB = {
       population: "979 Chinese and 323 Korean pre-service geography teachers",
       use: "Compare the two samples by category and by background variable.",
       provenance: "Means, sample sizes and effect sizes are the paper's reported values.",
+      research: "The largest application of the 2014 inventory: 979 Chinese and 323 Korean pre-service teachers, all 40 items. Use it as the comparison sample if you administer the inventory yourself.",
+      checked: "16 November 2026",
       builds: ["disposition-inventory"], related: [],
       ref: { authors: "Lee, J., Jo, I., Xuan, X., & Zhou, W.", year: 2018, title: "Geography preservice teachers' disposition toward teaching spatial thinking through geography: A comparison between China and Korea", container: "International Research in Geographical and Environmental Education", volume: "27", issue: "2", pages: "135–148", doi: "10.1080/10382046.2017.1320898", type: "article", zotero: "Y7MECCEQ" }
     },
@@ -196,6 +222,8 @@ window.LAB = {
       population: "High-school world geography or AP Human Geography classes",
       use: "Place countries in the use × import matrix and check your reasoning.",
       provenance: "The lesson structure is the article's. Country placements on this page are a teaching approximation; check current data before reuse.",
+      research: "A 45-minute lesson plan using World Bank energy data for 2013 in ArcGIS Online. It reports no student outcomes.",
+      checked: "16 November 2026",
       builds: [], related: [],
       ref: { authors: "Jo, I.", year: 2018, title: "World energy issues: An inquiry-based lesson using ArcGIS Online", container: "The Geography Teacher", volume: "15", issue: "1", pages: "43–46", doi: "10.1080/19338341.2017.1395753", type: "article", zotero: "CJCIX8NA" }
     },
@@ -208,6 +236,8 @@ window.LAB = {
       population: "100 learning objectives in China's national middle-school geography curriculum",
       use: "Read the code definitions, then code sample objectives and compare with the researchers.",
       provenance: "Framework, counts and reliability figure are the paper's reported values.",
+      research: "Two coders applied the framework to 100 learning objectives; the article reports inter-rater reliability and the rule used to settle disagreements. The framework could be applied to another curriculum document as is.",
+      checked: "16 November 2026",
       builds: [], related: ["coding-workbench"],
       ref: { authors: "Xuan, X., Jin, Q., Jo, I., Duan, Y., & Kim, M.", year: 2019, title: "The potential contribution of geography curriculum to scientific literacy", container: "Journal of Geography", volume: "118", issue: "5", pages: "185–196", doi: "10.1080/00221341.2019.1611906", type: "article", zotero: "7LU7ZHZN" }
     },
@@ -220,6 +250,8 @@ window.LAB = {
       population: "119 undergraduates in GIS and non-GIS courses",
       use: "Take a six-diagram version of both tasks and see how scoring works.",
       provenance: "Diagrams are redrawn for this site after the 2007 originals; the accepted-concept lists should be checked against the source before research use.",
+      research: "The study used Marsh, Golledge and Battersby's tasks with 119 undergraduates. The 'appropriate' concepts were: close, clustered, near, proximal, together (points); arrangement, connected, linked, network, patterned (lines); and eight terms for polygons. Obtain the original diagrams and word list from the 2007 article before replicating.",
+      checked: "16 November 2026",
       source: "Marsh, M., Golledge, R., & Battersby, S. E. (2007). Geospatial concept understanding and recognition in G6–college students. Annals of the Association of American Geographers, 97(4), 696–712.",
       builds: [], related: ["spatial-concepts-gis-2024", "stat-explorer"],
       ref: { authors: "Jo, I., & Hong, J. E.", year: 2020, title: "Effect of learning GIS on spatial concept understanding", container: "Journal of Geography", volume: "119", issue: "3", pages: "87–97", doi: "10.1080/00221341.2020.1745870", type: "article", zotero: "2QZHDV7Y" }
@@ -233,6 +265,8 @@ window.LAB = {
       population: "One online graduate course; reflections by the instructor and three graduate students",
       use: "Click any of the nine cells to see the activities placed there.",
       provenance: "The matrix and testimonials are summarised from the paper.",
+      research: "A reflective account of one course by its instructor and three graduate students, not an evaluation. The 3 × 3 crossing of Moore's and Sulla's frameworks is the reusable part.",
+      checked: "16 November 2026",
       source: "Moore, M. G. (1989). Three types of interaction. American Journal of Distance Education, 3(2). Sulla, N. (2019). Students taking charge in grades 6–12. Routledge.",
       builds: [], related: [],
       ref: { authors: "Jo, I., Huh, S., Bannert, A., & Grubb, K.", year: 2020, title: "Beginning the journey to creating an active online learning environment: Recommendations from graduate students", container: "Journal of Geography", volume: "119", issue: "6", pages: "197–205", doi: "10.1080/00221341.2020.1821085", type: "article", zotero: "B2S8FU94" }
@@ -246,6 +280,8 @@ window.LAB = {
       population: "Ten ninth-graders working individually or in groups",
       use: "Read the six cells, then classify transcript-style snippets.",
       provenance: "The matrix follows the paper's Table 1. Practice snippets are written for this site, not quoted from transcripts.",
+      research: "A small qualitative case (ten ninth-graders). The 2 × 3 matrix works as a discourse-coding frame, but the article is the place to check how units of talk were segmented and coded.",
+      checked: "16 November 2026",
       source: "Entwistle, N., McCune, V., & Walker, P. (2001); Marton, F., & Säljö, R. (1976).",
       builds: [], related: ["coding-workbench"],
       ref: { authors: "Huh, S., Lee, J., & Jo, I.", year: 2021, title: "The influence of collaboration on students' learning approaches in a geography task", container: "Research in Geographic Education", volume: "23", issue: "1", pages: "32–51", doi: null, type: "article", zotero: "6B2Z2KYV" }
@@ -259,6 +295,8 @@ window.LAB = {
       population: "AP Human Geography classes",
       use: "Work through each step with your own image or map and export what you wrote.",
       provenance: "Step names follow the article. The sample image is drawn for this site.",
+      research: "A classroom routine with no outcome data. OPTIC comes from the Texas Education Agency's Lighthouse Project and SCRAP is adapted from Gersmehl's modes of spatial thinking; cite those origins if you use the routines.",
+      checked: "16 November 2026",
       builds: [], related: ["geoactivity-discussions", "geoactivity-field-study", "geoactivity-exam-prep", "geoactivity-culminating-project"],
       ref: { authors: "Jo, I., Crane, M., Hong, J. E., & Huh, S.", year: 2022, title: "GeoActivity types in APHG: Analysis of maps and photos", container: "The Geography Teacher", volume: "19", issue: "2", pages: "56–59", doi: "10.1080/19338341.2022.2042837", type: "article", zotero: "PAFJBYPF" }
     },
@@ -271,6 +309,8 @@ window.LAB = {
       population: "AP Human Geography classes",
       use: "Build a seminar for a unit and try the rubric.",
       provenance: "Question types and topics are the article's; the rubric figure is described, not reproduced.",
+      research: "Eight question types with three model stems each, adapted by the authors from AVID, National Geographic and Facing History. The rubric shown in the article is an example from a school, not a validated instrument.",
+      checked: "16 November 2026",
       builds: [], related: ["geoactivity-optic-scrap", "geoactivity-field-study", "geoactivity-exam-prep", "geoactivity-culminating-project"],
       ref: { authors: "Hong, J. E., Loux, T., Huh, S., & Jo, I.", year: 2022, title: "GeoActivity types in APHG: Discussions", container: "The Geography Teacher", volume: "19", issue: "2", pages: "60–64", doi: "10.1080/19338341.2022.2042835", type: "article", zotero: "LLW8SZL3" }
     },
@@ -283,6 +323,8 @@ window.LAB = {
       population: "Ninth-grade AP Human Geography classes",
       use: "Compare the four designs and grade sample reflections with the rubric.",
       provenance: "Designs and rubric criteria are the article's. Sample student essays are written for this site.",
+      research: "The reflection rubric has two criteria (reaction/response and completion) and five levels from 'Full marks' to 'Not yet'. No scoring data or reliability are reported.",
+      checked: "16 November 2026",
       builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-exam-prep", "geoactivity-culminating-project"],
       ref: { authors: "Huh, S., Crane, M., Loux, T., Hong, J. E., & Jo, I.", year: 2022, title: "GeoActivity types in APHG: Field study", container: "The Geography Teacher", volume: "19", issue: "2", pages: "65–70", doi: "10.1080/19338341.2022.2042836", type: "article", zotero: "ZYKBHTU7" }
     },
@@ -295,6 +337,8 @@ window.LAB = {
       population: "AP Human Geography classes",
       use: "Try the mastery meter, the task verbs and the free-response build-and-grade cycle.",
       provenance: "Workflows and prompts follow the article; scores shown are examples.",
+      research: "Describes classroom practice with AP Classroom progress checks and Google Forms. The authors advise against using progress-check results for grading.",
+      checked: "16 November 2026",
       builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-field-study", "geoactivity-culminating-project"],
       ref: { authors: "Hong, J. E., Haakenson, D., Martin, K., Huh, S., & Jo, I.", year: 2022, title: "GeoActivity types in APHG: Exam preparation", container: "The Geography Teacher", volume: "19", issue: "2", pages: "71–74", doi: "10.1080/19338341.2022.2042834", type: "article", zotero: "MDW7BB6T" }
     },
@@ -307,6 +351,8 @@ window.LAB = {
       population: "AP Human Geography classes after the exam",
       use: "Follow the day-by-day protocol and see which course units each decision draws on.",
       provenance: "Protocol and deliverables follow the article; the sample group's choices are illustrative.",
+      research: "A project description with deliverables and a link to the authors' materials. No student outcomes are reported.",
+      checked: "16 November 2026",
       builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-field-study", "geoactivity-exam-prep"],
       ref: { authors: "Jo, I., Bannert, A., Huh, S., & Hong, J. E.", year: 2022, title: "GeoActivity types in APHG: End-of-year culminating project", container: "The Geography Teacher", volume: "19", issue: "2", pages: "75–79", doi: "10.1080/19338341.2022.2042838", type: "article", zotero: "AL9M2F2F" }
     },
@@ -319,6 +365,8 @@ window.LAB = {
       population: "14 teachers' GST-integrated lessons from a graduate course",
       use: "Score a lesson on the four criteria, compare with the study's averages, and print or export the result.",
       provenance: "Criteria and benchmark averages are from the 2023 study. Check the level descriptors against the article before using scores in research.",
+      research: "Four criteria scored 1–4 (Beginning to Outstanding). In the study, 14 teachers' lessons averaged 3.86, 3.93 and 3.85 on the first three criteria and 3.21 on overall fit. Take the full level descriptors from the article's rubric table.",
+      checked: "16 November 2026",
       source: "Harris, J., Grandgenett, N., & Hofer, M. (2010). Testing a TPACK-based technology integration assessment rubric.",
       builds: [], related: ["gst-integration-explorer"],
       ref: { authors: "Huh, S., & Jo, I.", year: 2023, title: "Successes and struggles: Evaluating geospatial technologies integration in geography lessons using TPACK", container: "Journal of Geography", volume: "122", issue: "5", pages: "126–139", doi: "10.1080/00221341.2023.2224814", type: "article", zotero: "73IJXZI8" }
@@ -332,6 +380,8 @@ window.LAB = {
       population: "Seven AP Human Geography teachers",
       use: "Follow the data-collection sequence and watch a simulated recall session.",
       provenance: "The sequence follows the paper. The lesson clips and teacher lines are dramatised composites, not transcript quotations.",
+      research: "A multiple case study of seven AP Human Geography teachers. The sequence of lesson video, stimulated recall and interview is the reusable method; consult the article for the interview protocol itself.",
+      checked: "16 November 2026",
       source: "Endacott, J. L., & Sturtz, J. (2015); Nguyen, N. T., McFadden, A., Tangen, D., & Beutel, D. (2013).",
       builds: [], related: ["learning-approach-matrix"],
       ref: { authors: "Huh, S., & Jo, I.", year: 2024, title: "Geography teachers' pedagogical reasoning and action while integrating sustainable development into APHG courses", container: "Journal of Geography", volume: "123", issue: "4", pages: "97–111", doi: "10.1080/00221341.2024.2382114", type: "article", zotero: "ZR9WD4Y9" }
@@ -345,6 +395,8 @@ window.LAB = {
       population: "24 GIS students",
       use: "See which concepts were already known, new, or deepened, and why some are harder.",
       provenance: "Percentages are the paper's reported values.",
+      research: "An exploratory study with 24 students. The three-way grouping of terms (neutral, helpful associations, hindering associations) comes from Glessmer and Brose (2014).",
+      checked: "16 November 2026",
       builds: [], related: ["spatial-concept-test"],
       ref: { authors: "Jo, I., & Hong-Dwyer, J. J.", year: 2024, title: "GIS learning and college students' acquisition and understanding of spatial concepts", container: "Journal of Geography in Higher Education", volume: "48", issue: "5", pages: "763–774", doi: "10.1080/03098265.2023.2263748", type: "article", zotero: "N5MVVS4F" }
     },
@@ -357,6 +409,8 @@ window.LAB = {
       population: "Whatever you bring",
       use: "Paste or import items, code three axes each, and export coded data with summary tables.",
       provenance: "A working tool built for this site on the published scheme. It is not an instrument Jo published; report it as an application of Jo & Bednarz (2009).",
+      research: "Report the scheme as Jo & Bednarz (2009), state which cell numbering you follow, and report agreement between coders. The workbench's hints are keyword matches and should never be used as codes.",
+      checked: "16 November 2026",
       builds: ["taxonomy-3d-cube"], related: ["question-authoring-tool", "where-spatial-questions-hide", "lesson-spatiality-comparator", "chi-square-demo"],
       ref: { authors: "Jo, I., & Bednarz, S. W.", year: 2009, title: "Evaluating geography textbook questions from a spatial perspective: Using concepts of space, tools of representation, and cognitive processes to evaluate spatiality", container: "Journal of Geography", volume: "108", issue: "1", pages: "4–13", doi: "10.1080/00221340902758401", type: "article", zotero: "3ZSTSBH5" }
     }

@@ -116,8 +116,9 @@
     "<dt>Measures</dt><dd>" + esc(inst.measures) + "</dd>" +
     "<dt>Studied with</dt><dd>" + esc(inst.population) + "</dd>" +
     "<dt>On this page</dt><dd>" + esc(inst.use) + "</dd>" +
+    (inst.research ? "<dt>In research</dt><dd>" + esc(inst.research) + "</dd>" : "") +
     "</dl>" +
-    '<div class="lab-prov"><b>What comes from the paper, and what does not</b>' + esc(inst.provenance) + "</div>" +
+    '<div class="lab-prov"><b>What comes from the paper, and what does not</b>' + esc(inst.provenance) + (inst.checked ? ' <span class="lab-checked">Figures and category names on this page were checked against the article text on ' + esc(inst.checked) + ".</span>" : "") + "</div>" +
     (links ? '<ul class="lab-links">' + links + "</ul>" : "") +
     "</div><div>" +
     '<div class="lab-cite"><h3>' + (inst.status === "reused" ? "Study that applied it" : inst.tool ? "Scheme to cite" : "Reference article") + "</h3>" +
