@@ -7,13 +7,14 @@ window.LAB = {
     repo: "https://github.com/edgeoinnovations-resources/Texas-State-University"
   },
   families: {
-    taxonomy:   { label: "Taxonomy of spatial thinking", color: "#1f6f8b" },
-    disposition:{ label: "Teacher dispositions",          color: "#8a4f9e" },
-    concepts:   { label: "Spatial concepts & ability",    color: "#2e7d4f" },
-    gst:        { label: "Geospatial technology & TPACK", color: "#b5651d" },
-    classroom:  { label: "Classroom routines",     color: "#a8324a" },
-    methods:    { label: "Research methods",              color: "#4a5a8c" },
-    learning:   { label: "Learning, literacy & readiness",color: "#6b6f2a" }
+    taxonomy:   { label: "Taxonomy of spatial thinking", color: "#1f6f8b", light: "#8fe3f5" },
+    disposition:{ label: "Teacher dispositions",          color: "#8a4f9e", light: "#e2b6f2" },
+    concepts:   { label: "Spatial concepts & ability",    color: "#2e7d4f", light: "#9be7b8" },
+    gst:        { label: "Geospatial technology & TPACK", color: "#b5651d", light: "#ffc98f" },
+    knowledge:  { label: "Teacher knowledge & reasoning", color: "#2f6f7a", light: "#9fe6e0" },
+    classroom:  { label: "Classroom routines",            color: "#a8324a", light: "#ffb3c1" },
+    methods:    { label: "Research methods",              color: "#4a5a8c", light: "#b9c6ff" },
+    learning:   { label: "Learning, literacy & readiness",color: "#6b6f2a", light: "#e6ea8e" }
   },
   kinds: {
     coding:   "Coding scheme",
@@ -24,7 +25,8 @@ window.LAB = {
     lesson:   "Lesson / classroom routine",
     stats:    "Statistical technique",
     review:   "Literature review",
-    model:    "Conceptual model"
+    model:    "Conceptual model",
+    study:    "Empirical study"
   },
   instruments: [
     {
@@ -32,6 +34,7 @@ window.LAB = {
       title: "Taxonomy of Spatial Thinking", short: "Taxonomy (3D cube)",
       family: "taxonomy", kind: "coding",
       blurb: "The 4 × 2 × 3 taxonomy — concepts of space, tools of representation, processes of reasoning — as a rotatable 24-cell cube.",
+      stats: [["24", "taxonomy cells"], ["3", "components"], ["9", "integrated cells"], ["3,010", "questions coded"], ["4.6 / 5", "expert content validity"]],
       measures: "The spatiality of a question, objective or task: which level of spatial concept it needs, whether it uses a representation, and what cognitive process it demands.",
       population: "3,010 questions in four Texas-adopted high-school world geography textbooks",
       use: "Walk the 24 cells and see which nine count as integrating all three components.",
@@ -60,6 +63,7 @@ window.LAB = {
       title: "Question-Location Coding Scheme", short: "Question location",
       family: "taxonomy", kind: "coding",
       blurb: "Five textbook locations — in text, page margin, supplemental section, end of section, end of chapter — compared for spatiality.",
+      stats: [["3,010", "questions coded"], ["5", "page locations"], ["75%", "of margin questions integrated"], ["6%", "of end-of-section questions"], ["4", "textbooks"]],
       measures: "Whether the spatiality of textbook questions differs by where on the page they are placed.",
       population: "The same 3,010 questions as the 2009 study, re-analysed by location",
       use: "Click a page zone to see its share of spatial concepts, representation use and integrated questions.",
@@ -74,13 +78,14 @@ window.LAB = {
       title: "Seven-Goal College-Readiness Scheme", short: "College readiness",
       family: "learning", kind: "survey",
       blurb: "Seven college-readiness goals for geography, rated for importance and student proficiency by teachers and faculty.",
+      stats: [["7", "readiness goals"], ["353", "educators"], ["260 + 93", "teachers + professors"], ["6-point", "rating scales"], ["18", "challenge categories"]],
       measures: "How high-school teachers and college faculty rate the importance of seven readiness goals and students' proficiency on each.",
       population: "353 educators (260 high-school teachers, 93 college faculty)",
       use: "Toggle between the two groups' views and inspect the importance–proficiency gap for each goal.",
       provenance: "Goals, ratings and challenge categories are the paper's reported values.",
       research: "Importance and proficiency were rated on six-point scales by 260 teachers and 93 professors; group differences are reported with confidence intervals. Open-ended challenge responses were coded into eighteen categories.",
       checked: "16 November 2026",
-      builds: [], related: [],
+      builds: [], related: ["serrano-jo-2026"],
       ref: { authors: "Jo, I., & Milson, A. J.", year: 2013, title: "College readiness for geography: Perceptions of high school teachers and college faculty", container: "Journal of Geography", volume: "112", issue: "5", pages: "193–204", doi: "10.1080/00221341.2012.761718", type: "article", zotero: "4BQF3ZQV" }
     },
     {
@@ -88,13 +93,14 @@ window.LAB = {
       title: "Teaching Spatial Thinking Disposition Inventory", short: "Disposition inventory",
       family: "disposition", kind: "survey",
       blurb: "A 40-item, five-category Likert inventory of a teacher's disposition to teach spatial thinking through geography.",
+      stats: [["40", "items"], ["5", "categories"], ["5", "reverse-scored items"], ["40–200", "score range"], ["1–5", "agreement scale"]],
       measures: "Beliefs and inclinations in five categories: teaching thinking skills (items 1–7), teaching spatial thinking (8–14), spatial thinking in geography (15–20), explicit teaching of spatial concepts (21–31), adopting representations and geospatial technologies (32–40).",
       population: "Pre-service geography teachers (instrument proposed as an exemplar; no sample in this paper)",
       use: "Answer a 15-item slice, see category means and how the reverse-scored items work.",
       provenance: "The page shows 15 of the 40 published items. The full instrument reverse-scores five items (#4, #11, #15, #16, #34); four of those fall in the slice shown. The authors state that validity and reliability had not yet been established.",
       research: "All 40 items are in the article's appendix. Score by summing 1–5 responses after reversing items 4, 11, 15, 16 and 34; totals run from 40 to 200, and the authors suggest a mean above 4.0 as 'fairly disposed', a theoretical guide only. The authors state validity and reliability were not yet established, so report your own. Note that the printed appendix numbers two consecutive items '11'.",
       checked: "16 November 2026",
-      builds: ["taxonomy-3d-cube"], related: ["china-korea-disposition-comparator"],
+      builds: ["taxonomy-3d-cube"], related: ["china-korea-disposition-comparator", "jo-2016-gst-dispositions", "sanli-jo-2020", "jo-2011-dissertation"],
       ref: { authors: "Jo, I., & Bednarz, S. W.", year: 2014, title: "Dispositions toward teaching spatial thinking through geography: Conceptualization and an exemplar assessment", container: "Journal of Geography", volume: "113", issue: "5", pages: "198–207", doi: "10.1080/00221341.2014.881409", type: "article", zotero: "WHLHFJDM" }
     },
     {
@@ -108,7 +114,7 @@ window.LAB = {
       provenance: "Counts and the Table 1 examples are from the paper; other practice objectives are written for this site.",
       research: "A single-group pre/post comparison of 24 pre-service teachers' lesson plans, reported as percentages without inferential tests. Treat it as a coding procedure to reuse, not as evidence of effect size.",
       checked: "16 November 2026",
-      builds: ["taxonomy-3d-cube"], related: ["coding-workbench", "disposition-inventory"],
+      builds: ["taxonomy-3d-cube"], related: ["coding-workbench", "disposition-inventory", "jo-2011-dissertation"],
       ref: { authors: "Jo, I., & Bednarz, S. W.", year: 2014, title: "Developing pre-service teachers' pedagogical content knowledge for teaching spatial thinking through geography", container: "Journal of Geography in Higher Education", volume: "38", issue: "2", pages: "301–313", doi: "10.1080/03098265.2014.911828", type: "article", zotero: "ZNTEKX2K" }
     },
     {
@@ -123,7 +129,7 @@ window.LAB = {
       research: "A conceptual model with no measurement procedure. The chapter proposes level 2 (interactive) as a reasonable target for formal education; using the levels as a coding scheme would be your own adaptation.",
       checked: "16 November 2026",
       source: "Gao, J. (2002). Integration of GPS with remote sensing and GIS: Reality and prospect.",
-      builds: [], related: ["tpack-gst-rubric"],
+      builds: [], related: ["tpack-gst-rubric", "jo-2024-gst-teacher-ed"],
       ref: { authors: "Jo, I., & Muñiz Solari, O.", year: 2015, title: "An agenda of GST in geography education for the future", container: "In O. Muñiz Solari, A. Demirci, & J. van der Schee (Eds.), Geospatial technologies and geography education in a changing world", volume: "", issue: "", pages: "205–221", publisher: "Springer", doi: "10.1007/978-4-431-55519-3_17", type: "chapter", zotero: "3I43SNHM" }
     },
     {
@@ -131,6 +137,7 @@ window.LAB = {
       title: "191-Article Methods Review", short: "Methods review",
       family: "methods", kind: "review",
       blurb: "A coded review of the designs, techniques and reporting practices in 191 empirical geography-education articles.",
+      stats: [["191", "articles reviewed"], ["3", "journals"], ["55", "quantitative"], ["65", "qualitative"], ["71", "mixed methods"]],
       measures: "Research design (quantitative, qualitative, mixed), techniques and reporting quality across three journals.",
       population: "191 empirical articles from Journal of Geography, Journal of Geography in Higher Education, and International Research in Geographical and Environmental Education",
       use: "Drill from design type into techniques and example studies.",
@@ -152,7 +159,7 @@ window.LAB = {
       research: "The STAT itself must be obtained from Lee and Bednarz; this page reproduces none of its items. Jo, Hong and Verma compared pre and post means within seven classes (306 students, two universities) in a non-equivalent control group design.",
       checked: "16 November 2026",
       source: "Lee, J., & Bednarz, R. (2012). Components of spatial thinking: Evidence from a spatial thinking ability test. Journal of Geography, 111(1), 15–26.",
-      builds: [], related: ["spatial-concept-test"],
+      builds: [], related: ["spatial-concept-test", "lee-jo-2022-spatial-skills"],
       ref: { authors: "Jo, I., Hong, J. E., & Verma, K.", year: 2016, title: "Facilitating spatial thinking in world geography using Web-based GIS", container: "Journal of Geography in Higher Education", volume: "40", issue: "3", pages: "442–459", doi: "10.1080/03098265.2016.1150439", type: "article", zotero: "54ZYBQA5" }
     },
     {
@@ -181,7 +188,7 @@ window.LAB = {
       provenance: "Counts are from the paper's tables. Photograph thumbnails are schematic drawings; the NASA photo IDs point to the originals.",
       research: "Thirty-two students described the same six photographs in three assignments; concept use was compared with chi-square goodness-of-fit tests. The authors added descriptors such as colour to the taxonomy's list of primitives.",
       checked: "16 November 2026",
-      builds: ["taxonomy-3d-cube"], related: ["chi-square-demo"],
+      builds: ["taxonomy-3d-cube"], related: ["chi-square-demo", "jo-hong-2018-intro"],
       ref: { authors: "Ghaffari, Z., Jo, I., & Currit, N. A.", year: 2018, title: "NASA astronaut photography of Earth: A resource to facilitate students' learning and using geospatial concepts", container: "International Journal of Geospatial and Environmental Research", volume: "5", issue: "3", pages: "Article 6", doi: null, type: "article", zotero: "NQYAPNE3" }
     },
     {
@@ -232,6 +239,7 @@ window.LAB = {
       title: "Four-Domain Scientific-Literacy Coding", short: "Scientific literacy",
       family: "learning", kind: "coding",
       blurb: "A four-domain, nine-code scientific-literacy framework applied to 100 objectives in China's geography curriculum.",
+      stats: [["100", "learning objectives"], ["4", "domains"], ["9", "codes"], ["0.777", "kappa"]],
       measures: "Which domains of scientific literacy a curriculum's learning objectives address.",
       population: "100 learning objectives in China's national middle-school geography curriculum",
       use: "Read the code definitions, then code sample objectives and compare with the researchers.",
@@ -246,6 +254,7 @@ window.LAB = {
       title: "Spatial-Concept Generation & Recognition Test", short: "Concept test",
       family: "concepts", kind: "test",
       blurb: "Marsh, Golledge & Battersby's generation and recognition tasks, administered online to 119 undergraduates.",
+      stats: [["6", "diagrams"], ["2", "tasks"], ["119", "undergraduates"], ["30 s", "recognition time limit"]],
       measures: "Whether students can generate, and recognise, the appropriate concept for a pictured spatial relationship.",
       population: "119 undergraduates in GIS and non-GIS courses",
       use: "Take a six-diagram version of both tasks and see how scoring works.",
@@ -253,7 +262,7 @@ window.LAB = {
       research: "The study used Marsh, Golledge and Battersby's tasks with 119 undergraduates. The 'appropriate' concepts were: close, clustered, near, proximal, together (points); arrangement, connected, linked, network, patterned (lines); and eight terms for polygons. Obtain the original diagrams and word list from the 2007 article before replicating.",
       checked: "16 November 2026",
       source: "Marsh, M., Golledge, R., & Battersby, S. E. (2007). Geospatial concept understanding and recognition in G6–college students. Annals of the Association of American Geographers, 97(4), 696–712.",
-      builds: [], related: ["spatial-concepts-gis-2024", "stat-explorer"],
+      builds: [], related: ["spatial-concepts-gis-2024", "stat-explorer", "lee-jo-2022-mapping-lp"],
       ref: { authors: "Jo, I., & Hong, J. E.", year: 2020, title: "Effect of learning GIS on spatial concept understanding", container: "Journal of Geography", volume: "119", issue: "3", pages: "87–97", doi: "10.1080/00221341.2020.1745870", type: "article", zotero: "2QZHDV7Y" }
     },
     {
@@ -291,13 +300,14 @@ window.LAB = {
       title: "GeoActivity Scaffolds — OPTIC & SCRAP", short: "OPTIC & SCRAP",
       family: "classroom", kind: "lesson",
       blurb: "Two student-facing routines: OPTIC for analysing photographs and SCRAP for analysing maps.",
+      stats: [["2", "routines"], ["5", "OPTIC steps"], ["5", "SCRAP steps"], ["APHG", "course context"]],
       measures: "A classroom routine, not a measurement instrument.",
       population: "AP Human Geography classes",
       use: "Work through each step with your own image or map and export what you wrote.",
       provenance: "Step names follow the article. The sample image is drawn for this site.",
       research: "A classroom routine with no outcome data. OPTIC comes from the Texas Education Agency's Lighthouse Project and SCRAP is adapted from Gersmehl's modes of spatial thinking; cite those origins if you use the routines.",
       checked: "16 November 2026",
-      builds: [], related: ["geoactivity-discussions", "geoactivity-field-study", "geoactivity-exam-prep", "geoactivity-culminating-project"],
+      builds: [], related: ["geoactivity-discussions", "geoactivity-field-study", "geoactivity-exam-prep", "geoactivity-culminating-project", "geoactivity-intro"],
       ref: { authors: "Jo, I., Crane, M., Hong, J. E., & Huh, S.", year: 2022, title: "GeoActivity types in APHG: Analysis of maps and photos", container: "The Geography Teacher", volume: "19", issue: "2", pages: "56–59", doi: "10.1080/19338341.2022.2042837", type: "article", zotero: "PAFJBYPF" }
     },
     {
@@ -311,7 +321,7 @@ window.LAB = {
       provenance: "Question types and topics are the article's; the rubric figure is described, not reproduced.",
       research: "Eight question types with three model stems each, adapted by the authors from AVID, National Geographic and Facing History. The rubric shown in the article is an example from a school, not a validated instrument.",
       checked: "16 November 2026",
-      builds: [], related: ["geoactivity-optic-scrap", "geoactivity-field-study", "geoactivity-exam-prep", "geoactivity-culminating-project"],
+      builds: [], related: ["geoactivity-optic-scrap", "geoactivity-field-study", "geoactivity-exam-prep", "geoactivity-culminating-project", "geoactivity-intro"],
       ref: { authors: "Hong, J. E., Loux, T., Huh, S., & Jo, I.", year: 2022, title: "GeoActivity types in APHG: Discussions", container: "The Geography Teacher", volume: "19", issue: "2", pages: "60–64", doi: "10.1080/19338341.2022.2042835", type: "article", zotero: "LLW8SZL3" }
     },
     {
@@ -325,7 +335,7 @@ window.LAB = {
       provenance: "Designs and rubric criteria are the article's. Sample student essays are written for this site.",
       research: "The reflection rubric has two criteria (reaction/response and completion) and five levels from 'Full marks' to 'Not yet'. No scoring data or reliability are reported.",
       checked: "16 November 2026",
-      builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-exam-prep", "geoactivity-culminating-project"],
+      builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-exam-prep", "geoactivity-culminating-project", "geoactivity-intro"],
       ref: { authors: "Huh, S., Crane, M., Loux, T., Hong, J. E., & Jo, I.", year: 2022, title: "GeoActivity types in APHG: Field study", container: "The Geography Teacher", volume: "19", issue: "2", pages: "65–70", doi: "10.1080/19338341.2022.2042836", type: "article", zotero: "ZYKBHTU7" }
     },
     {
@@ -339,7 +349,7 @@ window.LAB = {
       provenance: "Workflows and prompts follow the article; scores shown are examples.",
       research: "Describes classroom practice with AP Classroom progress checks and Google Forms. The authors advise against using progress-check results for grading.",
       checked: "16 November 2026",
-      builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-field-study", "geoactivity-culminating-project"],
+      builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-field-study", "geoactivity-culminating-project", "geoactivity-intro"],
       ref: { authors: "Hong, J. E., Haakenson, D., Martin, K., Huh, S., & Jo, I.", year: 2022, title: "GeoActivity types in APHG: Exam preparation", container: "The Geography Teacher", volume: "19", issue: "2", pages: "71–74", doi: "10.1080/19338341.2022.2042834", type: "article", zotero: "MDW7BB6T" }
     },
     {
@@ -353,7 +363,7 @@ window.LAB = {
       provenance: "Protocol and deliverables follow the article; the sample group's choices are illustrative.",
       research: "A project description with deliverables and a link to the authors' materials. No student outcomes are reported.",
       checked: "16 November 2026",
-      builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-field-study", "geoactivity-exam-prep"],
+      builds: [], related: ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-field-study", "geoactivity-exam-prep", "geoactivity-intro"],
       ref: { authors: "Jo, I., Bannert, A., Huh, S., & Hong, J. E.", year: 2022, title: "GeoActivity types in APHG: End-of-year culminating project", container: "The Geography Teacher", volume: "19", issue: "2", pages: "75–79", doi: "10.1080/19338341.2022.2042838", type: "article", zotero: "AL9M2F2F" }
     },
     {
@@ -361,6 +371,7 @@ window.LAB = {
       title: "TPACK-Based GST Lesson-Assessment Rubric", short: "TPACK rubric",
       family: "gst", kind: "rubric",
       blurb: "A four-criterion, four-level rubric for geospatial-technology lessons, adapted from Harris, Grandgenett & Hofer.",
+      stats: [["4", "criteria"], ["4", "levels"], ["14", "teachers' lessons"], ["3.21", "lowest mean: overall fit"]],
       measures: "How well a lesson fits geospatial technology to curriculum goals, instructional strategies, technology selection and overall fit.",
       population: "14 teachers' GST-integrated lessons from a graduate course",
       use: "Score a lesson on the four criteria, compare with the study's averages, and print or export the result.",
@@ -368,7 +379,7 @@ window.LAB = {
       research: "Four criteria scored 1–4 (Beginning to Outstanding). In the study, 14 teachers' lessons averaged 3.86, 3.93 and 3.85 on the first three criteria and 3.21 on overall fit. Take the full level descriptors from the article's rubric table.",
       checked: "16 November 2026",
       source: "Harris, J., Grandgenett, N., & Hofer, M. (2010). Testing a TPACK-based technology integration assessment rubric.",
-      builds: [], related: ["gst-integration-explorer"],
+      builds: [], related: ["gst-integration-explorer", "jo-2024-gst-teacher-ed"],
       ref: { authors: "Huh, S., & Jo, I.", year: 2023, title: "Successes and struggles: Evaluating geospatial technologies integration in geography lessons using TPACK", container: "Journal of Geography", volume: "122", issue: "5", pages: "126–139", doi: "10.1080/00221341.2023.2224814", type: "article", zotero: "73IJXZI8" }
     },
     {
@@ -376,6 +387,7 @@ window.LAB = {
       title: "Video-Stimulated Recall & Interview Protocols", short: "Stimulated recall",
       family: "methods", kind: "protocol",
       blurb: "How video-stimulated recall and interviews were sequenced to capture teachers' pedagogical reasoning.",
+      stats: [["7", "APHG teachers"], ["6", "processes in the reasoning model"], ["5", "data sources"]],
       measures: "Teachers' in-the-moment reasoning, recovered by replaying lesson video and asking what they were thinking.",
       population: "Seven AP Human Geography teachers",
       use: "Follow the data-collection sequence and watch a simulated recall session.",
@@ -383,7 +395,7 @@ window.LAB = {
       research: "A multiple case study of seven AP Human Geography teachers. The sequence of lesson video, stimulated recall and interview is the reusable method; consult the article for the interview protocol itself.",
       checked: "16 November 2026",
       source: "Endacott, J. L., & Sturtz, J. (2015); Nguyen, N. T., McFadden, A., Tangen, D., & Beutel, D. (2013).",
-      builds: [], related: ["learning-approach-matrix"],
+      builds: [], related: ["learning-approach-matrix", "jo-huh-2022-pra", "geokbt-2018"],
       ref: { authors: "Huh, S., & Jo, I.", year: 2024, title: "Geography teachers' pedagogical reasoning and action while integrating sustainable development into APHG courses", container: "Journal of Geography", volume: "123", issue: "4", pages: "97–111", doi: "10.1080/00221341.2024.2382114", type: "article", zotero: "ZR9WD4Y9" }
     },
     {
@@ -391,6 +403,7 @@ window.LAB = {
       title: "16-Spatial-Concepts Self-Report Survey", short: "16 concepts survey",
       family: "concepts", kind: "survey",
       blurb: "A three-question self-report on which of 16 spatial concepts GIS students already knew, newly learned, or deepened.",
+      stats: [["16", "spatial concepts"], ["24", "GIS students"], ["3", "survey questions"], ["3", "types of technical term"]],
       measures: "Students' self-reported acquisition and deepening of 16 spatial concepts through a GIS course.",
       population: "24 GIS students",
       use: "See which concepts were already known, new, or deepened, and why some are harder.",
@@ -405,6 +418,7 @@ window.LAB = {
       title: "Taxonomy Coding Workbench", short: "Coding workbench",
       family: "taxonomy", kind: "coding",
       blurb: "Code your own questions, objectives or tasks with the 24-cell taxonomy. Import a list, code it, test the distribution, export a CSV.",
+      stats: [["24", "cells"], ["3", "axes to code"], ["CSV", "in and out"], ["κ", "second-coder agreement"]],
       measures: "Your own corpus, using the Jo & Bednarz (2009) coding scheme.",
       population: "Whatever you bring",
       use: "Paste or import items, code three axes each, and export coded data with summary tables.",
@@ -413,15 +427,36 @@ window.LAB = {
       checked: "16 November 2026",
       builds: ["taxonomy-3d-cube"], related: ["question-authoring-tool", "where-spatial-questions-hide", "lesson-spatiality-comparator", "chi-square-demo"],
       ref: { authors: "Jo, I., & Bednarz, S. W.", year: 2009, title: "Evaluating geography textbook questions from a spatial perspective: Using concepts of space, tools of representation, and cognitive processes to evaluate spatiality", container: "Journal of Geography", volume: "108", issue: "1", pages: "4–13", doi: "10.1080/00221340902758401", type: "article", zotero: "3ZSTSBH5" }
-    }
+    },
+    /* NEW-STUDIES */
+    {"id": "jo-2011-dissertation", "year": 2011, "title": "Explicit Instruction in Spatial Thinking for Preservice Teachers", "short": "Dissertation (2011)", "family": "knowledge", "kind": "study", "blurb": "Jo's doctoral study: a one-day workshop on teaching spatial thinking, tested for its effect on preservice teachers' knowledge, skills and dispositions.", "stats": [["24", "preservice teachers"], ["~4 h", "one-day workshop"], ["3", "assessments, pre and post"], ["4", "research questions"], ["+13.4", "disposition score gain"]], "measures": "Whether explicit instruction in spatial thinking changes preservice teachers' knowledge of spatial concepts, their skill in building it into lessons, and their disposition to teach it.", "population": "24 undergraduate preservice teachers (21 women, 3 men) at Texas A&M University", "use": "See the design, the three assessments and the results for each research question, then plan your own intervention study.", "provenance": "Design facts and statistics are from the dissertation. The planning tool and questions are written for this site.", "research": "The source of three later instruments on this site: the disposition inventory, the lesson-plan coding procedure, and the workshop design. A single-group pre/post design with no control group, so gains cannot be attributed to the workshop alone.", "builds": ["taxonomy-3d-cube"], "related": ["disposition-inventory", "lesson-spatiality-comparator", "jo-2018-synthesis"], "ref": {"authors": "Jo, I.", "year": 2011, "title": "Fostering a spatially literate generation: Explicit instruction in spatial thinking for preservice teachers", "container": "Doctoral dissertation, Texas A&M University", "volume": "", "issue": "", "pages": "", "doi": null, "type": "thesis", "zotero": "EFSEXKTI"}, "status": "study", "study": true, "checked": "16 November 2026", "flagship": true},
+    {"id": "jo-2016-gst-dispositions", "year": 2016, "title": "Dispositions Toward Teaching With Geospatial Technologies", "short": "GST dispositions (2016)", "family": "disposition", "kind": "survey", "blurb": "Eight items from the disposition inventory, given before and after a methods course that used Web-based GIS.", "stats": [["14", "preservice teachers"], ["8", "inventory items"], ["3.58 → 4.71", "mean, pre to post"], ["p < .001", "paired t-test"], ["4", "reflection prompts"]], "measures": "Preservice teachers' beliefs about, confidence in and willingness to use geospatial technologies (items 1–4), and their awareness of and beliefs about teaching spatial thinking (items 5–8).", "population": "14 preservice teachers in a senior-level geography methods course", "use": "Compare pre and post means item by item, then take the eight-item survey yourself and export your responses.", "provenance": "Item wording and all means are from the article and its appendix. The eight items are a subset of the 40-item inventory published in 2014.", "research": "The first empirical use of the 2014 inventory. The article states that the inventory's reliability and validity had not yet been established. With 14 participants and no comparison group, treat the gains as descriptive.", "builds": ["disposition-inventory"], "related": ["china-korea-disposition-comparator", "sanli-jo-2020", "jo-2024-gst-teacher-ed"], "ref": {"authors": "Jo, I.", "year": 2016, "title": "Future teachers' dispositions toward teaching with geospatial technologies", "container": "Contemporary Issues in Technology and Teacher Education", "volume": "16", "issue": "3", "pages": "310–327", "doi": null, "type": "article", "zotero": "K5HV2VYU"}, "status": "study", "study": true, "checked": "16 November 2026"},
+    {"id": "sanli-jo-2020", "year": 2020, "title": "Dispositions to Teach Spatial Thinking: The Turkish Adaptation", "short": "Turkish adaptation (2020)", "family": "disposition", "kind": "survey", "blurb": "A 23-item Turkish version of the disposition inventory, given to 354 preservice geography teachers at five universities.", "stats": [["354", "preservice teachers"], ["5", "state universities"], ["23", "items, five factors"], [".72–.85", "Cronbach's alpha by factor"], ["4.08", "overall mean of 5"]], "measures": "The five disposition factors of the 2014 inventory, in a Turkish adaptation, compared by gender, year of study and course-taking.", "population": "354 preservice geography teachers in Turkey, 2018–2019 (177 men, 177 women)", "use": "Compare the five factor means and see which background variables made a difference.", "provenance": "All statistics are from the article. The Turkish adaptation itself is by Şanlı and Sezer (2019).", "research": "The only version of the inventory on this site with reported internal consistency: alpha of .72 to .85 across the five factors. If you need a shorter, factor-analysed form, start from the adaptation study it cites.", "builds": ["disposition-inventory"], "related": ["china-korea-disposition-comparator", "jo-2016-gst-dispositions"], "ref": {"authors": "Şanlı, C., & Jo, I.", "year": 2020, "title": "Examining preservice geography teachers' dispositions to teach spatial thinking skills", "container": "International Journal of Eurasian Education and Culture", "volume": "5", "issue": "11", "pages": "2069–2102", "doi": null, "type": "article", "zotero": "P6U5UXRE"}, "status": "study", "study": true, "checked": "16 November 2026"},
+    {"id": "geokbt-2018", "year": 2018, "title": "The Knowledge Base for Geography Teaching (GeoKBT)", "short": "GeoKBT model (2018)", "family": "knowledge", "kind": "model", "blurb": "A six-component model of what geography teachers need to know, refined through case studies of four expert teachers.", "stats": [["6", "components"], ["10", "knowledge categories"], ["4", "expert teachers"], ["11 yrs", "average experience"], ["5", "kinds of data"]], "measures": "The components of professional knowledge specific to teaching geography, adapted from Magnusson, Krajcik and Borko's model of pedagogical content knowledge.", "population": "Four expert secondary geography teachers with 4 to 19 years of experience", "use": "Open each component, then audit your own knowledge base against the model and export the result.", "provenance": "Components and categories follow the article. The self-audit is written for this site and is not a validated measure.", "research": "A preliminary conceptual model, built from the literature and refined with four cases. It gives you a coding frame for interviews, lesson plans or observations; it does not come with an instrument.", "builds": [], "related": ["jo-huh-2022-pra", "vsr-explainer", "tpack-gst-rubric"], "ref": {"authors": "Hong, J. E., Harris, J. B., Jo, I., & Keller, K. H.", "year": 2018, "title": "The knowledge base for geography teaching (GeoKBT): A preliminary model", "container": "Research in Geographic Education", "volume": "20", "issue": "1", "pages": "26–47", "doi": null, "type": "article", "zotero": "8SXLZMEF"}, "status": "study", "study": true, "checked": "16 November 2026", "flagship": true},
+    {"id": "jo-2018-synthesis", "year": 2018, "title": "Spatial Thinking in Secondary Geography: A Research Synthesis", "short": "Research synthesis (2018)", "family": "concepts", "kind": "review", "blurb": "A review of what a decade of research established about curriculum, instruction and assessment for spatial thinking, with four recommendations.", "stats": [["13", "studies reviewed"], ["44", "articles on spatial thinking"], ["5,639", "on secondary geography, 2008–2017"], ["2,416", "in 1998–2007"], ["4", "recommendations"]], "measures": "The state of research on supporting spatial thinking in secondary geography through curriculum, instruction and assessment.", "population": "13 studies selected from 44 articles on spatial thinking published 2008–2017", "use": "Follow the search funnel, the research framework and the recommendations, then position your own study in the framework.", "provenance": "The funnel counts, framework and recommendations are from the article. The positioning tool is written for this site.", "research": "The framework diagram is Jo's own, first set out in her 2011 dissertation, and is a ready-made way to locate a study and justify its gap. The search was run in February 2018, so anything later is yours to add.", "builds": ["jo-2011-dissertation"], "related": ["lee-jo-2022-spatial-skills", "methods-review-2016", "jo-hong-2018-intro"], "ref": {"authors": "Jo, I.", "year": 2018, "title": "Spatial thinking in secondary geography: A summary of research findings and recommendations for future research", "container": "Boletim Paulista de Geografia", "volume": "99", "issue": "", "pages": "200–212", "doi": null, "type": "article", "zotero": "PCZYZLXG"}, "status": "study", "study": true, "checked": "16 November 2026", "flagship": true},
+    {"id": "jo-hong-2018-intro", "year": 2018, "title": "Geography Education, Spatial Thinking and Geospatial Technologies", "short": "Special issue (2018)", "family": "gst", "kind": "review", "blurb": "Jo and Hong's introduction to a six-paper special issue on developing geospatial thinking across educational contexts.", "stats": [["6", "papers in the issue"], ["3", "on what geography develops"], ["2", "on spatial concepts"], ["1", "on critical citizenship"]], "measures": "An editorial map of six studies, not a study itself.", "population": "Six papers in the International Journal of Geospatial and Environmental Research, volume 5, issue 3", "use": "See how the editors grouped the six papers and which one is developed into an instrument on this site.", "provenance": "The grouping and the one-line descriptions paraphrase the editors' introduction.", "research": "Useful as a snapshot of the field's concerns in 2018 and as a pointer to six open-access studies. The issue is where the astronaut-photograph study on this site appeared.", "builds": [], "related": ["astronaut-photo-taxonomy", "chi-square-demo", "jo-2018-synthesis"], "ref": {"authors": "Jo, I., & Hong, J. E.", "year": 2018, "title": "Geography education, spatial thinking, and geospatial technologies: Introduction to the special issue", "container": "International Journal of Geospatial and Environmental Research", "volume": "5", "issue": "3", "pages": "Article 1", "doi": null, "type": "article", "zotero": "M4QQJPLT"}, "status": "study", "study": true, "checked": "16 November 2026"},
+    {"id": "geoactivity-intro", "year": 2022, "title": "GeoActivity Types in APHG: The Series", "short": "GeoActivity series", "family": "classroom", "kind": "lesson", "blurb": "The introduction to the 2022 symposium: how five activity types were identified with experienced AP Human Geography teachers.", "stats": [["5", "GeoActivity types"], ["5", "experienced APHG teachers"], ["2", "interviews per teacher"], ["2021", "March and April"]], "measures": "A set of classroom activity types with their strategies, assessment methods and expected outcomes; not a measurement instrument.", "population": "Five AP Human Geography teachers, each with more than five years' experience of the course", "use": "Use this page as the hub for the five activity pages.", "provenance": "The method and the list of types are from the introduction. Each linked page documents one article in the series.", "research": "Practitioner articles built from teacher interviews, with no outcome data. Their value for research is as worked descriptions of activity types you could observe, code or evaluate.", "builds": [], "related": ["geoactivity-optic-scrap", "geoactivity-discussions", "geoactivity-field-study", "geoactivity-exam-prep", "geoactivity-culminating-project"], "ref": {"authors": "Hong, J. E., Jo, I., Huh, S., Bannert, A., Crane, M., Haakenson, D., Loux, T., & Martin, K.", "year": 2022, "title": "GeoActivity types in APHG: Introduction", "container": "The Geography Teacher", "volume": "19", "issue": "2", "pages": "54–55", "doi": null, "type": "article", "zotero": "689NW54L"}, "status": "study", "study": true, "checked": "16 November 2026", "series": "GeoActivity Types in APHG"},
+    {"id": "jo-huh-2022-pra", "year": 2022, "title": "Pedagogical Reasoning and Action: A Framework for Research", "short": "Reasoning and action (2022)", "family": "knowledge", "kind": "model", "blurb": "Shulman's six-process model of how teachers turn what they know into teaching, argued as a research framework for geography education.", "stats": [["6", "processes"], ["4", "uses for research"], ["1987", "Shulman's model"]], "measures": "The process by which a teacher moves from understanding a subject to teaching it and learning from the result.", "population": "Conceptual chapter (no sample)", "use": "Walk the six processes, see the four research uses, then log a lesson of your own against the cycle.", "provenance": "The six processes are Shulman's (1987) as presented in the chapter. The process summaries are condensed for this site; the lesson log is written for this site.", "research": "This chapter supplies the theory behind the 2024 stimulated-recall study on this site. Use it to justify studying reasoning as well as knowledge, and to structure interview or recall protocols around the six processes.", "builds": [], "related": ["vsr-explainer", "geokbt-2018"], "ref": {"authors": "Jo, I., & Huh, S.", "year": 2022, "title": "Pedagogical reasoning and action (PR&A): A framework for research on professional knowledge of geography teaching", "container": "In E. Artvinli, I. Gryl, J. Lee, & J. T. Mitchell (Eds.), Geography teacher education and professionalization", "volume": "", "issue": "", "pages": "291–304", "publisher": "Springer", "doi": null, "type": "chapter", "zotero": "YASB9NTA"}, "status": "study", "study": true, "checked": "16 November 2026"},
+    {"id": "lee-jo-2022-mapping-lp", "year": 2022, "title": "Assessing a Learning Progression for Map Understanding", "short": "Mapping LP (2022)", "family": "concepts", "kind": "test", "blurb": "How to build and test a learning progression: six map concepts, four levels from grade 3 to grade 12, and an ordered multiple-choice test analysed with a Rasch model.", "stats": [["6", "map elements"], ["4", "levels, grade 3 to 12"], ["1,486", "students tested"], ["21", "prior studies analysed"], ["3", "ways to identify a progression"]], "measures": "Students' level of understanding of six map elements: contour lines, distance, location, map projection, orientation and scale.", "population": "1,486 students in Korea: 359 third graders, 168 fifth graders, 349 seventh graders, 347 tenth graders and 263 tertiary students", "use": "Compare the three research approaches, follow the method step by step, and plan a progression for a concept of your own.", "provenance": "Approaches, steps, sample and the hypothesised progression are from the chapter. The progression table is condensed from the chapter's Table 3.2, with each descriptor assigned to a map element by its content. The planner is written for this site.", "research": "The most directly reusable method on this site for learning-progression research: hypothesise levels from the literature, write ordered multiple-choice items whose options each represent a level, and test the fit with a partial credit Rasch model. The chapter draws on Jinhee Lee's doctoral work at Texas State.", "builds": [], "related": ["lee-jo-2022-spatial-skills", "stat-explorer", "spatial-concept-test"], "ref": {"authors": "Lee, J., & Jo, I.", "year": 2022, "title": "Assessment of mapping learning progressions in geography", "container": "In T. Bourke, R. Mills, & R. Lane (Eds.), Assessment in geographical education: An international perspective", "volume": "", "issue": "", "pages": "55–76", "publisher": "Springer", "doi": null, "type": "chapter", "zotero": "U6MBSGR6"}, "status": "study", "study": true, "checked": "16 November 2026", "flagship": true},
+    {"id": "lee-jo-2022-spatial-skills", "year": 2022, "title": "Assessing Spatial Skills and Thinking: A Review of Measures", "short": "Spatial assessment review (2022)", "family": "concepts", "kind": "review", "blurb": "A review of 19 papers on measuring spatial skills and thinking, sorted into four groups by scale and context.", "stats": [["19", "papers reviewed"], ["4", "groups of measures"], ["8", "small-scale, context-free"], ["3", "geographic-scale"], ["3", "self-assessments"]], "measures": "How spatial skills and spatial thinking have been measured across disciplines, by the scale of space involved and the context of the task.", "population": "19 peer-reviewed papers found through Web of Science, Google Scholar and manual journal searches", "use": "See the four groups, then decide which kind of measure your own study needs.", "provenance": "The four groups and their counts are from the chapter. The chooser is written for this site.", "research": "Use the four groups to justify your choice of instrument: a small-scale psychometric test, an everyday environmental measure, a geographic-scale test such as the STAT, or a self-assessment. Only three of the nineteen measure at geographic scale, which is itself a gap to cite.", "builds": [], "related": ["stat-explorer", "spatial-concept-test", "lee-jo-2022-mapping-lp", "jo-2018-synthesis"], "ref": {"authors": "Lee, J., & Jo, I.", "year": 2022, "title": "Assessing spatial skills/thinking in geography", "container": "In T. Bourke, R. Mills, & R. Lane (Eds.), Assessment in geographical education: An international perspective", "volume": "", "issue": "", "pages": "77–97", "publisher": "Springer", "doi": null, "type": "chapter", "zotero": "U6MBSGR6"}, "status": "study", "study": true, "checked": "16 November 2026"},
+    {"id": "jo-2024-gst-teacher-ed", "year": 2024, "title": "Geospatial Technologies Teacher Education: A Synthesis", "short": "GST teacher education (2024)", "family": "gst", "kind": "review", "blurb": "A handbook chapter reviewing how preservice and in-service teachers learn to teach with geospatial technologies, across 23 studies.", "stats": [["23", "studies analysed"], ["54", "judged relevant"], ["15", "on in-service teachers"], ["5", "things compared per study"], ["2", "lines of future research"]], "measures": "What teachers learn, how they learn, and what they become able to do with geospatial technologies, as reported in the research.", "population": "23 peer-reviewed articles and book chapters, selected from 54 relevant studies", "use": "See how the studies were compared and what the chapter concludes, then describe a professional-learning design of your own in the same terms.", "provenance": "Counts, comparison dimensions and conclusions are from the chapter. The design tool is written for this site.", "research": "The five comparison dimensions are a ready-made template for describing any professional-learning study so it can be compared with the literature. The chapter names two open lines of research you could claim.", "builds": [], "related": ["tpack-gst-rubric", "gst-integration-explorer", "jo-2016-gst-dispositions"], "ref": {"authors": "Jo, I.", "year": 2024, "title": "Geospatial technologies teacher education", "container": "In S. W. Bednarz & J. T. Mitchell (Eds.), Handbook of geography education", "volume": "", "issue": "", "pages": "chapter 31", "publisher": "Springer", "doi": null, "type": "chapter", "zotero": "HED76HD6"}, "status": "study", "study": true, "checked": "16 November 2026"},
+    {"id": "serrano-jo-2026", "year": 2026, "title": "Who Gets to Be 'Ready'? Early AP Human Geography and Academic Growth", "short": "AP access and growth (2026)", "family": "learning", "kind": "study", "blurb": "A longitudinal study of whether taking AP Human Geography in grade 9 or 10 is associated with greater growth from the PSAT 8/9 to the SAT.", "stats": [["7,179", "students"], ["948", "took APHG early"], ["+38", "points more SAT growth"], ["3", "cohorts, 2020–2022"], ["d = .27–.35", "effect sizes"]], "measures": "Growth from PSAT 8/9 to SAT for early AP Human Geography enrollees compared with students who took no AP course in grades 9 and 10, overall and by demographic group.", "population": "7,179 students with both scores in one school district, across three cohorts", "use": "Compare score growth for AP and non-AP students in each group, and read the cautions that go with the comparison.", "provenance": "All figures are from the article's Table 2 and results text. Group labels follow the article.", "research": "An observational comparison in one district where students choose their own courses, so it shows association, not cause. The Black APHG group has 26 students and the article reports no significant difference there. It is a useful model for using routinely collected scores to ask an equity question about geography courses.", "builds": [], "related": ["college-readiness-geography", "geoactivity-intro"], "ref": {"authors": "Serrano, S. M., & Jo, I.", "year": 2026, "title": "Who gets to be 'ready'? Rethinking equity metrics: A case study of early AP Human Geography enrollees and academic growth", "container": "Journal of Geography", "volume": "", "issue": "", "pages": "", "doi": "10.1080/00221341.2026.2671158", "type": "article", "zotero": "5LD792YU"}, "status": "study", "study": true, "checked": "16 November 2026"}
+    /* END-NEW */
   ],
   /* Papers in the project library that do not yet have a page. */
   gaps: [
-    { cite: "Jo, I. (2011). Fostering a spatially literate generation: Explicit instruction in spatial thinking for preservice teachers (doctoral dissertation, Texas A&M University).", note: "Source of the workshop design behind the 2014 lesson-plan study." },
-    { cite: "Jo, I. (2016). Future teachers' dispositions toward teaching with geospatial technologies. Contemporary Issues in Technology and Teacher Education, 16(3).", note: "A further use of the disposition work, focused on geospatial technologies." },
-    { cite: "Şanlı, C., & Jo, I. (2020). Examining preservice geography teachers' dispositions to teach spatial thinking skills. International Journal of Eurasian Education and Culture, 5(11), 2069–2102.", note: "Turkish adaptation of the disposition inventory (23 items, five factors) with 354 teacher candidates." },
-    { cite: "Hong, J. E., Harris, J., Jo, I., & Keller, K. (2018). The knowledge base for geography teaching (GeoKBT): A preliminary model.", note: "A knowledge-base model for geography teaching; publication details to confirm." },
-    { cite: "Jo, I. (2018). Spatial thinking in secondary geography: A summary of research findings and recommendations for future research. Boletim Paulista de Geografia, 99, 200–212.", note: "A research synthesis rather than an instrument; useful as a framing page." },
-    { cite: "Serrano, S. M., & Jo, I. (2026). Who gets to be 'ready'? Rethinking equity metrics: A case study of early AP Human Geography enrollees and academic growth.", note: "In your Zotero collection; outside the current 2009–2024 range." }
+    { cite: "Jo, I. (2007). Aspects of spatial thinking in geography textbooks. In S. Catling & L. Taylor (Eds.), pp. 107–112.", note: "The earliest statement of the textbook-question work." },
+    { cite: "Jo, I., Klein, A., Bednarz, R., & Bednarz, S. W. (2012). An exploration of spatial thinking in introductory GIS courses. In Teaching geographic information science and technology in higher education (pp. 211–229). Wiley-Blackwell.", note: "Bears on spatial thinking in GIS learning; relevant to the concept studies of 2020 and 2024." },
+    { cite: "Kerr, S., Jo, I., Collins, L., et al. (2013). Teacher education and geography: Research perspectives. Research in Geographic Education, 15(2), 44–58.", note: "" },
+    { cite: "Lee, J., & Jo, I. (2014). Introduction to the Road Map for 21st Century Geography Education: Implications for geography education research in Korea.", note: "" },
+    { cite: "Jo, I. (2015). Learning progressions research: Implications for geography curriculum development, pp. 133–137.", note: "Directly relevant to learning-progression work." },
+    { cite: "Lee, J., & Jo, I. (2016). Korean preservice geography teachers' attitude towards implementing geospatial technologies (GSTs) into classrooms. Journal of the Association of Korean Geographers, 5(2), 85–97.", note: "" },
+    { cite: "Jo, I. (2018). Cloud-based GIS to support geographic inquiry. Social Education, 82(2), 108–112.", note: "" },
+    { cite: "Jo, I. (2019). Spatial citizenship in the secondary geography curriculum. In Spatial citizenship education (pp. 145–169). Routledge.", note: "" },
+    { cite: "Bednarz, S., Shin, E., & Jo, I. (2022). Spatial thinking in primary geography. In Teaching primary geography (pp. 133–144). Springer.", note: "Would extend the site's coverage below secondary level." },
+    { cite: "Li, Y., Krause, S., McLendon, A., & Jo, I. (2022). Teaching a geography field methods course amid the COVID-19 pandemic. Journal of Geography in Higher Education.", note: "" },
+    { cite: "Jo, I. (2023). Pedagogical content knowledge in geography education. Oxford Bibliographies.", note: "An annotated bibliography; a guide to the PCK literature." },
+    { cite: "Huh, S., & Jo, I. (2025). Teachers' evolving knowledge base for teaching sustainable development in the geography classroom. The Journal of Social Studies Research, 49(3), 167–186.", note: "Companion to the 2024 stimulated-recall study." },
+    { cite: "Jo, I. (2026). Teachers as visionaries: Aspirations for integrating GIS in the classroom. In International perspectives on geography education. Edward Elgar.", note: "" }
   ]
 };

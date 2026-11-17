@@ -39,6 +39,10 @@
   .year h3{margin:0;font-size:20px;font-weight:800;padding-top:12px;color:var(--lab-navy);}
   .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px;}
   .card{background:#fff;border:1px solid var(--lab-line);border-top:4px solid var(--fam,#888);border-radius:12px;padding:14px 16px 12px;display:flex;flex-direction:column;gap:6px;}
+  .card{position:relative;overflow:hidden;}
+  .card .art{position:absolute;top:10px;right:10px;width:74px;height:54px;border-radius:9px;color:#fff;background:linear-gradient(135deg,#12233f,var(--fam));display:grid;place-items:center;}
+  .card .art svg{width:66px;height:48px;display:block;}
+  .card .chips{padding-right:84px;min-height:44px;align-content:flex-start;}
   .card h4{margin:0;font-size:17px;line-height:1.3;}
   .card h4 a{color:var(--lab-ink);text-decoration:none;}
   .card h4 a:hover,.card h4 a:focus-visible{color:var(--lab-accent-ink);text-decoration:underline;outline:none;}
@@ -59,7 +63,7 @@
   table.cat td.m{min-width:230px;color:var(--lab-sub);}
 
   #map{background:#fff;border:1px solid var(--lab-line);border-radius:12px;padding:8px;}
-  #map svg{display:block;min-width:900px;width:100%;height:auto;}
+  #map svg{display:block;min-width:1500px;width:100%;height:auto;}
   #map text{font:12px var(--lab-font);fill:var(--lab-ink);}
   #map a:focus-visible rect,#map a:hover rect{stroke:var(--lab-navy);stroke-width:2.5;}
   .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;color:var(--lab-sub);margin:10px 0 0;}
@@ -76,24 +80,26 @@
 </head>
 <body>
 <a class="lab-skip" href="#catalogue">Skip to the catalogue</a>
-<header class="hero"><div class="wrap">
-  <p class="eyebrow">Texas State University · Geography Education</p>
-  <h1>Dr. Injeong Jo — Instrument Lab</h1>
-  <p class="sub">Every research instrument Dr. Jo built or reused between 2009 and 2024, turned into a page you can work with: what it measures, how it was used, a hands-on version, and a link to the reference article.</p>
-  <ul class="stats" id="stats"></ul>
-</div></header>
+<header class="lab-hero" style="--fam:#1f6f8b;--fam-l:#8fe3f5"><div class="lab-hero-in"><div class="lab-hero-text">
+  <p class="lab-eyebrow">Texas State University · Geography Education</p>
+  <h1 class="lab-title">Dr. Injeong Jo — Instrument Lab</h1>
+  <p class="lab-blurb">The research of Dr. Injeong Jo, 2009 to 2026, turned into pages you can work with: every instrument she built or reused, every study and review, each with a hands-on tool and a link to the source.</p>
+  <ul class="lab-stats" id="stats"></ul>
+  <div class="lab-hero-btns"><a class="go" href="#catalogue">Browse the catalogue ↓</a><a href="instruments/coding-workbench.html">Code your own data</a></div>
+</div><div class="lab-hero-art" id="heroArt"></div></div></header>
 
 <main class="wrap">
   <div class="start">
-    <a href="instruments/taxonomy-3d-cube.html"><b>Start with the taxonomy</b><span>The 2009 three-axis taxonomy underlies a third of the instruments here.</span></a>
+    <a href="instruments/taxonomy-3d-cube.html"><b>Start with the taxonomy</b><span>The 2009 three-axis taxonomy underlies much of what follows.</span></a>
     <a href="instruments/coding-workbench.html"><b>Code your own data</b><span>Apply the 24-cell scheme to your own questions or objectives and export a CSV.</span></a>
-    <a href="#bibliography"><b>Get the references</b><span>All source articles with DOIs, exportable to Zotero in one file.</span></a>
+    <a href="instruments/lee-jo-2022-mapping-lp.html"><b>Learning progressions</b><span>How to build and test a progression, with a planner for your own concept.</span></a>
+    <a href="#bibliography"><b>Get the references</b><span>Every source, exportable to Zotero in one file.</span></a>
   </div>
 
   <div class="tools" id="catalogue">
     <div class="r1">
       <input class="lab-input" id="q" type="search" placeholder="Search title, construct, population, author…" aria-label="Search instruments">
-      <select class="lab-input" id="fStatus" aria-label="Filter by origin"><option value="">Built and reused</option><option value="built">Built by Jo</option><option value="reused">Reused by Jo</option><option value="tool">Working tools</option></select>
+      <select class="lab-input" id="fStatus" aria-label="Filter by origin"><option value="">Everything</option><option value="built">Built by Jo</option><option value="reused">Reused by Jo</option><option value="study">Studies and reviews</option><option value="tool">Working tools</option></select>
       <select class="lab-input" id="fFamily" aria-label="Filter by research strand"><option value="">All research strands</option></select>
       <select class="lab-input" id="fKind" aria-label="Filter by instrument type"><option value="">All instrument types</option></select>
       <div class="seg" role="group" aria-label="View">
@@ -119,7 +125,7 @@
   </section>
 
   <h2 class="sec" id="bibliography">Bibliography</h2>
-  <p class="secsub">The reference article for every instrument, in APA style. DOIs were taken from the publisher records in the project's Zotero library; five articles have no DOI on record.</p>
+  <p class="secsub">The source for every page, in APA style. DOIs were taken from the publisher records in the project's Zotero library; where none is recorded, a search link is given.</p>
   <div class="bib">
     <div class="lab-btns" style="margin-top:12px">
       <button class="lab-btn primary" type="button" id="bRis">Download all (RIS for Zotero)</button>
@@ -131,7 +137,7 @@
   </div>
 
   <h2 class="sec">Not yet covered</h2>
-  <p class="secsub">Works by Dr. Jo in the project library that do not have a page yet.</p>
+  <p class="secsub">Works on Dr. Jo's Texas State faculty record that have no page because the text is not in the project's Zotero library. Add a PDF to the library and the page can be built.</p>
   <ul class="gaps" id="gaps"></ul>
 
   <h2 class="sec">How to read these pages</h2>
@@ -151,7 +157,9 @@
   var L = window.LAB, U = L.util, all = L.instruments, state = { view: "cards", sort: "year", dir: 1 };
   var $ = function(s){ return document.querySelector(s); };
   var papers = all.filter(function(i){ return !i.tool; });
-  $("#stats").innerHTML = [[papers.length,"instruments"],[papers.filter(function(i){return i.status==="built";}).length,"built by Jo"],[papers.filter(function(i){return i.status==="reused";}).length,"reused by Jo"],[U.uniqueRefs(papers).length,"reference articles"],["2009–2024","span"]].map(function(s){ return "<li><b>"+s[0]+"</b>"+s[1]+"</li>"; }).join("");
+  var insts = papers.filter(function(i){ return !i.study; });
+  $("#stats").innerHTML = [[insts.length,"instruments"],[papers.length-insts.length,"studies and reviews"],[U.uniqueRefs(papers).length,"source publications"],[Object.keys(L.families).length,"research strands"],["1","coding workbench"]].map(function(s){ return "<li><b>"+s[0]+"</b>"+s[1]+"</li>"; }).join("");
+  $("#heroArt").innerHTML = U.motif("taxonomy", 7);
   Object.keys(L.families).forEach(function(k){ $("#fFamily").insertAdjacentHTML("beforeend",'<option value="'+k+'">'+L.families[k].label+"</option>"); });
   Object.keys(L.kinds).filter(function(k){ return all.some(function(i){ return i.kind===k; }); }).forEach(function(k){ $("#fKind").insertAdjacentHTML("beforeend",'<option value="'+k+'">'+L.kinds[k]+"</option>"); });
   $("#repo").href = L.site.repo; $("#repo").textContent = L.site.repo.replace("https://","");
@@ -166,7 +174,7 @@
   function cards(list){
     var box=$("#v-cards"); if(!list.length){ box.innerHTML='<div class="none" style="margin-top:20px">No instruments match. Clear the search or filters.</div>'; return; }
     var years={}, tools=[]; list.forEach(function(i){ if(i.tool) tools.push(i); else (years[i.year]=years[i.year]||[]).push(i); });
-    function card(i){ return '<article class="card" style="--fam:'+L.families[i.family].color+'"><div class="chips">'+chips(i)+'</div><h4><a href="'+U.href(i)+'">'+U.esc(i.title)+(i.flagship?' <span class="star" title="Flagship contribution" aria-label="Flagship contribution">★</span>':"")+'</a></h4><p class="ref">'+U.esc(shortRef(i))+(i.source?" · original: "+U.esc(i.source.split("(")[0].trim().replace(/[,.]$/,"")):"")+'</p><p>'+U.esc(i.blurb)+'</p><div class="acts"><a href="'+U.href(i)+'">Open instrument →</a>'+articleLink(i)+"</div></article>"; }
+    function card(i){ return '<article class="card" style="--fam:'+L.families[i.family].color+';--fam-l:'+L.families[i.family].light+'"><div class="art">'+U.motif(i.family,i.year*7+i.id.length)+'</div><div class="chips">'+chips(i)+'</div><h4><a href="'+U.href(i)+'">'+U.esc(i.title)+(i.flagship?' <span class="star" title="Flagship contribution" aria-label="Flagship contribution">★</span>':"")+'</a></h4><p class="ref">'+U.esc(shortRef(i))+(i.source?" · original: "+U.esc(i.source.split("(")[0].trim().replace(/[,.]$/,"")):"")+'</p><p>'+U.esc(i.blurb)+'</p><div class="acts"><a href="'+U.href(i)+'">'+(i.study?"Open study →":i.tool?"Open tool →":"Open instrument →")+'</a>'+articleLink(i)+"</div></article>"; }
     var h=""; if(tools.length) h+='<div class="year"><h3>Tools</h3><div class="cards">'+tools.map(card).join("")+"</div></div>";
     Object.keys(years).sort().forEach(function(y){ var s=years[y].filter(function(i){return i.series;})[0]; h+='<div class="year"><h3>'+y+'</h3><div><div class="cards">'+years[y].map(card).join("")+"</div>"+(s&&years[y].length>2?'<p class="count" style="margin-top:8px">'+years[y].filter(function(i){return i.series;}).length+" of these form the <i>"+U.esc(s.series)+"</i> symposium in <i>The Geography Teacher</i> 19(2).</p>":"")+"</div></div>"; });
     box.innerHTML=h;
@@ -178,14 +186,14 @@
   }
   function map(list){
     var show={}; list.forEach(function(i){ show[i.id]=1; });
-    var fams=Object.keys(L.families), years=[]; for(var y=2009;y<=2024;y++) years.push(y);
-    var X0=170, colW=118, rowH=66, top=34, W=X0+years.length*colW+10, bw=106, bh=40;
+    var fams=Object.keys(L.families), years=[], y0=Math.min.apply(null,all.map(function(i){return i.year;})), y1=Math.max.apply(null,all.map(function(i){return i.year;})); for(var y=y0;y<=y1;y++) years.push(y);
+    var X0=170, colW=112, rowH=66, top=34, W=X0+years.length*colW+10, bw=104, bh=40;
     var slot={}, pos={}, lanes={}, yOff=top, laneY={};
     fams.forEach(function(f){ var maxStack=1; years.forEach(function(yr){ var n=all.filter(function(i){ return i.family===f && i.year===yr; }).length; if(n>maxStack) maxStack=n; }); lanes[f]=maxStack; laneY[f]=yOff; yOff+=maxStack*(bh+8)+18; });
     var H=yOff+6, s='<svg viewBox="0 0 '+W+" "+H+'" role="img" aria-label="Lineage map of instruments by year and research strand"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3d4a5f"/></marker></defs>';
     years.forEach(function(yr,k){ var x=X0+k*colW; s+='<line x1="'+x+'" y1="22" x2="'+x+'" y2="'+H+'" stroke="#eef1f5"/><text x="'+(x+colW/2)+'" y="16" text-anchor="middle" style="font-weight:700;fill:#51607a">'+yr+"</text>"; });
     fams.forEach(function(f){ var y=laneY[f], h=lanes[f]*(bh+8)+10; s+='<rect x="0" y="'+(y-5)+'" width="'+W+'" height="'+h+'" fill="'+L.families[f].color+'" opacity=".06"/>'; var words=L.families[f].label.split(" "), l1=words.slice(0,Math.ceil(words.length/2)).join(" "), l2=words.slice(Math.ceil(words.length/2)).join(" "); s+='<text x="8" y="'+(y+18)+'" style="font-weight:700;fill:'+L.families[f].color+'">'+U.esc(l1)+'</text><text x="8" y="'+(y+33)+'" style="font-weight:700;fill:'+L.families[f].color+'">'+U.esc(l2)+"</text>"; });
-    all.forEach(function(i){ var key=i.family+i.year, n=slot[key]||0; slot[key]=n+1; pos[i.id]={ x:X0+(i.year-2009)*colW+(colW-bw)/2, y:laneY[i.family]+n*(bh+8) }; });
+    all.forEach(function(i){ var key=i.family+i.year, n=slot[key]||0; slot[key]=n+1; pos[i.id]={ x:X0+(i.year-y0)*colW+(colW-bw)/2, y:laneY[i.family]+n*(bh+8) }; });
     var edges="";
     all.forEach(function(i){ (i.builds||[]).forEach(function(p){ var a=pos[p], b=pos[i.id]; if(!a||!b) return; var on=show[i.id]&&show[p];
       var x1=a.x+bw, y1=a.y+bh/2, x2=b.x, y2=b.y+bh/2; if(x2<=x1){ x1=a.x+bw/2; y1=a.y+bh; x2=b.x+bw/2; y2=b.y; edges+='<path d="M'+x1+" "+y1+" L"+x2+" "+(y2-2)+'" fill="none" stroke="#3d4a5f" stroke-width="1.4" marker-end="url(#ar)" opacity="'+(on?.8:.12)+'"/>'; }
@@ -194,9 +202,9 @@
     s+=edges;
     all.forEach(function(i){ var p=pos[i.id], on=show[i.id], col=L.families[i.family].color, label=i.short||i.title, w=label.split(" "), l1=label, l2="";
       if(label.length>17){ var cut=Math.ceil(w.length/2); l1=w.slice(0,cut).join(" "); l2=w.slice(cut).join(" "); }
-      s+='<a href="'+U.href(i)+'" opacity="'+(on?1:.22)+'"><title>'+U.esc(i.title+" — "+shortRef(i))+'</title><rect x="'+p.x+'" y="'+p.y+'" width="'+bw+'" height="'+bh+'" rx="7" fill="'+(i.status==="reused"?"#fff":col)+'" stroke="'+col+'" stroke-width="1.5"'+(i.tool?' stroke-dasharray="4 3"':"")+'/><text x="'+(p.x+bw/2)+'" y="'+(p.y+(l2?17:24))+'" text-anchor="middle" style="font-size:11px;font-weight:600;fill:'+(i.status==="reused"?"#1b2430":"#fff")+'">'+U.esc(l1)+"</text>"+(l2?'<text x="'+(p.x+bw/2)+'" y="'+(p.y+31)+'" text-anchor="middle" style="font-size:11px;font-weight:600;fill:'+(i.status==="reused"?"#1b2430":"#fff")+'">'+U.esc(l2)+"</text>":"")+"</a>"; });
+      s+='<a href="'+U.href(i)+'" opacity="'+(on?1:.22)+'"><title>'+U.esc(i.title+" — "+shortRef(i))+'</title><rect x="'+p.x+'" y="'+p.y+'" width="'+bw+'" height="'+bh+'" rx="7" fill="'+(i.status==="reused"?"#fff":col)+'" fill-opacity="'+(i.study?.6:1)+'" stroke="'+col+'" stroke-width="1.5"'+(i.tool?' stroke-dasharray="4 3"':"")+'/><text x="'+(p.x+bw/2)+'" y="'+(p.y+(l2?17:24))+'" text-anchor="middle" style="font-size:11px;font-weight:600;fill:'+(i.status==="reused"?"#1b2430":"#fff")+'">'+U.esc(l1)+"</text>"+(l2?'<text x="'+(p.x+bw/2)+'" y="'+(p.y+31)+'" text-anchor="middle" style="font-size:11px;font-weight:600;fill:'+(i.status==="reused"?"#1b2430":"#fff")+'">'+U.esc(l2)+"</text>":"")+"</a>"; });
     $("#map").innerHTML=s+"</svg>";
-    $("#legend").innerHTML='<span><i style="background:#51607a"></i>Filled: built by Jo</span><span><i style="background:#fff;border:1.5px solid #51607a"></i>Outlined: reused by Jo</span><span><i style="background:#51607a;outline:1.5px dashed #51607a;outline-offset:1px"></i>Dashed outline: working tool</span><span>→ builds on</span>';
+    $("#legend").innerHTML='<span><i style="background:#51607a"></i>Filled: built by Jo</span><span><i style="background:#fff;border:1.5px solid #51607a"></i>Outlined: reused by Jo</span><span><i style="background:#51607a;opacity:.6"></i>Lighter: study or review</span><span><i style="background:#51607a;outline:1.5px dashed #51607a;outline-offset:1px"></i>Dashed outline: working tool</span><span>→ builds on</span>';
   }
   function render(){ var list=all.filter(match); $("#count").textContent=list.length+" of "+all.length+" shown"; cards(list); table(list); map(list); }
   ["#q","#fStatus","#fFamily","#fKind"].forEach(function(s){ $(s).addEventListener("input",render); });
